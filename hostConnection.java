@@ -16,7 +16,7 @@ public class hostConnection{
         try{
             socket = new ServerSocket();
             socket.bind(new InetSocketAddress("127.0.0.1", 50000));
-            System.out.printf("Socket created on port: %d", socket.getLocalPort());
+            System.out.printf("Socket created on port: %d\n", socket.getLocalPort());
         }catch(IOException i){
             System.out.println(i);
             return;
@@ -84,6 +84,7 @@ class awaitThread extends Thread{
         }
 
         //Send message to renderer to set to Connected Page
+        renderer.hostPage.frame.setVisible(false);
         renderer.ConnectedSessionPage();
 
         //Get max threads after successful connection

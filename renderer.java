@@ -14,24 +14,29 @@ public class renderer {
     hostConnection hostConnection = null;
     connectoHostConnection toConnection = null;
 
+    HomePage homePage = null;
+    HostPage hostPage = null;
+    ConnectPage connectPage = null;
+    ConnectedSessionPage connectedsessionPage = null;
+
     public renderer(){
         //Create homePage object
-        HomePage homePage = new HomePage(this);
+        this.homePage = new HomePage(this);
 
     }
 
     void HostPage(){
-        HostPage hostPage = new HostPage(this);
+        this.hostPage = new HostPage(this);
 
     }
 
     void ConnectPage(){
-        ConnectPage connectPage = new ConnectPage(this);
+        this.connectPage = new ConnectPage(this);
 
     }
 
     void ConnectedSessionPage(){
-        ConnectedSessionPage connectedsessionPage = new ConnectedSessionPage(this);
+        this.connectedsessionPage = new ConnectedSessionPage(this);
 
     }
 
