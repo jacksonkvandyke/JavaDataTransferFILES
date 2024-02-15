@@ -30,6 +30,11 @@ public class renderer {
 
     }
 
+    void ConnectedSessionPage(){
+        ConnectedSessionPage connectedsessionPage = new ConnectedSessionPage(this);
+
+    }
+
     public static void main(String[] args){
         //Create renderer
         renderer mainRenderer = new renderer();
@@ -63,7 +68,7 @@ class HomePage {
         hostButton.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) 
             { 
-                renderer.hostConnection = new hostConnection();
+                renderer.hostConnection = new hostConnection(renderer);
                 frame.setVisible(false);
                 renderer.HostPage();
             } 
@@ -213,7 +218,7 @@ class ConnectPage {
                     }
 
                     //Start next window if successful connection
-                    System.out.println("Connected!");
+                    renderer.ConnectedSessionPage();
                     frame.setVisible(false);
                 }
             }
@@ -227,6 +232,47 @@ class ConnectPage {
         this.frame.add(addressEntry);
         this.frame.add(portEntry);
         this.frame.add(connectButton);
+
+        //Set homepage window visible
+        this.frame.setVisible(true);
+        
+        //Add exception for when window closes
+        this.frame.addWindowListener(new WindowAdapter() { 
+            @Override
+            public void windowClosing(WindowEvent e) 
+            { 
+                System.exit(0); 
+            } 
+        }); 
+
+    }
+
+}
+
+class ConnectedSessionPage {
+
+    Frame frame = null;
+    renderer renderer = null;
+
+    public ConnectedSessionPage(renderer renderer){
+        this.frame = new Frame("Simple File Transfer");
+
+        //Set homepage frame size
+        this.frame.setSize(500, 400);
+
+        //Create grid for elements
+        GridLayout grid = new GridLayout(6, 1, 0, 15);
+        this.frame.setLayout(grid);
+
+        //Create elements for window
+        Label topLabel = new Label("Simple File Transfer");
+        Font toplabelFont = new Font("Arial", Font.PLAIN, 46);
+        topLabel.setAlignment(1);
+        topLabel.setFont(toplabelFont);
+
+        //Add elements to window
+        this.frame.add(topLabel);
+        this.frame.add(new JSeparator());
 
         //Set homepage window visible
         this.frame.setVisible(true);

@@ -5,12 +5,13 @@ import java.util.concurrent.Executors;
 
 public class hostConnection{
     //Initialize variables
+    renderer renderer = null;
     ServerSocket socket = null;
     DataOutputStream outputStream = null;
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    public hostConnection(){
+    public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
         try{
             socket = new ServerSocket();
@@ -22,7 +23,7 @@ public class hostConnection{
         }
 
         //Create awaitThread
-        awaitThread awaitObject = new awaitThread(this);
+        awaitThread awaitObject = new awaitThread(this, renderer);
         Thread thread = new Thread(awaitObject);
         thread.start();
 
@@ -54,13 +55,15 @@ public class hostConnection{
 
 class awaitThread extends Thread{
 
+    renderer renderer = null;
     hostConnection connection;
     ServerSocket serverSocket = null;
     Socket socket = null;
     DataInputStream inputStream = null;
     DataOutputStream outputStream = null;
 
-    public awaitThread(hostConnection connection){
+    public awaitThread(hostConnection connection, renderer renderer){
+        this.renderer = renderer;
         this.connection = connection;
         this.serverSocket = connection.socket;
 
@@ -79,6 +82,9 @@ class awaitThread extends Thread{
             System.out.println(i);
             return;
         }
+
+        //Send message to renderer to set to Connected Page
+        renderer.ConnectedSessionPage();
 
         //Get max threads after successful connection
         int cores = Runtime.getRuntime().availableProcessors();
