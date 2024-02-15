@@ -25,11 +25,6 @@ public class hostConnection{
         awaitThread awaitObject = new awaitThread(this);
         Thread thread = new Thread(awaitObject);
         thread.start();
-        try{
-            thread.join();
-        }catch (InterruptedException i){
-            System.out.println(i);
-        }
 
     }
 
