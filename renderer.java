@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter; 
 import java.awt.event.WindowEvent;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 
 import javax.swing.JSeparator;
@@ -203,9 +204,18 @@ class ConnectPage {
         connectButton.setFont(connectFont);
         connectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                System.out.printf("%s, %d", addressEntry.getText(), Integer.valueOf(portEntry.getText()));
-                renderer.toConnection = new connectoHostConnection(addressEntry.getText(), Integer.valueOf(portEntry.getText()));
+                try{
+                    renderer.toConnection = new connectoHostConnection(addressEntry.getText(), Integer.valueOf(portEntry.getText()));
+                }finally{
+                    if (renderer.toConnection == null){
+                        return;
 
+                    }
+
+                    //Start next window if successful connection
+                    renderer.HostPage();
+                    frame.setVisible(false);
+                }
             }
 
         });
