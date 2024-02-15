@@ -206,6 +206,7 @@ class ConnectPage {
             public void actionPerformed(ActionEvent e){
                 try{
                     renderer.toConnection = new connectoHostConnection(addressEntry.getText(), Integer.valueOf(portEntry.getText()));
+                    System.out.println(renderer.toConnection);
                 }finally{
                     if (renderer.toConnection == null){
                         return;
