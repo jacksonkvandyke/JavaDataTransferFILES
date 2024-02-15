@@ -105,9 +105,7 @@ class awaitThread extends Thread{
         }
 
         //Set max cores
-        int maxCores = Math.max(cores, otherCores);
-        System.out.println(maxCores);
-        this.connection.setCores(maxCores);
+        this.connection.setCores(Math.max(cores, otherCores));
 
     }
 }

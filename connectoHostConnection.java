@@ -7,10 +7,12 @@ import java.util.concurrent.TimeUnit;
 
 public class connectoHostConnection {
     //Initialize variables
+    connectoHostConnection connection = this;
     Socket socket = null;
-    int maxCores = 0;
     DataInputStream inputStream = null;
     DataOutputStream outputStream = null;
+    int maxCores = 0;
+    FileToPackets assembledPackets = null;
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -25,7 +27,7 @@ public class connectoHostConnection {
             System.out.println(socket.getPort());
 
             //Call thread to create Data Threads
-            incomingConnectThread object = new incomingConnectThread(socket);
+            incomingConnectThread object = new incomingConnectThread(connection, socket);
             Thread thread = new Thread(object);
             thread.start();
 
@@ -37,16 +39,40 @@ public class connectoHostConnection {
 
     }
 
+    void setCores(int cores){
+        this.maxCores = cores;
+
+    }
+
+    void createPackets(String location){
+        System.out.println(maxCores);
+        assembledPackets = new FileToPackets(location, this.maxCores);
+
+    }
+
+    void connectThreads(){
+        //Create the threads and await for connection
+        ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
+        for (int i = 0; i < this.maxCores; i++){
+            Runnable thread = new outgoingDataThread(this.socket.getLocalPort() + i + 1);
+            threads.execute(thread);
+
+        }
+
+    }
+
 }
 
 class incomingConnectThread extends Thread{
 
+    connectoHostConnection connection = null;
     Socket socket = null;
     DataInputStream inputStream = null;
     DataOutputStream outputStream = null;
 
-    public incomingConnectThread(Socket socket){
+    public incomingConnectThread(connectoHostConnection connection, Socket socket){
         try{
+            this.connection = connection;
             this.socket = socket;
             this.inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             this.outputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -77,8 +103,7 @@ class incomingConnectThread extends Thread{
         }
         
         //Set max cores
-        int maxCores = Math.max(cores, otherCores);
-        System.out.println(maxCores);
+        connection.setCores(Math.max(cores, otherCores));
 
         try {
             TimeUnit.SECONDS.sleep(1);
@@ -86,8 +111,8 @@ class incomingConnectThread extends Thread{
             System.out.println(i);
         }
 
-        ExecutorService threads = Executors.newFixedThreadPool(maxCores);
-        for (int i = 0; i < maxCores; i++){
+        ExecutorService threads = Executors.newFixedThreadPool(connection.maxCores);
+        for (int i = 0; i < connection.maxCores; i++){
             Runnable thread = new incomingDataThread(socket.getPort() + i + 1);
             threads.execute(thread);
 
