@@ -21,6 +21,16 @@ public class hostConnection{
             return;
         }
 
+        //Create awaitThread
+        awaitThread awaitObject = new awaitThread(this);
+        Thread thread = new Thread(awaitObject);
+        thread.start();
+        try{
+            thread.join();
+        }catch (InterruptedException i){
+            System.out.println(i);
+        }
+
     }
 
     void setCores(int cores){
@@ -43,21 +53,6 @@ public class hostConnection{
 
         }
 
-    }
-
-    public static void main(String[] args){
-        //Create socket
-        hostConnection connection = new hostConnection();
-
-        //Create awaitThread
-        awaitThread awaitObject = new awaitThread(connection);
-        Thread thread = new Thread(awaitObject);
-        thread.start();
-        try{
-            thread.join();
-        }catch (InterruptedException i){
-            System.out.println(i);
-        }
     }
 
 }
