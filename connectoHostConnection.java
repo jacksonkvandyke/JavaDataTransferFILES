@@ -54,7 +54,7 @@ public class connectoHostConnection {
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i++){
-            Runnable thread = new outgoingDataThread(this.socket.getLocalPort() + i + 1);
+            Runnable thread = new dataThread(this.socket.getLocalPort() + i + 1);
             threads.execute(thread);
 
         }
@@ -105,29 +105,16 @@ class incomingConnectThread extends Thread{
         //Set max cores
         connection.setCores(Math.max(cores, otherCores));
 
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException i) {
-            System.out.println(i);
-        }
-
-        ExecutorService threads = Executors.newFixedThreadPool(connection.maxCores);
-        for (int i = 0; i < connection.maxCores; i++){
-            Runnable thread = new incomingDataThread(socket.getPort() + i + 1);
-            threads.execute(thread);
-
-        }
-
     }
     
 }
 
-class incomingDataThread extends Thread{
+class dataThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
 
-    public incomingDataThread(int port) {
+    public dataThread(int port) {
         this.port = port;
         
     }

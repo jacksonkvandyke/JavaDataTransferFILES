@@ -44,7 +44,7 @@ public class hostConnection{
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i++){
-            Runnable thread = new outgoingDataThread(this.socket.getLocalPort() + i + 1);
+            Runnable thread = new dataThread(this.socket.getLocalPort() + i + 1);
             threads.execute(thread);
 
         }
@@ -110,12 +110,12 @@ class awaitThread extends Thread{
     }
 }
 
-class outgoingDataThread extends Thread{
+class dataThread extends Thread{
 
     private int port = 0;
     private ServerSocket socket = null;
     
-    public outgoingDataThread(int port){
+    public dataThread(int port){
         this.port = port;
         
     }
