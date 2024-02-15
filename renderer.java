@@ -213,7 +213,7 @@ class ConnectPage {
                     }
 
                     //Start next window if successful connection
-                    renderer.HostPage();
+                    System.out.println("Connected!");
                     frame.setVisible(false);
                 }
             }
