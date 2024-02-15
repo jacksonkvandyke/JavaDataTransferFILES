@@ -12,14 +12,14 @@ public class connectoHostConnection {
     DataInputStream inputStream = null;
     DataOutputStream outputStream = null;
 
-    connectoHostConnection(){
+    connectoHostConnection(String address, int port){
         //Create socket and link streams
         socket = new Socket();
         System.out.println("Socket successfully created.");
 
         //Connect to ensure connection
         try{
-            socket.connect(new InetSocketAddress("127.0.0.1", 50000));
+            socket.connect(new InetSocketAddress(address, port));
             inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             outputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             System.out.println(socket.getPort());

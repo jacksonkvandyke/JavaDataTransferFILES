@@ -41,8 +41,6 @@ class HomePage {
 
     Frame frame = null;
     renderer renderer = null;
-    hostConnection hostConnection = null;
-    connectoHostConnection toConnection = null;
 
     public HomePage(renderer renderer){
         this.frame = new Frame("Simple File Transfer");
@@ -64,8 +62,7 @@ class HomePage {
         hostButton.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) 
             { 
-                hostConnection = new hostConnection();
-                renderer.hostConnection = hostConnection;
+                renderer.hostConnection = new hostConnection();
                 frame.setVisible(false);
                 renderer.HostPage();
             } 
@@ -106,14 +103,10 @@ class HostPage {
 
     Frame frame = null;
     renderer renderer = null;
-    hostConnection hostConnection = null;
-    connectoHostConnection toConnection = null;
 
     public HostPage(renderer renderer){
         this.frame = new Frame("Simple File Transfer");
         this.renderer = renderer;
-        this.hostConnection = renderer.hostConnection;
-        this.toConnection = renderer.toConnection;
 
         //Set homepage frame size
         this.frame.setSize(500, 300);
@@ -134,7 +127,7 @@ class HostPage {
         connectioninfoLabel.setFont(infoFont);
 
         //Get socket address for address label and port label
-        InetSocketAddress address = (InetSocketAddress)hostConnection.socket.getLocalSocketAddress();
+        InetSocketAddress address = (InetSocketAddress)renderer.hostConnection.socket.getLocalSocketAddress();
         Label addressLabel = new Label(String.format("Address: %s", address.getAddress().toString().replace("/", "")));
         Font addressFont = new Font("Arial", Font.PLAIN, 24);
         addressLabel.setAlignment(1);
@@ -175,8 +168,6 @@ class ConnectPage {
 
     Frame frame = null;
     renderer renderer = null;
-    hostConnection hostConnection = null;
-    connectoHostConnection toConnection = null;
 
     public ConnectPage(renderer renderer){
         this.frame = new Frame("Simple File Transfer");
@@ -199,17 +190,25 @@ class ConnectPage {
         connectioninfoLabel.setAlignment(1);
         connectioninfoLabel.setFont(infoFont);
 
-        TextField addressEntry = new TextField("Enter Address Here");
+        TextField addressEntry = new TextField();
         Font addressFont = new Font("Arial", Font.PLAIN, 32);
         addressEntry.setFont(addressFont);
 
-        TextField portEntry = new TextField("Enter Port Here");
+        TextField portEntry = new TextField();
         Font portFont = new Font("Arial", Font.PLAIN, 32);
         portEntry.setFont(portFont);
 
         Button connectButton = new Button("Connect");
         Font connectFont = new Font("Arial", Font.PLAIN, 32);
         connectButton.setFont(connectFont);
+        connectButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                System.out.printf("%s, %d", addressEntry.getText(), Integer.valueOf(portEntry.getText()));
+                renderer.toConnection = new connectoHostConnection(addressEntry.getText(), Integer.valueOf(portEntry.getText()));
+
+            }
+
+        });
 
         //Add elements to window
         this.frame.add(topLabel);
