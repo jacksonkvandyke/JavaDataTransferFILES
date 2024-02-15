@@ -23,6 +23,12 @@ public class connectoHostConnection {
             inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             outputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             System.out.println(socket.getPort());
+
+            //Call thread to create Data Threads
+            incomingConnectThread object = new incomingConnectThread(socket);
+            Thread thread = new Thread(object);
+            thread.start();
+
         
         }catch(IOException i) {
             System.out.println(i);
@@ -30,17 +36,6 @@ public class connectoHostConnection {
         }
 
     }
-    
-    public static void main(String[] args){
-        connectoHostConnection connection = new connectoHostConnection();
-
-        //Call thread to create Data Threads
-        incomingConnectThread object = new incomingConnectThread(connection.socket);
-        Thread thread = new Thread(object);
-        thread.start();
-
-    }
-
 
 }
 
