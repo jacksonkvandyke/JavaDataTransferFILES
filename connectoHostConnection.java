@@ -164,8 +164,10 @@ class awaitFileThread extends Thread{
         while (true){
             //Read data from input stream
             try{
-                connection.inCommand = inputStream.readAllBytes().toString();
-                System.out.println(connection.inCommand);
+                if (inputStream.available() > 0){
+                    connection.inCommand = inputStream.readAllBytes().toString();
+                    System.out.println(connection.inCommand);
+                }
             }catch (IOException e){
                 System.out.println(e);
 
