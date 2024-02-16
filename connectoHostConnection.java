@@ -189,6 +189,7 @@ class awaitFileThread extends Thread{
             }catch (InterruptedException e){
                 System.out.println(e);
             }       
+        }
 
     }
     
