@@ -144,6 +144,7 @@ class awaitFileThread extends Thread{
     public void run(){
         //Create thread socket and await connection
         socket = new Socket();
+        System.out.println("HI");
 
 
         //Wait for connection then accept
