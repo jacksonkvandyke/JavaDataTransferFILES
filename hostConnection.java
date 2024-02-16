@@ -7,6 +7,7 @@ public class hostConnection{
     //Initialize variables
     renderer renderer = null;
     ServerSocket socket = null;
+    String address = "127.0.0.1";
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
@@ -18,7 +19,7 @@ public class hostConnection{
         //Set up server socket and bind to address and port
         try{
             socket = new ServerSocket();
-            socket.bind(new InetSocketAddress("127.0.0.1", 50000));
+            socket.bind(new InetSocketAddress(address, 50000));
             System.out.printf("Socket created on port: %d\n", socket.getLocalPort());
         }catch(IOException i){
             System.out.println(i);
@@ -140,8 +141,7 @@ class awaitFileThread extends Thread{
         //Create thread socket and await connection
         try{
             serverSocket = new ServerSocket();
-            System.out.println(connection.socket.getInetAddress().getAddress().toString());
-            serverSocket.bind(new InetSocketAddress(connection.socket.getInetAddress().getAddress().toString(), port));
+            serverSocket.bind(new InetSocketAddress(connection.address, port));
         }catch(IOException i){
             System.out.println(i);
         }
