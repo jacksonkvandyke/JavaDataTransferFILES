@@ -52,7 +52,7 @@ public class connectoHostConnection {
 
     void awaitFiles(){
         //Create the await file thread to wait for commands
-        awaitFileThread awaitObject = new awaitFileThread(this.socket.getLocalPort() + 1, this);
+        awaitFileThread awaitObject = new awaitFileThread(this.socket.getInetAddress(), this.socket.getPort() + 1, this);
         Thread thread = new Thread(awaitObject);
         thread.start();
 
@@ -129,28 +129,26 @@ class incomingConnectThread extends Thread{
 class awaitFileThread extends Thread{
 
     private int port = 0;
-    private ServerSocket serverSocket = null;
+    private InetAddress address = null;
     private Socket socket = null;
     connectoHostConnection connection = null;
     DataInputStream inputStream = null;
     DataOutputStream outputStream = null;
     
-    public awaitFileThread(int port, connectoHostConnection connection){
+    public awaitFileThread(InetAddress address, int port, connectoHostConnection connection){
+        this.address = address;
         this.port = port;
         this.connection = connection;
     }
 
     public void run(){
         //Create thread socket and await connection
-        try{
-            serverSocket = new ServerSocket(this.port);
-        }catch(IOException i){
-            System.out.println(i);
-        }
+        socket = new Socket();
+
 
         //Wait for connection then accept
         try{
-            socket = serverSocket.accept();
+            socket.connect(new InetSocketAddress(address.getAddress().toString(), port));
             System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
