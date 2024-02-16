@@ -140,6 +140,7 @@ class awaitFileThread extends Thread{
         //Create thread socket and await connection
         try{
             serverSocket = new ServerSocket();
+            System.out.println(connection.socket.getInetAddress().getAddress().toString());
             serverSocket.bind(new InetSocketAddress(connection.socket.getInetAddress().getAddress().toString(), port));
         }catch(IOException i){
             System.out.println(i);
