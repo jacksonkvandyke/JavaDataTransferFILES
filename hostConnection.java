@@ -7,7 +7,6 @@ public class hostConnection{
     //Initialize variables
     renderer renderer = null;
     ServerSocket socket = null;
-    DataOutputStream outputStream = null;
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
@@ -113,25 +112,31 @@ class awaitThread extends Thread{
 class dataThread extends Thread{
 
     private int port = 0;
-    private ServerSocket socket = null;
+    private ServerSocket serverSocket = null;
+    private Socket socket = null;
+    DataInputStream inputStream = null;
+    DataOutputStream outputStream = null;
     
     public dataThread(int port){
         this.port = port;
-        
     }
 
     public void run(){
         //Create thread socket and await connection
         try{
-            socket = new ServerSocket(this.port);
+            serverSocket = new ServerSocket(this.port);
         }catch(IOException i){
             System.out.println(i);
         }
 
         //Wait for connection then accept
         try{
-            socket.accept();
+            socket = serverSocket.accept();
             System.out.printf("Socket connected on port: %d\n", this.port);
+
+            //Assign input and output streams
+            inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            outputStream = new  DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         }catch(IOException i){
             System.out.println(i);
         }

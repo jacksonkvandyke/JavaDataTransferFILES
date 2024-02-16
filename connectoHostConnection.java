@@ -9,8 +9,6 @@ public class connectoHostConnection {
     //Initialize variables
     connectoHostConnection connection = this;
     Socket socket = null;
-    DataInputStream inputStream = null;
-    DataOutputStream outputStream = null;
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
@@ -22,8 +20,6 @@ public class connectoHostConnection {
         //Connect to ensure connection
         try{
             socket.connect(new InetSocketAddress(address, port));
-            inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-            outputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             System.out.println(socket.getPort());
 
             //Call thread to create Data Threads
@@ -113,6 +109,8 @@ class dataThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
+    DataInputStream inputStream = null;
+    DataOutputStream outputStream = null;
 
     public dataThread(int port) {
         this.port = port;
@@ -122,9 +120,14 @@ class dataThread extends Thread{
     public void run(){
         //Connect to thread sockets
         socket = new Socket();
+        
         try{
             socket.connect(new InetSocketAddress("127.0.0.1", port));
             System.out.printf("Socket connected on port: %d\n", port);
+
+            //Assign input and output streams
+            inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            outputStream = new  DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         }catch(IOException i){
             System.out.println(i);
 
