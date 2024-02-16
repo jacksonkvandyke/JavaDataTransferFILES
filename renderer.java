@@ -291,6 +291,7 @@ class ConnectedSessionPage {
         //Add elements to window
         this.frame.add(topLabel);
         this.frame.add(new JSeparator());
+        this.frame.add(testButton);
 
         //Set homepage window visible
         this.frame.setVisible(true);
