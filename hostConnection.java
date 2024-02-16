@@ -45,7 +45,7 @@ public class hostConnection{
 
     void awaitFiles(){
         //Create the await file thread to wait for commands
-        awaitFileThread awaitObject = new awaitFileThread(this.socket.getLocalPort(), this.connection);
+        awaitFileThread awaitObject = new awaitFileThread(this.socket.getLocalPort(), this);
         Thread thread = new Thread(awaitObject);
         thread.start();
 
