@@ -167,6 +167,8 @@ class awaitFileThread extends Thread{
 
             }
 
+            System.out.println("Connected");
+
             //Send commands through output stream
             try{
                 outputStream.write(Byte.parseByte(connection.command));
