@@ -9,6 +9,7 @@ public class connectoHostConnection {
     //Initialize variables
     connectoHostConnection connection = this;
     Socket socket = null;
+    String address = "127.0.0.1";
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
@@ -24,6 +25,7 @@ public class connectoHostConnection {
         //Connect to ensure connection
         try{
             socket.connect(new InetSocketAddress(address, port));
+            this.address = address;
             System.out.println(socket.getPort());
 
             //Call thread to create Data Threads
@@ -52,7 +54,7 @@ public class connectoHostConnection {
 
     void awaitFiles(){
         //Create the await file thread to wait for commands
-        awaitFileThread awaitObject = new awaitFileThread(this.socket.getInetAddress(), this.socket.getPort() + 1, this);
+        awaitFileThread awaitObject = new awaitFileThread(this.socket.getPort() + 1, this);
         Thread thread = new Thread(awaitObject);
         thread.start();
 
@@ -129,14 +131,12 @@ class incomingConnectThread extends Thread{
 class awaitFileThread extends Thread{
 
     private int port = 0;
-    private InetAddress address = null;
     private Socket socket = null;
     connectoHostConnection connection = null;
     DataInputStream inputStream = null;
     DataOutputStream outputStream = null;
     
-    public awaitFileThread(InetAddress address, int port, connectoHostConnection connection){
-        this.address = address;
+    public awaitFileThread(int port, connectoHostConnection connection){
         this.port = port;
         this.connection = connection;
     }
@@ -147,7 +147,7 @@ class awaitFileThread extends Thread{
 
         //Wait for connection then accept
         try{
-            socket.connect(new InetSocketAddress(address.getAddress().toString(), port));
+            socket.connect(new InetSocketAddress(connection.address, port));
             System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
