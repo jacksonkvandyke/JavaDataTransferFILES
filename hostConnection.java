@@ -137,7 +137,6 @@ class awaitFileThread extends Thread{
     }
 
     public void run(){
-        System.out.println("hio");
         //Create thread socket and await connection
         try{
             serverSocket = new ServerSocket();
@@ -151,8 +150,8 @@ class awaitFileThread extends Thread{
             socket = serverSocket.accept();
 
             //Assign input and output streams
-            inputStream = socket.getInputStream();
-            outputStream = socket.getOutputStream();
+            this.inputStream = socket.getInputStream();
+            this.outputStream = socket.getOutputStream();
         }catch(IOException i){
             System.out.println(i);
         }
@@ -161,9 +160,9 @@ class awaitFileThread extends Thread{
         while (true){
             //Read data from input stream
             try{
-                System.out.println(inputStream.available());
-                if (inputStream.available() > 0){
-                    connection.inCommand = inputStream.readAllBytes().toString();
+                System.out.println(this.inputStream.available());
+                if (this.inputStream.available() > 0){
+                    connection.inCommand = this.inputStream.readAllBytes().toString();
                     System.out.println(connection.inCommand);
                 }
             }catch (IOException e){
@@ -173,8 +172,8 @@ class awaitFileThread extends Thread{
 
             //Send commands through output stream
             try{
-                outputStream.write(Byte.parseByte(connection.command));
-                outputStream.flush();
+                this.outputStream.write(Byte.parseByte(connection.command));
+                this.outputStream.flush();
             }catch (IOException e){
                 System.out.println(e);
 
