@@ -111,7 +111,6 @@ class awaitThread extends Thread{
         }
         try{
             otherCores = inputStream.readInt();
-            socket.close();
             connection.awaitFiles();
         }catch(IOException i){
             System.out.println(i);

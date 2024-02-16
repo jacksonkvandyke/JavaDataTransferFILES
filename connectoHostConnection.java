@@ -113,7 +113,7 @@ class incomingConnectThread extends Thread{
                 System.out.println(e);
             }
 
-            socket.close();
+            //Await files thread
             connection.awaitFiles();
         }catch(IOException i){
             System.out.println(i);
