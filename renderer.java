@@ -275,6 +275,19 @@ class ConnectedSessionPage {
         topLabel.setAlignment(1);
         topLabel.setFont(toplabelFont);
 
+        Button testButton = new Button("Test");
+        Font connectFont = new Font("Arial", Font.PLAIN, 32);
+        testButton.setFont(connectFont);
+        testButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                //If host connection
+                if (renderer.hostConnection != null){
+                    renderer.hostConnection.command = "It connected and sent!";
+                }
+            }
+
+        });
+
         //Add elements to window
         this.frame.add(topLabel);
         this.frame.add(new JSeparator());
