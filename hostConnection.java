@@ -27,7 +27,7 @@ public class hostConnection{
         }
 
         //Create awaitThread
-        awaitThread awaitObject = new awaitThread(this, renderer);
+        hostawaitThread awaitObject = new hostawaitThread(this, renderer);
         Thread thread = new Thread(awaitObject);
         thread.start();
 
@@ -46,7 +46,7 @@ public class hostConnection{
 
     void awaitFiles(){
         //Create the await file thread to wait for commands
-        awaitFileThread awaitObject = new awaitFileThread(this.socket.getLocalPort() + 1, this);
+        hostawaitFileThread awaitObject = new hostawaitFileThread(this.socket.getLocalPort() + 1, this);
         Thread thread = new Thread(awaitObject);
         thread.start();
 
@@ -56,7 +56,7 @@ public class hostConnection{
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i++){
-            Runnable thread = new outputThread(this.socket.getLocalPort() + i + 1);
+            Runnable thread = new hostoutputThread(this.socket.getLocalPort() + i + 1);
             threads.execute(thread);
 
         }
@@ -65,7 +65,7 @@ public class hostConnection{
 
 }
 
-class awaitThread extends Thread{
+class hostawaitThread extends Thread{
 
     renderer renderer = null;
     hostConnection connection;
@@ -74,7 +74,7 @@ class awaitThread extends Thread{
     DataInputStream inputStream = null;
     DataOutputStream outputStream = null;
 
-    public awaitThread(hostConnection connection, renderer renderer){
+    public hostawaitThread(hostConnection connection, renderer renderer){
         this.renderer = renderer;
         this.connection = connection;
         this.serverSocket = connection.socket;
@@ -123,7 +123,7 @@ class awaitThread extends Thread{
     }
 }
 
-class awaitFileThread extends Thread{
+class hostawaitFileThread extends Thread{
 
     private int port = 0;
     private ServerSocket serverSocket = null;
@@ -132,7 +132,7 @@ class awaitFileThread extends Thread{
     InputStream inputStream = null;
     OutputStream outputStream = null;
     
-    public awaitFileThread(int port, hostConnection connection){
+    public hostawaitFileThread(int port, hostConnection connection){
         this.port = port;
         this.connection = connection;
     }
@@ -198,14 +198,14 @@ class awaitFileThread extends Thread{
     
 }
 
-class inputThread extends Thread{
+class hostinputThread extends Thread{
 
     private int port = 0;
     private ServerSocket serverSocket = null;
     private Socket socket = null;
     DataInputStream inputStream = null;
     
-    public inputThread(int port){
+    public hostinputThread(int port){
         this.port = port;
     }
 
@@ -232,14 +232,14 @@ class inputThread extends Thread{
     
 }
 
-class outputThread extends Thread{
+class hostoutputThread extends Thread{
 
     private int port = 0;
     private ServerSocket serverSocket = null;
     private Socket socket = null;
     DataOutputStream outputStream = null;
     
-    public outputThread(int port){
+    public hostoutputThread(int port){
         this.port = port;
     }
 

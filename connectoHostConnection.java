@@ -27,7 +27,7 @@ public class connectoHostConnection {
             System.out.println(socket.getPort());
 
             //Call thread to create Data Threads
-            incomingConnectThread object = new incomingConnectThread(connection, socket);
+            connectThread object = new connectThread(connection, socket);
             Thread thread = new Thread(object);
             thread.start();
 
@@ -52,7 +52,7 @@ public class connectoHostConnection {
 
     void awaitFiles(){
         //Create the await file thread to wait for commands
-        hostawaitFileThread awaitObject = new hostawaitFileThread(this.socket.getPort() + 1, this);
+        awaitFileThread awaitObject = new awaitFileThread(this.socket.getPort() + 1, this);
         Thread thread = new Thread(awaitObject);
         thread.start();
 
@@ -71,14 +71,14 @@ public class connectoHostConnection {
 
 }
 
-class incomingConnectThread extends Thread{
+class connectThread extends Thread{
 
     connectoHostConnection connection = null;
     Socket socket = null;
     DataInputStream inputStream = null;
     DataOutputStream outputStream = null;
 
-    public incomingConnectThread(connectoHostConnection connection, Socket socket){
+    public connectThread(connectoHostConnection connection, Socket socket){
         try{
             this.connection = connection;
             this.socket = socket;
@@ -126,7 +126,7 @@ class incomingConnectThread extends Thread{
     
 }
 
-class hostawaitFileThread extends Thread{
+class awaitFileThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
@@ -134,7 +134,7 @@ class hostawaitFileThread extends Thread{
     DataInputStream inputStream = null;
     DataOutputStream outputStream = null;
     
-    public hostawaitFileThread(int port, connectoHostConnection connection){
+    public awaitFileThread(int port, connectoHostConnection connection){
         this.port = port;
         this.connection = connection;
     }
@@ -181,10 +181,6 @@ class hostawaitFileThread extends Thread{
 
             }
 
-            //Reset incoming and outgoing streams
-            connection.inCommand = "";
-            connection.command = "";
-
             //Sleep for short moment to reduce CPU use
             try{
                 Thread.sleep(1000);
@@ -197,14 +193,14 @@ class hostawaitFileThread extends Thread{
     
 }
 
-class hostinputThread extends Thread{
+class inputThread extends Thread{
 
     private int port = 0;
     private ServerSocket serverSocket = null;
     private Socket socket = null;
     DataInputStream inputStream = null;
     
-    public hostinputThread(int port){
+    public inputThread(int port){
         this.port = port;
     }
 
@@ -231,14 +227,14 @@ class hostinputThread extends Thread{
     
 }
 
-class hostoutputThread extends Thread{
+class outputThread extends Thread{
 
     private int port = 0;
     private ServerSocket serverSocket = null;
     private Socket socket = null;
     DataOutputStream outputStream = null;
     
-    public hostoutputThread(int port){
+    public outputThread(int port){
         this.port = port;
     }
 
