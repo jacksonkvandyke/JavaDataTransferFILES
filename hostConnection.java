@@ -161,11 +161,10 @@ class hostawaitFileThread extends Thread{
         while (true){
             //Read data from input stream
             try{
-                if (this.inputStream.available() > 0){
-                    connection.inCommand = this.inputStream.readAllBytes().toString();
-                    System.out.println(connection.inCommand);
-                    connection.inCommand = "";
-                }
+                System.out.println(connection.command);
+                connection.inCommand = this.inputStream.readAllBytes().toString();
+                System.out.println(connection.inCommand);
+                connection.inCommand = "";
             }catch (IOException e){
                 System.out.println(e);
 
@@ -182,8 +181,6 @@ class hostawaitFileThread extends Thread{
                 System.out.println(e);
 
             }
-
-            System.out.print(connection.command);
 
             //Sleep for short moment to reduce CPU use
             try{
