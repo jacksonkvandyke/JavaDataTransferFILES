@@ -12,7 +12,7 @@ public class hostConnection{
     FileToPackets assembledPackets = null;
 
     //Await files command strings
-    String command = "no";
+    String command = "";
     String inCommand = "";
 
     public hostConnection(renderer renderer){
@@ -85,6 +85,9 @@ class hostawaitThread extends Thread{
         //Await for connection
         try{
             socket = serverSocket.accept();
+
+            //Set socket timeout from readbytes
+            socket.setSoTimeout(1000);
 
             //Assign input and output streams
             inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -161,11 +164,9 @@ class hostawaitFileThread extends Thread{
         while (true){
             //Read data from input stream
             try{
-                if (inputStream.available() >= 2){
-                    connection.inCommand = this.inputStream.readAllBytes().toString();
-                    System.out.println(connection.inCommand);
-                    connection.inCommand = "";
-                }
+                connection.inCommand = this.inputStream.readAllBytes().toString();
+                System.out.println(connection.inCommand);
+                connection.inCommand = "";
             }catch (IOException e){
                 System.out.println(e);
 

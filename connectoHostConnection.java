@@ -143,10 +143,12 @@ class awaitFileThread extends Thread{
         //Create thread socket and await connection
         socket = new Socket();
 
-        //Wait for connection then accept
+        //Attempt connection to socket
         try{
             socket.connect(new InetSocketAddress(connection.address, port));
-            System.out.printf("Socket connected on port: %d\n", this.port);
+            
+            //Set socket timeout from readbytes
+            socket.setSoTimeout(1000);
 
             //Assign input and output streams
             inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -159,11 +161,9 @@ class awaitFileThread extends Thread{
         while (true){
             //Read data from input stream
             try{
-                if (inputStream.available() >= 2){
-                    connection.inCommand = this.inputStream.readAllBytes().toString();
-                    System.out.println(connection.inCommand);
-                    connection.inCommand = "";
-                }
+                connection.inCommand = this.inputStream.readAllBytes().toString();
+                System.out.println(connection.inCommand);
+                connection.inCommand = "";
             }catch (IOException e){
                 System.out.println(e);
 
