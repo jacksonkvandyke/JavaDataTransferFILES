@@ -86,9 +86,6 @@ class hostawaitThread extends Thread{
         try{
             socket = serverSocket.accept();
 
-            //Set socket timeout from readbytes
-            socket.setSoTimeout(1000);
-
             //Assign input and output streams
             inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             outputStream = new  DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -152,6 +149,9 @@ class hostawaitFileThread extends Thread{
         //Wait for connection then accept
         try{
             socket = serverSocket.accept();
+
+            //Set socket timeout from readbytes
+            socket.setSoTimeout(1000);
 
             //Assign input and output streams
             this.inputStream = socket.getInputStream();
