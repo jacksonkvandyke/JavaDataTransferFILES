@@ -164,6 +164,7 @@ class awaitFileThread extends Thread{
                 if (this.inputStream.available() > 0){
                     connection.inCommand = this.inputStream.readAllBytes().toString();
                     System.out.println(connection.inCommand);
+                    connection.inCommand = "";
                 }
             }catch (IOException e){
                 System.out.println(e);
@@ -175,15 +176,12 @@ class awaitFileThread extends Thread{
                 if (connection.command != ""){
                     this.outputStream.write(connection.command.getBytes());
                     this.outputStream.flush();
+                    connection.command = "";
                 }
             }catch (IOException e){
                 System.out.println(e);
 
             }
-
-            //Reset incoming and outgoing streams
-            connection.inCommand = "";
-            connection.command = "";
 
             //Sleep for short moment to reduce CPU use
             try{
