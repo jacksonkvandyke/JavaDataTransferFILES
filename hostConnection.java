@@ -12,7 +12,7 @@ public class hostConnection{
     FileToPackets assembledPackets = null;
 
     //Await files command strings
-    String command = "";
+    String command = "no";
     String inCommand = "";
 
     public hostConnection(renderer renderer){
