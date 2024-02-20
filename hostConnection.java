@@ -183,6 +183,8 @@ class awaitFileThread extends Thread{
 
             }
 
+            System.out.print(connection.command);
+
             //Sleep for short moment to reduce CPU use
             try{
                 Thread.sleep(1000);
