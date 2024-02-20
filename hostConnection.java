@@ -161,7 +161,6 @@ class awaitFileThread extends Thread{
         while (true){
             //Read data from input stream
             try{
-                System.out.println(this.inputStream.available());
                 if (this.inputStream.available() > 0){
                     connection.inCommand = this.inputStream.readAllBytes().toString();
                     System.out.println(connection.inCommand);
@@ -174,7 +173,7 @@ class awaitFileThread extends Thread{
             //Send commands through output stream
             try{
                 if (connection.command != ""){
-                    this.outputStream.write(Byte.parseByte(connection.command));
+                    this.outputStream.write(connection.command.getBytes());
                     this.outputStream.flush();
                 }
             }catch (IOException e){

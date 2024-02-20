@@ -159,7 +159,6 @@ class hostawaitFileThread extends Thread{
         while (true){
             //Read data from input stream
             try{
-                System.out.println(inputStream.available());
                 if (inputStream.available() > 0){
                     connection.inCommand = inputStream.readAllBytes().toString();
                     System.out.println(connection.inCommand);
@@ -172,7 +171,7 @@ class hostawaitFileThread extends Thread{
             //Send commands through output stream
             try{
                 if (connection.command != ""){
-                    outputStream.write(Byte.parseByte(connection.command));;
+                    outputStream.write(connection.command.getBytes());;
                     outputStream.flush();
                 }
             }catch (IOException e){
