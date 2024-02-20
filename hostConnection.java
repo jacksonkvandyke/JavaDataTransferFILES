@@ -173,8 +173,10 @@ class awaitFileThread extends Thread{
 
             //Send commands through output stream
             try{
-                this.outputStream.write(Byte.parseByte(connection.command));
-                this.outputStream.flush();
+                if (connection.command != ""){
+                    this.outputStream.write(Byte.parseByte(connection.command));
+                    this.outputStream.flush();
+                }
             }catch (IOException e){
                 System.out.println(e);
 
