@@ -171,8 +171,10 @@ class hostawaitFileThread extends Thread{
 
             //Send commands through output stream
             try{
-                outputStream.write(Byte.parseByte(connection.command));;
-                outputStream.flush();
+                if (connection.command != ""){
+                    outputStream.write(Byte.parseByte(connection.command));;
+                    outputStream.flush();
+                }
             }catch (IOException e){
                 System.out.println(e);
 
