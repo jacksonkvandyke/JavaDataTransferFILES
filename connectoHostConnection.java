@@ -159,8 +159,8 @@ class awaitFileThread extends Thread{
         while (true){
             //Read data from input stream
             try{
-                if (inputStream.available() > 0){
-                    connection.inCommand = inputStream.readAllBytes().toString();
+                if (inputStream.available() >= 2){
+                    connection.inCommand = this.inputStream.readAllBytes().toString();
                     System.out.println(connection.inCommand);
                     connection.inCommand = "";
                 }
