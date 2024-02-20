@@ -1,9 +1,7 @@
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class connectoHostConnection {
     //Initialize variables
@@ -54,7 +52,7 @@ public class connectoHostConnection {
 
     void awaitFiles(){
         //Create the await file thread to wait for commands
-        awaitFileThread awaitObject = new awaitFileThread(this.socket.getPort() + 1, this);
+        hostawaitFileThread awaitObject = new hostawaitFileThread(this.socket.getPort() + 1, this);
         Thread thread = new Thread(awaitObject);
         thread.start();
 
@@ -64,7 +62,7 @@ public class connectoHostConnection {
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i++){
-            Runnable thread = new inputThread(this.socket.getLocalPort() + i + 1);
+            Runnable thread = new hostinputThread(this.socket.getLocalPort() + i + 1);
             threads.execute(thread);
 
         }
@@ -128,7 +126,7 @@ class incomingConnectThread extends Thread{
     
 }
 
-class awaitFileThread extends Thread{
+class hostawaitFileThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
@@ -136,7 +134,7 @@ class awaitFileThread extends Thread{
     DataInputStream inputStream = null;
     DataOutputStream outputStream = null;
     
-    public awaitFileThread(int port, connectoHostConnection connection){
+    public hostawaitFileThread(int port, connectoHostConnection connection){
         this.port = port;
         this.connection = connection;
     }
@@ -196,14 +194,14 @@ class awaitFileThread extends Thread{
     
 }
 
-class inputThread extends Thread{
+class hostinputThread extends Thread{
 
     private int port = 0;
     private ServerSocket serverSocket = null;
     private Socket socket = null;
     DataInputStream inputStream = null;
     
-    public inputThread(int port){
+    public hostinputThread(int port){
         this.port = port;
     }
 
@@ -230,14 +228,14 @@ class inputThread extends Thread{
     
 }
 
-class outputThread extends Thread{
+class hostoutputThread extends Thread{
 
     private int port = 0;
     private ServerSocket serverSocket = null;
     private Socket socket = null;
     DataOutputStream outputStream = null;
     
-    public outputThread(int port){
+    public hostoutputThread(int port){
         this.port = port;
     }
 
