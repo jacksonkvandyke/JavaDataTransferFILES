@@ -134,7 +134,8 @@ class hostinputThread extends Thread{
     public void run(){
         //Create thread socket and await connection
         try{
-            serverSocket = new ServerSocket(this.port);
+            serverSocket = new ServerSocket();
+            serverSocket.bind(new InetSocketAddress("127.0.0.1", this.port));
         }catch(IOException i){
             System.out.println(i);
         }
@@ -168,7 +169,8 @@ class hostoutputThread extends Thread{
     public void run(){
         //Create thread socket and await connection
         try{
-            serverSocket = new ServerSocket(this.port);
+            serverSocket = new ServerSocket();
+            serverSocket.bind(new InetSocketAddress("127.0.0.1", this.port));
         }catch(IOException i){
             System.out.println(i);
         }
