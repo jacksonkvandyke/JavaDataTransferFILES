@@ -121,7 +121,6 @@ class connectThread extends Thread{
 class inputThread extends Thread{
 
     private int port = 0;
-    private ServerSocket serverSocket = null;
     private Socket socket = null;
     DataInputStream inputStream = null;
     
@@ -130,16 +129,12 @@ class inputThread extends Thread{
     }
 
     public void run(){
-        //Create thread socket and await connection
-        try{
-            serverSocket = new ServerSocket(this.port);
-        }catch(IOException i){
-            System.out.println(i);
-        }
+        //Create thread socket and connect to host socket
+        socket = new Socket();
 
         //Wait for connection then accept
         try{
-            socket = serverSocket.accept();
+            socket.connect(new InetSocketAddress("127.0.0.1", this.port));
             System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
@@ -155,7 +150,6 @@ class inputThread extends Thread{
 class outputThread extends Thread{
 
     private int port = 0;
-    private ServerSocket serverSocket = null;
     private Socket socket = null;
     DataOutputStream outputStream = null;
     
@@ -164,16 +158,13 @@ class outputThread extends Thread{
     }
 
     public void run(){
-        //Create thread socket and await connection
-        try{
-            serverSocket = new ServerSocket(this.port);
-        }catch(IOException i){
-            System.out.println(i);
-        }
+        //Create thread socket and connect to host socket
+        socket = new Socket();
+        
 
         //Wait for connection then accept
         try{
-            socket = serverSocket.accept();
+            socket.connect(new InetSocketAddress("127.0.0.1", this.port));
             System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
