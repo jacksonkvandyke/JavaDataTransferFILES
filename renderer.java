@@ -279,10 +279,7 @@ class ConnectedSessionPage {
         testButton.setFont(connectFont);
         testButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                //If host connection
-                if (renderer.hostConnection != null){
-                    renderer.hostConnection.command = "It connected and sent!";
-                }
+                System.out.print("Button pressed!");
             }
 
         });
