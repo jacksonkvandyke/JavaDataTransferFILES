@@ -45,8 +45,8 @@ public class hostConnection{
 
     void connectThreads(){
         //Create the threads and await for connection
-        ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
-        for (int i = 0; i < this.maxCores; i += 2){
+        ExecutorService threads = Executors.newFixedThreadPool(this.maxCores / 2);
+        for (int i = 0; i < this.maxCores / 2; i += 2){
             //Output thread
             Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1);
             threads.execute(outThread);
@@ -181,13 +181,16 @@ class hostoutputThread extends Thread{
         //Wait for connection then accept
         try{
             socket = serverSocket.accept();
-            System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
             outputStream = new  DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         }catch(IOException i){
             System.out.println(i);
+            return;
         }
+
+        //Print successful connection
+        System.out.printf("Socket connected on port: %d\n", this.port);
 
     }
     
