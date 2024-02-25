@@ -143,13 +143,16 @@ class hostinputThread extends Thread{
         //Wait for connection then accept
         try{
             socket = serverSocket.accept();
-            System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
             inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
         }catch(IOException i){
             System.out.println(i);
+            return;
         }
+
+        //Print successful connection of thread
+        System.out.printf("Socket connected on port: %d\n", this.port);
 
     }
     
