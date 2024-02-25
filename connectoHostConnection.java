@@ -111,7 +111,7 @@ class connectThread extends Thread{
         }
         
         //Set max cores and start transfer threads
-        connection.setCores(Math.max(cores, otherCores));
+        connection.setCores((int) ( Math.max(cores, otherCores) / 2));
         connection.connectThreads();
 
     }

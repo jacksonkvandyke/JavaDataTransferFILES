@@ -45,8 +45,8 @@ public class hostConnection{
 
     void connectThreads(){
         //Create the threads and await for connection
-        ExecutorService threads = Executors.newFixedThreadPool(this.maxCores / 2);
-        for (int i = 0; i < this.maxCores / 2; i += 2){
+        ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
+        for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
             Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1);
             threads.execute(outThread);
@@ -114,7 +114,7 @@ class hostawaitThread extends Thread{
         }
 
         //Set max cores and start transfer threads
-        this.connection.setCores(Math.max(cores, otherCores));
+        this.connection.setCores((int) ( Math.max(cores, otherCores) / 2));
         connection.connectThreads();
 
     }
