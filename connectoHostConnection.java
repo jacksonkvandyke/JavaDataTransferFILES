@@ -51,11 +51,11 @@ public class connectoHostConnection {
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new outputThread(this.socket.getLocalPort() + i + 1);
+            Runnable outThread = new outputThread(this.socket.getPort() + i + 1);
             threads.execute(outThread);
 
             //Input thread
-            Runnable inThread = new inputThread(this.socket.getLocalPort() + i + 2);
+            Runnable inThread = new inputThread(this.socket.getPort() + i + 2);
             threads.execute(inThread);
 
         }
