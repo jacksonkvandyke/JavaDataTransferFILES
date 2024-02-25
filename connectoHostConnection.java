@@ -106,15 +106,13 @@ class connectThread extends Thread{
             }catch (InterruptedException e){
                 System.out.println(e);
             }
-
-            //Await files thread
-            connection.connectThreads();
         }catch(IOException i){
             System.out.println(i);
         }
         
-        //Set max cores
+        //Set max cores and start transfer threads
         connection.setCores(Math.max(cores, otherCores));
+        connection.connectThreads();
 
     }
     

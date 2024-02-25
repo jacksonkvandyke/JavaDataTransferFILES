@@ -109,13 +109,13 @@ class hostawaitThread extends Thread{
         try{
             otherCores = inputStream.readInt();
             System.out.print(otherCores);
-            connection.connectThreads();
         }catch(IOException i){
             System.out.println(i);
         }
 
-        //Set max cores
+        //Set max cores and start transfer threads
         this.connection.setCores(Math.max(cores, otherCores));
+        connection.connectThreads();
 
     }
 }
