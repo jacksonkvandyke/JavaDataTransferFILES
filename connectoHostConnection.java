@@ -112,6 +112,15 @@ class connectThread extends Thread{
         
         //Set max cores and start transfer threads
         connection.setCores((int) ( Math.max(cores, otherCores) / 2));
+
+        //Sleep for one second to allow host threads to be created
+        try{
+            Thread.sleep(1000);
+        }catch(InterruptedException e){
+            System.out.print(e);
+        }
+
+        //Start transfer threads
         connection.connectThreads();
 
     }

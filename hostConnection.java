@@ -142,7 +142,7 @@ class hostinputThread extends Thread{
 
         //Wait for connection then accept
         try{
-            System.out.printf("Socket started on port %d:", this.port);
+            System.out.printf("Socket started on port :%d\n", this.port);
             socket = serverSocket.accept();
 
             //Assign input and output streams
