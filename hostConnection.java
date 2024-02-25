@@ -46,7 +46,7 @@ public class hostConnection{
     void connectThreads(){
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
-        for (int i = 0; i < this.maxCores / 2; i += 2){
+        for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
             Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1);
             threads.execute(outThread);
