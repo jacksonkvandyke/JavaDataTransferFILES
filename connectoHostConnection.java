@@ -50,14 +50,6 @@ public class connectoHostConnection {
 
     }
 
-    void awaitFiles(){
-        //Create the await file thread to wait for commands
-        awaitFileThread awaitObject = new awaitFileThread(this.socket.getPort() + 1, this);
-        Thread thread = new Thread(awaitObject);
-        thread.start();
-
-    }
-
     void connectThreads(){
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
@@ -114,80 +106,13 @@ class connectThread extends Thread{
             }
 
             //Await files thread
-            connection.awaitFiles();
+            connection.connectThreads();
         }catch(IOException i){
             System.out.println(i);
         }
         
         //Set max cores
         connection.setCores(Math.max(cores, otherCores));
-
-    }
-    
-}
-
-class awaitFileThread extends Thread{
-
-    private int port = 0;
-    private Socket socket = null;
-    connectoHostConnection connection = null;
-    DataInputStream inputStream = null;
-    DataOutputStream outputStream = null;
-    
-    public awaitFileThread(int port, connectoHostConnection connection){
-        this.port = port;
-        this.connection = connection;
-    }
-
-    public void run(){
-        //Create thread socket and await connection
-        socket = new Socket();
-
-        //Attempt connection to socket
-        try{
-            socket.connect(new InetSocketAddress(connection.address, port));
-            
-            //Set socket timeout from readbytes
-            socket.setSoTimeout(1000);
-
-            //Assign input and output streams
-            inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-            outputStream =  new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-        }catch(IOException i){
-            System.out.println(i);
-        }
-
-        //Continously read from input stream and write commands to output stream
-        while (true){
-            //Read data from input stream
-            try{
-                connection.inCommand = this.inputStream.readAllBytes().toString();
-                System.out.println(connection.inCommand);
-                connection.inCommand = "";
-            }catch (IOException e){
-                System.out.println(e);
-
-            }
-
-            //Send commands through output stream
-            try{
-                if (connection.command != ""){
-                    outputStream.write(connection.command.getBytes());;
-                    outputStream.flush();
-                    connection.command = "";
-                }
-            }catch (IOException e){
-                System.out.println(e);
-
-            }
-
-            //Sleep for short moment to reduce CPU use
-            try{
-                Thread.sleep(1000);
-            }catch (InterruptedException e){
-                System.out.println(e);
-            }       
-        }
 
     }
     
