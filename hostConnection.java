@@ -108,6 +108,7 @@ class hostawaitThread extends Thread{
         }
         try{
             otherCores = inputStream.readInt();
+            System.out.print(otherCores);
             connection.connectThreads();
         }catch(IOException i){
             System.out.println(i);

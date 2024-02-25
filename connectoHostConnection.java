@@ -99,6 +99,7 @@ class connectThread extends Thread{
         }
         try{
             otherCores = inputStream.readInt();
+            System.out.print(otherCores);
             //Sleep for one second before continuing connection to ensure the host has finished setting up connections
             try{
                 Thread.sleep(1000);
