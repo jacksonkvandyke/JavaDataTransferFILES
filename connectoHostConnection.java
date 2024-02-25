@@ -11,10 +11,6 @@ public class connectoHostConnection {
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    //Command strings
-    String command = "";
-    String inCommand = "";
-
     connectoHostConnection(String address, int port){
         //Create socket and link streams
         socket = new Socket();
@@ -53,9 +49,14 @@ public class connectoHostConnection {
     void connectThreads(){
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
-        for (int i = 0; i < this.maxCores; i++){
-            Runnable thread = new hostinputThread(this.socket.getLocalPort() + i + 1);
-            threads.execute(thread);
+        for (int i = 0; i < this.maxCores / 2; i += 2){
+            //Output thread
+            Runnable outThread = new outputThread(this.socket.getLocalPort() + i + 1);
+            threads.execute(outThread);
+
+            //Input thread
+            Runnable inThread = new inputThread(this.socket.getLocalPort() + i + 2);
+            threads.execute(inThread);
 
         }
 

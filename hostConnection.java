@@ -11,9 +11,8 @@ public class hostConnection{
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    //Await files command strings
-    String command = "";
-    String inCommand = "";
+    //Command packet
+
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
@@ -47,9 +46,14 @@ public class hostConnection{
     void connectThreads(){
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
-        for (int i = 0; i < this.maxCores; i++){
-            Runnable thread = new hostoutputThread(this.socket.getLocalPort() + i + 1);
-            threads.execute(thread);
+        for (int i = 0; i < this.maxCores / 2; i += 2){
+            //Output thread
+            Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1);
+            threads.execute(outThread);
+
+            //Input thread
+            Runnable inThread = new hostinputThread(this.socket.getLocalPort() + i + 2);
+            threads.execute(inThread);
 
         }
 
