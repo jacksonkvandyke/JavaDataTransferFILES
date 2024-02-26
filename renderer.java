@@ -325,5 +325,7 @@ class SelectFile {
                 System.out.println(e);
             }
         }
+
+        System.out.println(directory.getAbsolutePath());
     }
 }
