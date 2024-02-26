@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter; 
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.awt.Desktop;
 import java.awt.Desktop.Action;
@@ -310,15 +311,19 @@ class ConnectedSessionPage {
 }
 
 class SelectFile {
-    //Prompt file select
-    File directory = new File("C://Program Files//");
-    Desktop desk = Desktop.getDesktop();
 
-    //Try to open and get file directory or file
-    try{
-        desk.open(directory);
-    }catch(Exception e){
-        System.out.println(e);
+    SelectFile(){
+        //Prompt file select
+        File directory = new File("C://Program Files//");
+
+        //Try to open and get file directory or file
+        if (Desktop.isDesktopSupported()){
+            try{
+                Desktop desktop = Desktop.getDesktop();
+                desktop.open(directory);
+            }catch(IOException e){
+                System.out.println(e);
+            }
+        }
     }
-
 }
