@@ -152,6 +152,22 @@ class inputThread extends Thread{
             System.out.println(i);
         }
 
+        //Start data transfer
+        dataTransfer();
+
+    }
+
+    void dataTransfer(){
+        while(true){
+            System.out.printf("Data in\n");
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e){
+                System.out.println(e);
+            }
+
+        }
     }
     
 }
@@ -169,7 +185,6 @@ class outputThread extends Thread{
     public void run(){
         //Create thread socket and connect to host socket
         socket = new Socket();
-        
 
         //Wait for connection then accept
         try{
@@ -182,6 +197,22 @@ class outputThread extends Thread{
             System.out.println(i);
         }
 
+        //Start data transfer
+        dataTransfer();
+
+    }
+
+    void dataTransfer(){
+        while(true){
+            System.out.printf("Data out\n");
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e){
+                System.out.println(e);
+            }
+
+        }
     }
     
 }

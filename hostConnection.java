@@ -151,9 +151,22 @@ class hostinputThread extends Thread{
             return;
         }
 
-        //Print successful connection of thread
-        System.out.printf("Socket connected on port: %d\n", this.port);
+        //Start data transfer
+        dataTransfer();
 
+    }
+
+    void dataTransfer(){
+        while(true){
+            System.out.printf("Data in\n");
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e){
+                System.out.println(e);
+            }
+
+        }
     }
     
 }
@@ -189,9 +202,22 @@ class hostoutputThread extends Thread{
             return;
         }
 
-        //Print successful connection
-        System.out.printf("Socket connected on port: %d\n", this.port);
+        //Start data transfer
+        dataTransfer();
 
+    }
+
+    void dataTransfer(){
+        while(true){
+            System.out.printf("Data out\n");
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e){
+                System.out.println(e);
+            }
+
+        }
     }
     
 }
