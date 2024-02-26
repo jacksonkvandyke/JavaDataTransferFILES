@@ -328,12 +328,8 @@ class SelectFile {
             }
         }
 
-<<<<<<< HEAD
         //Convert files to FilePacket objects
         new GatherAllFiles(userPrompt);
 
-=======
-        System.out.println(userPrompt.getAbsolutePath());
->>>>>>> 175519a0d9d1aa0f7a008a1f846e208ffe9cac11
     }
 }
