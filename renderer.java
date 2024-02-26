@@ -319,6 +319,7 @@ class SelectFile {
             try{
                 JFileChooser chooser = new JFileChooser();
                 chooser.setCurrentDirectory(directory);
+                chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 chooser.showOpenDialog(chooser);
             }catch(SecurityException e){
                 System.out.println(e);
