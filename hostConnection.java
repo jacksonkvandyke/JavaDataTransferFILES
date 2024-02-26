@@ -11,9 +11,6 @@ public class hostConnection{
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    //Command packet
-
-
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
         try{
@@ -158,8 +155,6 @@ class hostinputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            System.out.printf("Data in\n");
-
             try{
                 Thread.sleep(1000);
             }catch(InterruptedException e){
@@ -209,8 +204,6 @@ class hostoutputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            System.out.printf("Data out\n");
-
             try{
                 Thread.sleep(1000);
             }catch(InterruptedException e){

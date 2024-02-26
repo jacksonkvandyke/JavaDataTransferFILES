@@ -54,13 +54,19 @@ public class FileToPackets{
 
 class Packet {
 
+    private int totalPackets = 0;
     private int packetSequence = 0;
     private byte packetData[];
 
     public Packet(int sequence, byte data[]){
+        this.totalPackets = data.length;
         this.packetSequence = sequence;
         this.packetData = data;
 
+    }
+
+    public int getTotalPackets() {
+        return this.totalPackets;
     }
 
     public int getSequence() {

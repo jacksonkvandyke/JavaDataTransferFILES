@@ -6,6 +6,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.InetSocketAddress;
 
+import javax.swing.JFileChooser;
 import javax.swing.JSeparator;
 
 public class renderer {
@@ -274,12 +275,13 @@ class ConnectedSessionPage {
         topLabel.setAlignment(1);
         topLabel.setFont(toplabelFont);
 
-        Button testButton = new Button("Test");
+        Button testButton = new Button("Send Files");
         Font connectFont = new Font("Arial", Font.PLAIN, 32);
         testButton.setFont(connectFont);
         testButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                System.out.print("Button pressed!");
+                //Prompt user to select a directory of files or file
+                new SelectFile();
             }
 
         });
@@ -302,5 +304,11 @@ class ConnectedSessionPage {
         }); 
 
     }
+
+}
+
+class SelectFile {
+    //Prompt file select
+    JFileChooser chooseFile = new JFileChooser("C:");
 
 }
