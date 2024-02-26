@@ -321,13 +321,19 @@ class SelectFile {
                 chooser.setCurrentDirectory(userPrompt);
                 chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 chooser.showOpenDialog(chooser);
+
+                userPrompt = chooser.getSelectedFile();
             }catch(SecurityException e){
                 System.out.println(e);
             }
         }
 
+<<<<<<< HEAD
         //Convert files to FilePacket objects
         new GatherAllFiles(userPrompt);
 
+=======
+        System.out.println(userPrompt.getAbsolutePath());
+>>>>>>> 175519a0d9d1aa0f7a008a1f846e208ffe9cac11
     }
 }
