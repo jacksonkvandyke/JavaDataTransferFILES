@@ -159,8 +159,6 @@ class inputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            System.out.printf("Data in\n");
-
             try{
                 Thread.sleep(1000);
             }catch(InterruptedException e){
@@ -204,8 +202,6 @@ class outputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            System.out.printf("Data out\n");
-
             try{
                 Thread.sleep(1000);
             }catch(InterruptedException e){

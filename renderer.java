@@ -309,6 +309,6 @@ class ConnectedSessionPage {
 
 class SelectFile {
     //Prompt file select
-    JFileChooser chooseFile = new JFileChooser("C:");
+    JFileChooser chooseFile = new JFileChooser();
 
 }
