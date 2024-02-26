@@ -320,8 +320,8 @@ class SelectFile {
         if (Desktop.isDesktopSupported()){
             try{
                 Desktop desktop = Desktop.getDesktop();
-                desktop.open(directory);
-            }catch(IOException e){
+                desktop.browseFileDirectory(directory);
+            }catch(SecurityException e){
                 System.out.println(e);
             }
         }
