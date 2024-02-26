@@ -4,9 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter; 
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.net.InetSocketAddress;
+import java.awt.Desktop;
+import java.awt.Desktop.Action;
 
-import javax.swing.JFileChooser;
 import javax.swing.JSeparator;
 
 public class renderer {
@@ -309,6 +311,14 @@ class ConnectedSessionPage {
 
 class SelectFile {
     //Prompt file select
-    JFileChooser chooseFile = new JFileChooser();
+    File directory = new File("C://Program Files//");
+    Desktop desk = Desktop.getDesktop();
+
+    //Try to open and get file directory or file
+    try{
+        desk.open(directory);
+    }catch(Exception e){
+        System.out.println(e);
+    }
 
 }
