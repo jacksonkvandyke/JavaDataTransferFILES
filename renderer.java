@@ -312,20 +312,22 @@ class SelectFile {
 
     SelectFile(){
         //Prompt file select
-        File directory = new File("C://Program Files//");
+        File userPrompt = new File("C://Program Files//");
 
         //Try to open and get file directory or file
         if (Desktop.isDesktopSupported()){
             try{
                 JFileChooser chooser = new JFileChooser();
-                chooser.setCurrentDirectory(directory);
+                chooser.setCurrentDirectory(userPrompt);
                 chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 chooser.showOpenDialog(chooser);
+
+                userPrompt = chooser.getSelectedFile();
             }catch(SecurityException e){
                 System.out.println(e);
             }
         }
 
-        System.out.println(directory.getAbsolutePath());
+        System.out.println(userPrompt.getAbsolutePath());
     }
 }
