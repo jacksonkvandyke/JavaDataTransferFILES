@@ -2,8 +2,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class FileToPackets{
 
@@ -13,7 +11,7 @@ public class FileToPackets{
     long maxPackets = 0;
     long fileSize = 0;
 
-    public FileToPackets(String location, int maxCores){
+    public FileToPackets(String location){
         //Open file and create scanner
         try{
             currentFile = new File(location);
@@ -37,16 +35,8 @@ public class FileToPackets{
         maxPackets = (long) Math.max(1, Math.ceil(fileSize / 1024));
         packets = new Packet[(int) maxPackets];
 
-        //Create packet assembler threads
-        ExecutorService threads = Executors.newFixedThreadPool(maxCores);
-        while (packets.length < maxPackets){
-            Runnable thread = new ReadPacketThread(fileInput, sequenceNumber, packets);
-            threads.execute(thread);
-
-        }
-
-        //Print bytes
-        System.out.println(packets.length);
+        //Create packets
+        new ReadPacketThread(currentFile.getName(), fileInput, sequenceNumber, packets);
 
     }
 
@@ -54,15 +44,21 @@ public class FileToPackets{
 
 class Packet {
 
+    private String fileName = "";
     private int totalPackets = 0;
     private int packetSequence = 0;
     private byte packetData[];
 
-    public Packet(int sequence, byte data[]){
+    public Packet(String fileName, int sequence, byte data[]){
+        this.fileName = fileName;
         this.totalPackets = data.length;
         this.packetSequence = sequence;
         this.packetData = data;
 
+    }
+
+    public String getFilename() {
+        return this.fileName;
     }
 
     public int getTotalPackets() {
@@ -83,11 +79,13 @@ class Packet {
 
 class ReadPacketThread extends Thread{
 
+    String fileName = "";
     InputStream fileInput = null;
     int sequenceNumber = 0;
     Packet packets[] = null;
 
-    public ReadPacketThread(InputStream fileInput, int sequenceNumber, Packet packets[]){
+    public ReadPacketThread(String fileName, InputStream fileInput, int sequenceNumber, Packet packets[]){
+        this.fileName = fileName;
         this.fileInput = fileInput;
         this.sequenceNumber = sequenceNumber;
         this.packets = packets;
@@ -108,7 +106,7 @@ class ReadPacketThread extends Thread{
 
             //Create packet and increment sequence
             if (packetBuffer.length > 0){
-                Packet packet = new Packet(sequenceNumber, packetBuffer);
+                Packet packet = new Packet(fileName, sequenceNumber, packetBuffer);
                 packetBuffer = new byte[1024];
                 packets[sequenceNumber] = packet;
 

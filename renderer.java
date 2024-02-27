@@ -329,7 +329,17 @@ class SelectFile {
         }
 
         //Convert files to FilePacket objects
-        new GatherAllFiles(userPrompt);
+        GatherAllFiles test = new GatherAllFiles(userPrompt);
+
+        //Start simple time to print progress for debug
+        while (true){
+            System.out.println(test.progress);
+            try{
+                Thread.sleep(500);
+            }catch(InterruptedException e){
+                System.out.print(e);
+            }
+        }
 
     }
 }
