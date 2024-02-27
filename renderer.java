@@ -257,8 +257,10 @@ class ConnectPage {
 
 class ConnectedSessionPage {
 
+    ConnectedSessionPage self = this;
     Frame frame = null;
     renderer renderer = null;
+    GatherAllFiles filestoSend = null;
 
     public ConnectedSessionPage(renderer renderer){
         this.frame = new Frame("Simple File Transfer");
@@ -282,7 +284,7 @@ class ConnectedSessionPage {
         testButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //Prompt user to select a directory of files or file
-                new SelectFile();
+                new SelectFile(self);
             }
 
         });
@@ -310,7 +312,7 @@ class ConnectedSessionPage {
 
 class SelectFile {
 
-    SelectFile(){
+    SelectFile(ConnectedSessionPage parent){
         //Prompt file select
         File userPrompt = new File("C://Program Files//");
 
@@ -328,18 +330,42 @@ class SelectFile {
             }
         }
 
-        //Convert files to FilePacket objects
-        GatherAllFiles test = new GatherAllFiles(userPrompt);
+        //Create thread that waits for file preperation
+        WaitForFiles threadObject = new WaitForFiles(userPrompt, parent);
+        Thread thread = new Thread(threadObject);
+        thread.start();
 
-        //Start simple time to print progress for debug
+    }
+}
+
+class WaitForFiles extends Thread{
+
+    File userPrompt = null;
+    ConnectedSessionPage parent = null;
+
+    WaitForFiles(File userPrompt, ConnectedSessionPage parent){
+        this.userPrompt = userPrompt;
+        this.parent = parent;
+
+    }
+
+    public void run() {
+        //Continues to loop until all files have been gathered
+        GatherAllFiles files = new GatherAllFiles(this.userPrompt);
+
         while (true){
-            System.out.println(test.totalSize);
+            if (files.convertedFiles.length != 0){
+                parent.filestoSend = files;
+                return;
+            }
+
             try{
-                Thread.sleep(500);
-            }catch(InterruptedException e){
+                Thread.sleep(1000);
+            }catch (InterruptedException e){
                 System.out.print(e);
             }
         }
 
     }
+
 }
