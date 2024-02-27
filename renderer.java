@@ -333,7 +333,7 @@ class SelectFile {
 
         //Start simple time to print progress for debug
         while (true){
-            System.out.println(test.progress);
+            System.out.println(test.totalSize);
             try{
                 Thread.sleep(500);
             }catch(InterruptedException e){
