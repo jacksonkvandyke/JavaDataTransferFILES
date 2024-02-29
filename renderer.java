@@ -261,6 +261,7 @@ class ConnectedSessionPage {
     Frame frame = null;
     renderer renderer = null;
     GatherAllFiles filestoSend = null;
+    Label statusLabels[] = new Label[2];
 
     public ConnectedSessionPage(renderer renderer){
         this.frame = new Frame("Simple File Transfer");
@@ -272,7 +273,7 @@ class ConnectedSessionPage {
         GridLayout grid = new GridLayout(6, 1, 0, 15);
         this.frame.setLayout(grid);
 
-        //Create elements for window
+        //Create elements for initial window
         Label topLabel = new Label("Simple File Transfer");
         Font toplabelFont = new Font("Arial", Font.PLAIN, 46);
         topLabel.setAlignment(1);
@@ -284,15 +285,29 @@ class ConnectedSessionPage {
         selectFileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //Prompt user to select a directory of files or file
-                new SelectFile(self, frame);
+                new SelectFile(self);
             }
 
         });
+
+        //Create UI elements for file await, but set them invisible unit needed
+        Font labelFont = new Font("Arial", Font.PLAIN, 32);
+        statusLabels[0] = new Label();
+        statusLabels[0].setText("Processing files for transfer.");
+        statusLabels[0].setFont(labelFont);
+        statusLabels[0].setVisible(false);
+
+        statusLabels[1] = new Label();
+        statusLabels[1].setText("0");
+        statusLabels[1].setFont(labelFont);
 
         //Add elements to window
         this.frame.add(topLabel);
         this.frame.add(new JSeparator());
         this.frame.add(selectFileButton);
+        this.frame.add(statusLabels[0]);
+        this.frame.add(statusLabels[1]);
+        statusLabels[1].setVisible(false);
 
         //Set homepage window visible
         this.frame.setVisible(true);
@@ -313,7 +328,7 @@ class ConnectedSessionPage {
 class SelectFile {
     //This class allows the user to select a file
 
-    SelectFile(ConnectedSessionPage parent, Frame frame){
+    SelectFile(ConnectedSessionPage parent){
         //Prompt file select
         File userPrompt = new File("C://Program Files//");
 
@@ -332,7 +347,7 @@ class SelectFile {
         }
 
         //Create thread that waits for file preperation
-        WaitForFiles threadObject = new WaitForFiles(userPrompt, parent, frame);
+        WaitForFiles threadObject = new WaitForFiles(userPrompt, parent);
         Thread thread = new Thread(threadObject);
         thread.start();
 
@@ -344,53 +359,27 @@ class WaitForFiles extends Thread{
 
     File userPrompt = null;
     ConnectedSessionPage parent = null;
-    Frame frame = null;
-
-    Label statusLabel = null;
-    Label progressLabel = null;
-
-    WaitForFiles(File userPrompt, ConnectedSessionPage parent, Frame frame){
+    Label labels[] = null;
+ 
+    WaitForFiles(File userPrompt, ConnectedSessionPage parent){
         this.userPrompt = userPrompt;
         this.parent = parent;
-        this.frame = frame;
+        this.labels = parent.statusLabels;
 
     }
 
     public void run() {
         //Continues to loop until all files have been gathered
         GatherAllFiles files = new GatherAllFiles(this.userPrompt);
-
-        //Removes sold UI if present
-        if (statusLabel != null){
-            this.frame.remove(statusLabel);
-        }
-        if (progressLabel != null){
-            this.frame.remove(progressLabel);
-        }
-
-        //Create fonts
-        Font labelFont = new Font("Arial", Font.PLAIN, 32);
-
-        //Create UI to wait for file to be ready
-        this.statusLabel = new Label();
-        this.statusLabel.setText("Processing files for transfer.");
-        this.statusLabel.setFont(labelFont);
-
-        this.progressLabel = new Label();
-        this.progressLabel.setText(String.valueOf(files.getProgress()));
-        this.progressLabel.setFont(labelFont);
-
-        //Add elements to frame
-        this.frame.add(statusLabel);
-        this.frame.add(progressLabel);
-        frame.validate();
+        this.labels[0].setVisible(true);
 
         while (true){
             //Update UI on loop about progress
-            this.progressLabel.setText(String.valueOf(files.getProgress()));
+            this.labels[1].setText(String.valueOf(files.getProgress()));
+            this.labels[1].setVisible(true);
 
             if (files.convertedFiles != null){
-                this.statusLabel.setText("Files ready for transfer.");
+                this.labels[0].setText("Files ready for transfer.");
                 parent.filestoSend = files;
                 return;
             }
