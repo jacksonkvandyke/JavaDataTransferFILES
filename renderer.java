@@ -377,7 +377,8 @@ class WaitForFiles extends Thread{
         while (true){
             //Update UI on loop about progress
             if (files.requiredFiles > 0){
-                this.labels[1].setText(String.valueOf(files.currentFiles / files.requiredFiles * 100));
+                this.labels[0].setText("Processing files for transfer.");
+                this.labels[1].setText("Total Data: " + String.valueOf(files.totalSize));
             }else {
                 this.labels[1].setText("Preparing");
             }
@@ -385,7 +386,7 @@ class WaitForFiles extends Thread{
 
             if (files.progress == 100){
                 this.labels[0].setText("Files ready for transfer.");
-                this.labels[1].setText(String.valueOf(files.currentFiles / files.requiredFiles * 100));
+                this.labels[1].setText("Total Data: " + String.valueOf(files.totalSize));
                 parent.filestoSend = files;
                 this.parent.frame.validate();
                 return;
