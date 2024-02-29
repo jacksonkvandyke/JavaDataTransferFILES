@@ -33,11 +33,6 @@ public class GatherAllFiles {
         }
     }
 
-    public int getProgress() {
-        //Returns progress on conversion of files to packets
-        return progress;
-    }
-
 }
 
 class OpenDirectory extends Thread{
@@ -79,7 +74,7 @@ class OpenDirectory extends Thread{
         //Wait for files to finish processing
         while (true){
             if (this.parent.requiredFiles == this.parent.currentFiles){
-                this.parent.progress = 100;
+
                 return;
             }
 
