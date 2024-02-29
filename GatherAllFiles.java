@@ -7,7 +7,8 @@ public class GatherAllFiles {
     File userPrompt = null;
     int progress = 0;
     int totalSize = 0;
-    List<FileToPackets[]> convertedFiles = new ArrayList<FileToPackets[]>();
+    List<File> directories = new ArrayList<File>();
+    List<FileToPackets> convertedFiles = new ArrayList<FileToPackets>();
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
@@ -51,7 +52,6 @@ class OpenDirectory extends Thread{
         //Get all files in directory then convert each to packets
         File directoryFile = new File(this.directory);
         File fileList[] = directoryFile.listFiles();
-        FileToPackets convertedFiles[] = new FileToPackets[fileList.length];
 
         //Call packet creation on each file or open start operation on directory if directory
         for (int i = 0; i < fileList.length; i++){
@@ -60,20 +60,18 @@ class OpenDirectory extends Thread{
                 OpenDirectory threadObject = new OpenDirectory(fileList[i].getAbsolutePath(), this.parent);
                 Thread thread = new Thread(threadObject);
                 thread.start();
-                System.out.println("Directory");
                 continue;
             }
 
-            convertedFiles[i] = new FileToPackets(fileList[i].getAbsolutePath());
-
-            //Set progress on files
-            parent.progress = (i + 1) / fileList.length * 100;
-            parent.totalSize += convertedFiles[i].fileSize;
+            //Convert file to packets and update file size
+            OpenFile threadObject = new OpenFile(fileList[0].getAbsolutePath(), this.parent);
+            Thread thread = new Thread(threadObject);
+            thread.start();
 
         }
 
         //Set files after completion
-        this.parent.convertedFiles.add(convertedFiles);
+        this.parent.directories.add(directoryFile);
     }
 }
 
@@ -89,12 +87,10 @@ class OpenFile extends Thread{
 
     public void run() {
         //Convert single file and set attributes
-        FileToPackets convertedFiles[] = new FileToPackets[1];
-        convertedFiles[0] = new FileToPackets(this.path);
-        parent.totalSize += convertedFiles[0].fileSize;
+        FileToPackets convertedFile = new FileToPackets(this.path, this.parent);
 
         //Set converted files
-        parent.convertedFiles.add(convertedFiles);
+        parent.convertedFiles.add(convertedFile);
 
     }
 
