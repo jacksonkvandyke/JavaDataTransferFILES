@@ -371,13 +371,13 @@ class WaitForFiles extends Thread{
     public void run() {
         //Continues to loop until all files have been gathered
         GatherAllFiles files = new GatherAllFiles(this.userPrompt);
+        this.labels[0].setVisible(true);
         this.labels[1].setVisible(true);
-        this.parent.frame.validate();
 
         while (true){
             //Update UI on loop about progress
             this.labels[1].setText(String.valueOf(files.getProgress()));
-            this.labels[1].setVisible(true);
+            this.parent.frame.validate();
 
             if (files.convertedFiles != null){
                 this.labels[0].setText("Files ready for transfer.");
