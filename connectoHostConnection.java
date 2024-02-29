@@ -42,7 +42,7 @@ public class connectoHostConnection {
 
     void createPackets(String location){
         System.out.println(maxCores);
-        assembledPackets = new FileToPackets(location, this.maxCores);
+        assembledPackets = new FileToPackets(location);
 
     }
 
