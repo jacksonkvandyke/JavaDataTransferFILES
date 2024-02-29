@@ -31,6 +31,9 @@ public class GatherAllFiles {
             thread.start();
 
         }
+
+        //Start file wait
+        new WaitCompletion(this);
     }
 
 }
@@ -70,11 +73,17 @@ class OpenDirectory extends Thread{
 
         //Set files after completion
         this.parent.directories.add(directoryFile);
+    }
+}
 
+
+class WaitCompletion {
+
+    WaitCompletion(GatherAllFiles parent){
         //Wait for files to finish processing
         while (true){
-            if (this.parent.requiredFiles == this.parent.currentFiles){
-                this.parent.progress = 100;
+            if (parent.requiredFiles == parent.currentFiles){
+                parent.progress = 100;
                 return;
             }
 
@@ -86,6 +95,7 @@ class OpenDirectory extends Thread{
 
         }
     }
+
 }
 
 class OpenFile extends Thread{
