@@ -375,6 +375,7 @@ class WaitForFiles extends Thread{
         //Add elements to frame
         this.frame.add(statusLabel);
         this.frame.add(progressLabel);
+        frame.validate();
 
         while (true){
             if (files.convertedFiles.length != 0){
