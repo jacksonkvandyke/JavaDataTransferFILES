@@ -1,22 +1,25 @@
 import java.io.File;
+import java.util.List;
 
 public class GatherAllFiles {
     //This class gathers all files and prepares them to be sent by converting them to packets
     File userPrompt = null;
     int progress = 0;
     int totalSize = 0;
-    FileToPackets convertedFiles[] = null;
+    List<FileToPackets[]> convertedFiles = null;
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
         this.userPrompt = userPrompt;
-
+        
+        //Checks for directories or files
         if (userPrompt.isDirectory()){
             //Start thread to get all files
             OpenDirectory threadObject = new OpenDirectory(userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
             thread.start();
         }
+
         if (userPrompt.isFile()){
             //Start thread for single file
             OpenFile threadObject = new OpenFile(userPrompt.getAbsolutePath(), this);
@@ -49,8 +52,16 @@ class OpenDirectory extends Thread{
         File fileList[] = directoryFile.listFiles();
         FileToPackets convertedFiles[] = new FileToPackets[fileList.length];
 
-        //Call packet creation on each file and return
+        //Call packet creation on each file or open start operation on directory if directory
         for (int i = 0; i < fileList.length; i++){
+            if (fileList[i].isDirectory()){
+                //Start thread to get all files
+                OpenDirectory threadObject = new OpenDirectory(fileList[i].getAbsolutePath(), this.parent);
+                Thread thread = new Thread(threadObject);
+                thread.start();
+                continue;
+            }
+
             convertedFiles[i] = new FileToPackets(fileList[i].getAbsolutePath());
 
             //Set progress on files
@@ -60,7 +71,7 @@ class OpenDirectory extends Thread{
         }
 
         //Set files after completion
-        this.parent.convertedFiles = convertedFiles;
+        this.parent.convertedFiles.add(convertedFiles);
     }
 }
 
@@ -81,7 +92,7 @@ class OpenFile extends Thread{
         parent.totalSize += convertedFiles[0].fileSize;
 
         //Set converted files
-        parent.convertedFiles = convertedFiles;
+        parent.convertedFiles.add(convertedFiles);
 
     }
 

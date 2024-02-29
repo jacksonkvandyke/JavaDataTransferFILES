@@ -7,6 +7,7 @@ public class FileToPackets{
 
     Packet packets[] = null;
     File currentFile = null;
+    File parentDirectory = null;
     InputStream fileInput = null;
     long maxPackets = 0;
     long fileSize = 0;
@@ -15,6 +16,7 @@ public class FileToPackets{
         //Open file and create scanner
         try{
             currentFile = new File(location);
+            parentDirectory = currentFile.getParentFile();
             fileInput = new FileInputStream(currentFile);
 
             //Get file size
