@@ -378,7 +378,11 @@ class WaitForFiles extends Thread{
         frame.validate();
 
         while (true){
+            //Update UI on loop about progress
+            this.progressLabel.setText(String.valueOf(files.getProgress()));
+
             if (files.convertedFiles != null){
+                this.statusLabel.setText("Files ready for transfer.");
                 parent.filestoSend = files;
                 return;
             }
