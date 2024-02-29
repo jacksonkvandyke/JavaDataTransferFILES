@@ -360,6 +360,14 @@ class WaitForFiles extends Thread{
         //Continues to loop until all files have been gathered
         GatherAllFiles files = new GatherAllFiles(this.userPrompt);
 
+        //Removes sold UI if present
+        if (statusLabel != null){
+            this.frame.remove(statusLabel);
+        }
+        if (progressLabel != null){
+            this.frame.remove(progressLabel);
+        }
+
         //Create fonts
         Font labelFont = new Font("Arial", Font.PLAIN, 32);
 
