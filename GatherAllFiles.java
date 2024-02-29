@@ -77,8 +77,18 @@ class OpenDirectory extends Thread{
         this.parent.directories.add(directoryFile);
 
         //Wait for files to finish processing
-        if (this.parent.requiredFiles == this.parent.currentFiles){
-            this.parent.progress = 100;
+        while (true){
+            if (this.parent.requiredFiles == this.parent.currentFiles){
+                this.parent.progress = 100;
+                return;
+            }
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e){
+                System.out.println(e);
+            }
+
         }
     }
 }
@@ -99,7 +109,21 @@ class OpenFile extends Thread{
 
         //Set converted files
         parent.convertedFiles.add(convertedFile);
-        parent.currentFiles += 1;
+
+        //Wait for file to finish processing
+        while (true){
+            if (convertedFile.packets.length == convertedFile.maxPackets){
+                this.parent.currentFiles += 1;
+                return;
+            }
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e){
+                System.out.println(e);
+            }
+
+        }
 
     }
 
