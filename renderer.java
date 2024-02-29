@@ -376,8 +376,11 @@ class WaitForFiles extends Thread{
 
         while (true){
             //Update UI on loop about progress
-            System.out.print(files.currentFiles / files.requiredFiles * 100);
-            this.labels[1].setText(String.valueOf(files.currentFiles / files.requiredFiles * 100));
+            if (files.requiredFiles > 0){
+                this.labels[1].setText(String.valueOf(files.currentFiles / files.requiredFiles * 100));
+            }else {
+                this.labels[1].setText("Preparing");
+            }
             this.parent.frame.validate();
 
             if (files.progress == 100){
