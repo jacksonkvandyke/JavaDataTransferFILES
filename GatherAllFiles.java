@@ -32,13 +32,10 @@ public class GatherAllFiles {
 
         }
 
-        //Start file wait
-        try{
-            Thread.sleep(1000);
-            new WaitCompletion(this);
-        }catch(InterruptedException e) {
-            System.out.print(e);
-        }
+        //Start file wait on thread
+        WaitCompletion waitObject = new WaitCompletion(this);
+        Thread waitThread = new Thread(waitObject);
+        waitThread.start();
     }
 
 }
@@ -118,9 +115,15 @@ class OpenFile extends Thread{
 
 }
 
-class WaitCompletion {
+class WaitCompletion extends Thread{
+
+    GatherAllFiles parent = null;
 
     WaitCompletion(GatherAllFiles parent){
+        this.parent = parent;
+    }
+
+    public void run(){
         //Wait for files to finish processing
         while (true){
             if (parent.requiredFiles == parent.currentFiles){
