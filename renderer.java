@@ -379,7 +379,7 @@ class WaitForFiles extends Thread{
             this.labels[1].setText(String.valueOf(files.totalSize));
             this.parent.frame.validate();
 
-            if (files.convertedFiles != null){
+            if (files.progress == 100){
                 this.labels[0].setText("Files ready for transfer.");
                 parent.filestoSend = files;
                 this.parent.frame.validate();

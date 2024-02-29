@@ -7,6 +7,8 @@ public class GatherAllFiles {
     File userPrompt = null;
     int progress = 0;
     int totalSize = 0;
+    int requiredFiles = 0;
+    int currentFiles = 0;
     List<File> directories = new ArrayList<File>();
     List<FileToPackets> convertedFiles = new ArrayList<FileToPackets>();
 
@@ -67,11 +69,17 @@ class OpenDirectory extends Thread{
             OpenFile threadObject = new OpenFile(fileList[0].getAbsolutePath(), this.parent);
             Thread thread = new Thread(threadObject);
             thread.start();
+            this.parent.requiredFiles += 1;
 
         }
 
         //Set files after completion
         this.parent.directories.add(directoryFile);
+
+        //Wait for files to finish processing
+        if (this.parent.requiredFiles == this.parent.currentFiles){
+            this.parent.progress = 100;
+        }
     }
 }
 
@@ -91,6 +99,7 @@ class OpenFile extends Thread{
 
         //Set converted files
         parent.convertedFiles.add(convertedFile);
+        parent.currentFiles += 1;
 
     }
 
