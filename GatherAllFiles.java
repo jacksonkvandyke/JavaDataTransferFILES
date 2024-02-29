@@ -33,7 +33,12 @@ public class GatherAllFiles {
         }
 
         //Start file wait
-        new WaitCompletion(this);
+        try{
+            Thread.sleep(1000);
+            new WaitCompletion(this);
+        }catch(InterruptedException e) {
+            System.out.print(e);
+        }
     }
 
 }
