@@ -102,7 +102,6 @@ class OpenFile extends Thread{
         while (true){
             if (convertedFile.packets.length == convertedFile.maxPackets){
                 this.parent.totalSize += convertedFile.fileSize;
-                System.out.print(this.parent.totalSize);
                 this.parent.currentFiles += 1;
                 return;
             }
