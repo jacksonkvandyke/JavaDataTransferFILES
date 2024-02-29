@@ -74,7 +74,7 @@ class OpenDirectory extends Thread{
         //Wait for files to finish processing
         while (true){
             if (this.parent.requiredFiles == this.parent.currentFiles){
-
+                this.parent.progress = 100;
                 return;
             }
 
