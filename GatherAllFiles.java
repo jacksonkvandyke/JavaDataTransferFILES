@@ -81,6 +81,42 @@ class OpenDirectory extends Thread{
     }
 }
 
+class OpenFile extends Thread{
+
+    String path = "";
+    GatherAllFiles parent = null;
+
+    OpenFile(String userPrompt, GatherAllFiles parent) {
+        this.path = userPrompt;
+        this.parent = parent;
+    }
+
+    public void run() {
+        //Convert single file and set attributes
+        FileToPackets convertedFile = new FileToPackets(this.path);
+
+        //Set converted files
+        parent.convertedFiles.add(convertedFile);
+
+        //Wait for file to finish processing
+        while (true){
+            if (convertedFile.packets.length == convertedFile.maxPackets){
+                this.parent.totalSize += convertedFile.fileSize;
+                this.parent.currentFiles += 1;
+                return;
+            }
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e){
+                System.out.println(e);
+            }
+
+        }
+
+    }
+
+}
 
 class WaitCompletion {
 
@@ -100,42 +136,5 @@ class WaitCompletion {
 
         }
     }
-
-}
-
-class OpenFile extends Thread{
-
-    String path = "";
-    GatherAllFiles parent = null;
-
-    OpenFile(String userPrompt, GatherAllFiles parent) {
-        this.path = userPrompt;
-        this.parent = parent;
-    }
-
-    public void run() {
-        //Convert single file and set attributes
-        FileToPackets convertedFile = new FileToPackets(this.path, this.parent);
-
-        //Set converted files
-        parent.convertedFiles.add(convertedFile);
-
-        //Wait for file to finish processing
-        while (true){
-            if (convertedFile.packets.length == convertedFile.maxPackets){
-                this.parent.currentFiles += 1;
-                return;
-            }
-
-            try{
-                Thread.sleep(1000);
-            }catch(InterruptedException e){
-                System.out.println(e);
-            }
-
-        }
-
-    }
-
 
 }

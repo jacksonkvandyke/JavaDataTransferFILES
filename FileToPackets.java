@@ -12,7 +12,7 @@ public class FileToPackets{
     long maxPackets = 0;
     long fileSize = 0;
 
-    public FileToPackets(String location, GatherAllFiles fileGatherer){
+    public FileToPackets(String location){
         //Open file and create scanner
         try{
             currentFile = new File(location);
@@ -38,7 +38,7 @@ public class FileToPackets{
         packets = new Packet[(int) maxPackets];
 
         //Create packets
-        new ReadPacketThread(currentFile.getName(), fileInput, sequenceNumber, packets, fileGatherer);
+        new ReadPacketThread(currentFile.getName(), fileInput, sequenceNumber, packets);
 
     }
 
@@ -83,14 +83,12 @@ class ReadPacketThread extends Thread{
 
     String fileName = "";
     InputStream fileInput = null;
-    GatherAllFiles fileGatherer = null;
     int sequenceNumber = 0;
     Packet packets[] = null;
 
-    public ReadPacketThread(String fileName, InputStream fileInput, int sequenceNumber, Packet packets[], GatherAllFiles fileGatherer){
+    public ReadPacketThread(String fileName, InputStream fileInput, int sequenceNumber, Packet packets[]){
         this.fileName = fileName;
         this.fileInput = fileInput;
-        this.fileGatherer = fileGatherer;
         this.sequenceNumber = sequenceNumber;
         this.packets = packets;
 
@@ -102,7 +100,7 @@ class ReadPacketThread extends Thread{
 
         //Read data from file and put it into packetBuffer
             try{
-                this.fileGatherer.totalSize += fileInput.read(packetBuffer);
+                fileInput.read(packetBuffer);
             }catch (IOException i){
                 System.out.print(i);
 
