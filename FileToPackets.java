@@ -102,7 +102,7 @@ class ReadPacketThread extends Thread{
 
         //Read data from file and put it into packetBuffer
             try{
-                fileInput.read(packetBuffer);
+                this.fileGatherer.totalSize += fileInput.read(packetBuffer);
             }catch (IOException i){
                 System.out.print(i);
 
@@ -111,7 +111,6 @@ class ReadPacketThread extends Thread{
             //Create packet, increment sequence, and increment fileSize to UI
             if (packetBuffer.length > 0){
                 Packet packet = new Packet(fileName, sequenceNumber, packetBuffer);
-                this.fileGatherer.totalSize += packetBuffer.length;
                 packetBuffer = new byte[1024];
                 packets[sequenceNumber] = packet;
 
