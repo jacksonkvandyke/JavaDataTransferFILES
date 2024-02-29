@@ -278,13 +278,13 @@ class ConnectedSessionPage {
         topLabel.setAlignment(1);
         topLabel.setFont(toplabelFont);
 
-        Button testButton = new Button("Send Files");
+        Button selectFileButton = new Button("Select Files");
         Font connectFont = new Font("Arial", Font.PLAIN, 32);
-        testButton.setFont(connectFont);
-        testButton.addActionListener(new ActionListener() {
+        selectFileButton.setFont(connectFont);
+        selectFileButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //Prompt user to select a directory of files or file
-                new SelectFile(self);
+                new SelectFile(self, frame);
             }
 
         });
@@ -292,7 +292,7 @@ class ConnectedSessionPage {
         //Add elements to window
         this.frame.add(topLabel);
         this.frame.add(new JSeparator());
-        this.frame.add(testButton);
+        this.frame.add(selectFileButton);
 
         //Set homepage window visible
         this.frame.setVisible(true);
@@ -311,8 +311,9 @@ class ConnectedSessionPage {
 }
 
 class SelectFile {
+    //This class allows the user to select a file
 
-    SelectFile(ConnectedSessionPage parent){
+    SelectFile(ConnectedSessionPage parent, Frame frame){
         //Prompt file select
         File userPrompt = new File("C://Program Files//");
 
@@ -331,7 +332,7 @@ class SelectFile {
         }
 
         //Create thread that waits for file preperation
-        WaitForFiles threadObject = new WaitForFiles(userPrompt, parent);
+        WaitForFiles threadObject = new WaitForFiles(userPrompt, parent, frame);
         Thread thread = new Thread(threadObject);
         thread.start();
 
@@ -339,19 +340,41 @@ class SelectFile {
 }
 
 class WaitForFiles extends Thread{
+    //This file waits for the users files to be prepared
 
     File userPrompt = null;
     ConnectedSessionPage parent = null;
+    Frame frame = null;
 
-    WaitForFiles(File userPrompt, ConnectedSessionPage parent){
+    Label statusLabel = null;
+    Label progressLabel = null;
+
+    WaitForFiles(File userPrompt, ConnectedSessionPage parent, Frame frame){
         this.userPrompt = userPrompt;
         this.parent = parent;
+        this.frame = frame;
 
     }
 
     public void run() {
         //Continues to loop until all files have been gathered
         GatherAllFiles files = new GatherAllFiles(this.userPrompt);
+
+        //Create fonts
+        Font labelFont = new Font("Arial", Font.PLAIN, 32);
+
+        //Create UI to wait for file to be ready
+        this.statusLabel = new Label();
+        this.statusLabel.setText("Processing files for transfer.");
+        this.statusLabel.setFont(labelFont);
+
+        this.progressLabel = new Label();
+        this.progressLabel.setText(String.valueOf(files.getProgress()));
+        this.progressLabel.setFont(labelFont);
+
+        //Add elements to frame
+        this.frame.add(statusLabel);
+        this.frame.add(progressLabel);
 
         while (true){
             if (files.convertedFiles.length != 0){
@@ -360,7 +383,7 @@ class WaitForFiles extends Thread{
             }
 
             try{
-                Thread.sleep(1000);
+                Thread.sleep(100);
             }catch (InterruptedException e){
                 System.out.print(e);
             }
