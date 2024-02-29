@@ -378,7 +378,7 @@ class WaitForFiles extends Thread{
         frame.validate();
 
         while (true){
-            if (files.convertedFiles.length != 0){
+            if (files.convertedFiles != null){
                 parent.filestoSend = files;
                 return;
             }
