@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GatherAllFiles {
@@ -6,7 +7,7 @@ public class GatherAllFiles {
     File userPrompt = null;
     int progress = 0;
     int totalSize = 0;
-    List<FileToPackets[]> convertedFiles = null;
+    List<FileToPackets[]> convertedFiles = new ArrayList<FileToPackets[]>();
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
