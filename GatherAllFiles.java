@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,6 @@ public class GatherAllFiles {
     int requiredFiles = 0;
     int currentFiles = 0;
     List<File> directories = new ArrayList<File>();
-    List<FileToPackets> convertedFiles = new ArrayList<FileToPackets>();
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
@@ -29,18 +29,19 @@ public class GatherAllFiles {
         }
     }
 
-    void StartTransfer(){
-        //Checks for directories or files
+    void StartTransfer(List<Packet> dataStream){
+
+        //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
             //Start thread to get all files
-            OpenDirectory threadObject = new OpenDirectory(userPrompt.getAbsolutePath(), this);
+            OpenDirectory threadObject = new OpenDirectory(outputStream, userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
             thread.start();
         }
 
         if (userPrompt.isFile()){
             //Start thread for single file
-            OpenFile threadObject = new OpenFile(userPrompt.getAbsolutePath(), this);
+            OpenFile threadObject = new OpenFile(outputStream, userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
             thread.start();
 
@@ -111,10 +112,12 @@ class GetDirectorySize extends Thread{
 
 class OpenDirectory extends Thread{
     //This class opens the specified directory and checks for any files to send
+    List<Packet> dataStream = new ArrayList<Packet>();
     String directory = "";
     GatherAllFiles parent = null;
 
-    OpenDirectory(String userPrompt, GatherAllFiles parent) {
+    OpenDirectory(List<Packet> dataStream, String userPrompt, GatherAllFiles parent) {
+        this.dataStream = dataStream;
         this.directory = userPrompt;
         this.parent = parent;
     }
@@ -128,16 +131,14 @@ class OpenDirectory extends Thread{
         for (int i = 0; i < fileList.length; i++){
             if (fileList[i].isDirectory()){
                 //Start thread to get all files
-                OpenDirectory threadObject = new OpenDirectory(fileList[i].getAbsolutePath(), this.parent);
+                OpenDirectory threadObject = new OpenDirectory(this.dataStream, fileList[i].getAbsolutePath(), this.parent);
                 Thread thread = new Thread(threadObject);
                 thread.start();
                 continue;
             }
 
             //Convert file to packets and update file size
-            OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), this.parent);
-            Thread thread = new Thread(threadObject);
-            thread.start();
+            new OpenFile(this.dataStream, fileList[i].getAbsolutePath(), this.parent);
             this.parent.requiredFiles += 1;
 
         }
@@ -147,12 +148,14 @@ class OpenDirectory extends Thread{
     }
 }
 
-class OpenFile extends Thread{
+class OpenFile{
 
+    List<Packet> dataStream = new ArrayList<Packet>();
     String path = "";
     GatherAllFiles parent = null;
 
-    OpenFile(String userPrompt, GatherAllFiles parent) {
+    OpenFile(List<Packet> dataStream, String userPrompt, GatherAllFiles parent) {
+        this.dataStream = dataStream;
         this.path = userPrompt;
         this.parent = parent;
     }
@@ -160,14 +163,17 @@ class OpenFile extends Thread{
     public void run() {
         //Convert single file and set attributes
         FileToPackets convertedFile = new FileToPackets(this.path);
-
-        //Set converted files
-        parent.convertedFiles.add(convertedFile);
+        int packetIterator = 0;
 
         //Wait for file to finish processing
         while (true){
             if (convertedFile.packets.length == convertedFile.maxPackets){
-                this.parent.currentFiles += 1;
+                //Add files to outputStream until depleted
+                while (packetIterator < convertedFile.packets.length){
+                    if (this.dataStream.size() < 1000){
+                        this.dataStream.add(convertedFile.packets[packetIterator]);
+                    }
+                }
                 return;
             }
 

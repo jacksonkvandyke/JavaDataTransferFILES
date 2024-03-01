@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -10,6 +12,8 @@ public class connectoHostConnection {
     String address = "127.0.0.1";
     int maxCores = 0;
     FileToPackets assembledPackets = null;
+
+    List<Packet> dataStream = new ArrayList<Packet>();
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -51,11 +55,11 @@ public class connectoHostConnection {
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new outputThread(this.socket.getPort() + i + 1);
+            Runnable outThread = new outputThread(this.socket.getPort() + i + 1, dataStream);
             threads.execute(outThread);
 
             //Input thread
-            Runnable inThread = new inputThread(this.socket.getPort() + i + 2);
+            Runnable inThread = new inputThread(this.socket.getPort() + i + 2, dataStream);
             threads.execute(inThread);
 
         }
@@ -131,10 +135,13 @@ class inputThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
-    DataInputStream inputStream = null;
     
-    public inputThread(int port){
+    List<Packet> dataStream = null;
+    ObjectInputStream inputStream = null;
+    
+    public inputThread(int port, List<Packet> dataStream){
         this.port = port;
+        this.dataStream = dataStream;
     }
 
     public void run(){
@@ -147,7 +154,7 @@ class inputThread extends Thread{
             System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
-            inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
         }catch(IOException i){
             System.out.println(i);
         }
@@ -174,10 +181,13 @@ class outputThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
-    DataOutputStream outputStream = null;
+
+    List<Packet> dataStream = null;
+    ObjectOutputStream outputStream = null;
     
-    public outputThread(int port){
+    public outputThread(int port, List<Packet> dataStream){
         this.port = port;
+        this.dataStream = dataStream;
     }
 
     public void run(){
@@ -190,7 +200,7 @@ class outputThread extends Thread{
             System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
-            outputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            outputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         }catch(IOException i){
             System.out.println(i);
         }
@@ -202,12 +212,15 @@ class outputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            try{
-                Thread.sleep(1000);
-            }catch(InterruptedException e){
-                System.out.println(e);
+            //Write data to output stream
+            if (this.dataStream.size() > 0){
+                try{
+                    this.outputStream.writeObject(this.dataStream.get(0));
+                    this.dataStream.remove(0);
+                }catch (IOException e){
+                    System.out.print(e);
+                }
             }
-
         }
     }
     

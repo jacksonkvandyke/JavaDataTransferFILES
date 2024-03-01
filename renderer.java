@@ -262,6 +262,7 @@ class ConnectedSessionPage {
     renderer renderer = null;
     GatherAllFiles filestoSend = null;
     Label statusLabels[] = new Label[2];
+    Button sendButton = new Button();
 
     public ConnectedSessionPage(renderer renderer){
         this.frame = new Frame("Simple File Transfer");
@@ -290,7 +291,7 @@ class ConnectedSessionPage {
 
         });
 
-        //Create UI elements for file await, but set them invisible unit needed
+        //Create UI elements for file await, but set them invisible until needed
         Font labelFont = new Font("Arial", Font.PLAIN, 32);
         statusLabels[0] = new Label();
         statusLabels[0].setText("Processing files for transfer.");
@@ -301,12 +302,18 @@ class ConnectedSessionPage {
         statusLabels[1].setText("0");
         statusLabels[1].setFont(labelFont);
 
+        sendButton = new Button("Send Files");
+        Font sendFilesFont = new Font("Arial", Font.PLAIN, 32);
+        sendButton.setFont(sendFilesFont);
+        sendButton.setVisible(false);
+
         //Add elements to window
         this.frame.add(topLabel);
         this.frame.add(new JSeparator());
         this.frame.add(selectFileButton);
         this.frame.add(statusLabels[0]);
         this.frame.add(statusLabels[1]);
+        this.frame.add(sendButton);
         statusLabels[1].setVisible(false);
 
         //Set homepage window visible
@@ -359,20 +366,35 @@ class WaitForFiles extends Thread{
 
     File userPrompt = null;
     ConnectedSessionPage parent = null;
-    Label labels[] = null;
  
     WaitForFiles(File userPrompt, ConnectedSessionPage parent){
         this.userPrompt = userPrompt;
         this.parent = parent;
-        this.labels = parent.statusLabels;
 
     }
 
     public void run() {
-        //Continues to loop until all files have been gathered
+        //Gets total file size and waits for files to be sent
         GatherAllFiles files = new GatherAllFiles(this.userPrompt);
-        this.labels[1].setVisible(true);
-        this.labels[1].setText("Total Data: " + String.valueOf(files.totalSize));
+        this.parent.statusLabels[1].setVisible(true);
+        this.parent.statusLabels[1].setText("Total Data: " + String.valueOf(files.totalSize));
+
+        //Add send button to UI and add event listener
+        this.parent.sendButton.setVisible(true);
+        this.parent.sendButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                //Prompt user to select a directory of files or file
+                if (parent.renderer.hostConnection != null){
+                    files.StartTransfer(parent.renderer.hostConnection.dataStream);
+                }
+                parent.statusLabels[0].setVisible(true);
+                parent.statusLabels[0].setText("Sending files...");
+                parent.frame.validate();
+            }
+
+        });
+
+        //Validate to update UI on initial creation
         this.parent.frame.validate();
 
     }

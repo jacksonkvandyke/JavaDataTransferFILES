@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -10,6 +12,8 @@ public class hostConnection{
     String address = "127.0.0.1";
     int maxCores = 0;
     FileToPackets assembledPackets = null;
+
+    List<Packet> dataStream = new ArrayList<Packet>();
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
@@ -45,11 +49,11 @@ public class hostConnection{
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1);
+            Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1, this.dataStream);
             threads.execute(outThread);
 
             //Input thread
-            Runnable inThread = new hostinputThread(this.socket.getLocalPort() + i + 2);
+            Runnable inThread = new hostinputThread(this.socket.getLocalPort() + i + 2, this.dataStream);
             threads.execute(inThread);
 
         }
@@ -122,10 +126,13 @@ class hostinputThread extends Thread{
     private int port = 0;
     private ServerSocket serverSocket = null;
     private Socket socket = null;
-    DataInputStream inputStream = null;
+
+    List<Packet> dataStream = null;
+    ObjectInputStream inputStream = null;
     
-    public hostinputThread(int port){
+    public hostinputThread(int port, List<Packet> dataStream){
         this.port = port;
+        this.dataStream = dataStream;
     }
 
     public void run(){
@@ -142,7 +149,7 @@ class hostinputThread extends Thread{
             socket = serverSocket.accept();
 
             //Assign input and output streams
-            inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
         }catch(IOException i){
             System.out.println(i);
             return;
@@ -171,10 +178,13 @@ class hostoutputThread extends Thread{
     private int port = 0;
     private ServerSocket serverSocket = null;
     private Socket socket = null;
-    DataOutputStream outputStream = null;
+
+    List<Packet> dataStream = null;
+    ObjectOutputStream outputStream = null;
     
-    public hostoutputThread(int port){
+    public hostoutputThread(int port, List<Packet> dataStream){
         this.port = port;
+        this.dataStream = dataStream;
     }
 
     public void run(){
@@ -191,7 +201,7 @@ class hostoutputThread extends Thread{
             socket = serverSocket.accept();
 
             //Assign input and output streams
-            outputStream = new  DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            outputStream = new  ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         }catch(IOException i){
             System.out.println(i);
             return;
@@ -204,10 +214,14 @@ class hostoutputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            try{
-                Thread.sleep(1000);
-            }catch(InterruptedException e){
-                System.out.println(e);
+            //Write data to output stream
+            if (this.dataStream.size() > 0){
+                try{
+                    this.outputStream.writeObject(this.dataStream.get(0));
+                    this.dataStream.remove(0);
+                }catch (IOException e){
+                    System.out.print(e);
+                }
             }
 
         }
