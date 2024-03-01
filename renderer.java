@@ -371,7 +371,7 @@ class WaitForFiles extends Thread{
     public void run() {
         //Continues to loop until all files have been gathered
         GatherAllFiles files = new GatherAllFiles(this.userPrompt);
-        this.labels[0].setVisible(true);
+        this.labels[1].setVisible(true);
         this.labels[1].setText("Total Data: " + String.valueOf(files.totalSize));
         this.parent.frame.validate();
 
