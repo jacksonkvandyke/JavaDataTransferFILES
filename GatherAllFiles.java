@@ -19,7 +19,8 @@ public class GatherAllFiles {
         //Checks for directories or files
         if (userPrompt.isDirectory()){
             //Get total directory size
-            this.totalSize = userPrompt.length();
+            GetDirectorySize calculator = new GetDirectorySize(this);
+            this.totalSize = calculator.CalculateSize();
             System.out.print(this.totalSize);
 
             //Start thread to get all files
@@ -44,6 +45,61 @@ public class GatherAllFiles {
         WaitCompletion waitObject = new WaitCompletion(this);
         Thread waitThread = new Thread(waitObject);
         waitThread.start();
+    }
+
+}
+
+class GetDirectorySize extends Thread{
+
+    GatherAllFiles parent = null;
+    long totalSize = 0;
+    
+    GetDirectorySize(GatherAllFiles parent){
+        this.parent = parent;
+    }
+
+    long CalculateSize(){
+        //Go through all files and directories to get total size
+        File fileList[] = parent.userPrompt.listFiles();
+
+        //Loop through all files and add the size
+        for (int i = 0; i < fileList.length; i++){
+            //Open directory if directory
+            if (fileList[i].isDirectory()){
+                OpenDirectory(fileList[i]);
+                continue;
+            }
+
+            //Add file size if file
+            if (fileList[i].isFile()){
+                this.totalSize += fileList[i].length();
+                continue;
+            }
+
+        }
+
+        return totalSize;
+    }
+
+    void OpenDirectory(File file){
+        //Go through all files and directories to get total size
+        File fileList[] = file.listFiles();
+
+        //Loop through all files and add the size
+        for (int i = 0; i < fileList.length; i++){
+            //Open directory if directory
+            if (fileList[i].isDirectory()){
+                OpenDirectory(fileList[i]);
+                continue;
+            }
+
+            //Add file size if file
+            if (fileList[i].isFile()){
+                this.totalSize += fileList[i].length();
+                continue;
+            }
+
+        }
     }
 
 }
