@@ -21,8 +21,17 @@ public class GatherAllFiles {
             //Get total directory size
             GetDirectorySize calculator = new GetDirectorySize(this);
             this.totalSize = calculator.CalculateSize();
-            System.out.print(this.totalSize);
+        }
 
+        if (userPrompt.isFile()){
+            //Get total file size
+            this.totalSize = userPrompt.length();
+        }
+    }
+
+    void StartTransfer(){
+        //Checks for directories or files
+        if (userPrompt.isDirectory()){
             //Start thread to get all files
             OpenDirectory threadObject = new OpenDirectory(userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
@@ -30,10 +39,6 @@ public class GatherAllFiles {
         }
 
         if (userPrompt.isFile()){
-            //Get total file size
-            this.totalSize = userPrompt.length();
-            System.out.print(this.totalSize);
-
             //Start thread for single file
             OpenFile threadObject = new OpenFile(userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);

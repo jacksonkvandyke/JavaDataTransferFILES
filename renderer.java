@@ -372,32 +372,8 @@ class WaitForFiles extends Thread{
         //Continues to loop until all files have been gathered
         GatherAllFiles files = new GatherAllFiles(this.userPrompt);
         this.labels[0].setVisible(true);
-        this.labels[1].setVisible(true);
-
-        while (true){
-            //Update UI on loop about progress
-            if (files.requiredFiles > 0){
-                this.labels[0].setText("Processing files for transfer.");
-                this.labels[1].setText("Total Data: " + String.valueOf(files.totalSize));
-            }else {
-                this.labels[1].setText("Preparing");
-            }
-            this.parent.frame.validate();
-
-            if (files.progress == 100){
-                this.labels[0].setText("Files ready for transfer.");
-                this.labels[1].setText("Total Data: " + String.valueOf(files.totalSize));
-                parent.filestoSend = files;
-                this.parent.frame.validate();
-                return;
-            }
-
-            try{
-                Thread.sleep(5);
-            }catch (InterruptedException e){
-                System.out.print(e);
-            }
-        }
+        this.labels[1].setText("Total Data: " + String.valueOf(files.totalSize));
+        this.parent.frame.validate();
 
     }
 
