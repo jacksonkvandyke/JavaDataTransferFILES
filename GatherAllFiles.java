@@ -5,8 +5,8 @@ import java.util.List;
 public class GatherAllFiles {
     //This class gathers all files and prepares them to be sent by converting them to packets
     File userPrompt = null;
-    int progress = 0;
-    int totalSize = 0;
+    long progress = 0;
+    long totalSize = 0;
     int requiredFiles = 0;
     int currentFiles = 0;
     List<File> directories = new ArrayList<File>();
@@ -18,6 +18,10 @@ public class GatherAllFiles {
         
         //Checks for directories or files
         if (userPrompt.isDirectory()){
+            //Get total directory size
+            this.totalSize = userPrompt.length();
+            System.out.print(this.totalSize);
+
             //Start thread to get all files
             OpenDirectory threadObject = new OpenDirectory(userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
@@ -25,6 +29,10 @@ public class GatherAllFiles {
         }
 
         if (userPrompt.isFile()){
+            //Get total file size
+            this.totalSize = userPrompt.length();
+            System.out.print(this.totalSize);
+
             //Start thread for single file
             OpenFile threadObject = new OpenFile(userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
@@ -98,7 +106,6 @@ class OpenFile extends Thread{
         //Wait for file to finish processing
         while (true){
             if (convertedFile.packets.length == convertedFile.maxPackets){
-                this.parent.totalSize += convertedFile.fileSize;
                 this.parent.currentFiles += 1;
                 return;
             }
