@@ -34,17 +34,14 @@ public class GatherAllFiles {
         //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
             //Start thread to get all files
-            OpenDirectory threadObject = new OpenDirectory(outputStream, userPrompt.getAbsolutePath(), this);
+            OpenDirectory threadObject = new OpenDirectory(dataStream, userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
             thread.start();
         }
 
         if (userPrompt.isFile()){
             //Start thread for single file
-            OpenFile threadObject = new OpenFile(outputStream, userPrompt.getAbsolutePath(), this);
-            Thread thread = new Thread(threadObject);
-            thread.start();
-
+            new OpenFile(dataStream, userPrompt.getAbsolutePath(), this);
         }
 
         //Start file wait on thread
