@@ -10,7 +10,6 @@ public class GatherAllFiles {
     long totalSize = 0;
     int requiredFiles = 0;
     int currentFiles = 0;
-    List<File> directories = new ArrayList<File>();
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
@@ -140,8 +139,6 @@ class OpenDirectory extends Thread{
 
         }
 
-        //Set files after completion
-        this.parent.directories.add(directoryFile);
     }
 }
 
@@ -163,25 +160,14 @@ class OpenFile{
         int packetIterator = 0;
 
         //Wait for file to finish processing
-        while (true){
-            if (convertedFile.packets.length == convertedFile.maxPackets){
-                //Add files to outputStream until depleted
-                while (packetIterator < convertedFile.packets.length){
-                    if (this.dataStream.size() < 1000){
-                        this.dataStream.add(convertedFile.packets[packetIterator]);
-                    }
-                }
-                return;
+        //Add files to outputStream until depleted
+        while ((packetIterator < convertedFile.packets.length) && (convertedFile.packets.length != convertedFile.maxPackets)){
+            //Check if data can be added to stream
+            if (this.dataStream.size() < 1000){
+                this.dataStream.add(convertedFile.packets[packetIterator]);
             }
-
-            try{
-                Thread.sleep(1000);
-            }catch(InterruptedException e){
-                System.out.println(e);
-            }
-
         }
-
+        parent.currentFiles += 1;
     }
 
 }
