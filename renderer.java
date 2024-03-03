@@ -408,17 +408,20 @@ class WaitForFiles extends Thread{
 
     void UpdateUI(){
         //Update UI on send
-        if (this.files.requiredFiles > 0){
+        while (this.files.requiredFiles != this.files.currentFiles){
             parent.statusLabels[0].setText(String.format("Sending files... Progress: %d", this.files.currentFiles / this.files.requiredFiles * 100));
             parent.frame.validate();
+
+            //Sleep to reduce CPU usage
+            try{
+                Thread.sleep(500);
+            }catch(InterruptedException e){
+                System.out.print(e);
+            }
         }
 
-        //Sleep to reduce CPU usage
-        try{
-            Thread.sleep(500);
-        }catch(InterruptedException e){
-            System.out.print(e);
-        }
+        //Update UI to show files are sent
+        parent.statusLabels[0].setText("All files sent.");
+        parent.frame.validate();
     }
-
 }
