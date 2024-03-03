@@ -267,7 +267,7 @@ class ConnectedSessionPage {
     public ConnectedSessionPage(renderer renderer){
         //Set renderer element
         this.renderer = renderer;
-        
+
         //Frame title
         this.frame = new Frame("Simple File Transfer");
 
@@ -395,7 +395,7 @@ class WaitForFiles extends Thread{
                     files.StartTransfer(parent.renderer.toConnection.dataStream);
                 }
                 parent.statusLabels[0].setVisible(true);
-                parent.statusLabels[0].setText("Sending files...");
+                parent.statusLabels[0].setText(String.format("Sending files... Progress: %d", files.currentFiles / files.requiredFiles * 100));
                 parent.frame.validate();
             }
 
