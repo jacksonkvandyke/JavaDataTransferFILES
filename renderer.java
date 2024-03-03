@@ -370,6 +370,7 @@ class WaitForFiles extends Thread{
 
     File userPrompt = null;
     ConnectedSessionPage parent = null;
+    GatherAllFiles files = null;
  
     WaitForFiles(File userPrompt, ConnectedSessionPage parent){
         this.userPrompt = userPrompt;
@@ -379,7 +380,7 @@ class WaitForFiles extends Thread{
 
     public void run() {
         //Gets total file size and waits for files to be sent
-        GatherAllFiles files = new GatherAllFiles(this.userPrompt);
+        this.files = new GatherAllFiles(this.userPrompt);
         this.parent.statusLabels[1].setVisible(true);
         this.parent.statusLabels[1].setText("Total Data: " + String.valueOf(files.totalSize));
 
@@ -395,8 +396,7 @@ class WaitForFiles extends Thread{
                     files.StartTransfer(parent.renderer.toConnection.dataStream);
                 }
                 parent.statusLabels[0].setVisible(true);
-                parent.statusLabels[0].setText(String.format("Sending files... Progress: %d", files.currentFiles / files.requiredFiles * 100));
-                parent.frame.validate();
+                UpdateUI();
             }
 
         });
@@ -404,6 +404,19 @@ class WaitForFiles extends Thread{
         //Validate to update UI on initial creation
         this.parent.frame.validate();
 
+    }
+
+    void UpdateUI(){
+        //Update UI on send
+        parent.statusLabels[0].setText(String.format("Sending files... Progress: %d", this.files.currentFiles / this.files.requiredFiles * 100));
+        parent.frame.validate();
+
+        //Sleep to reduce CPU usage
+        try{
+            Thread.sleep(500);
+        }catch(InterruptedException e){
+            System.out.print(e);
+        }
     }
 
 }
