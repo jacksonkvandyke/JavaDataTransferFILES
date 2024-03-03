@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,7 +134,6 @@ class OpenDirectory extends Thread{
 
             //Convert file to packets and update file size
             new OpenFile(this.dataStream, fileList[i].getAbsolutePath(), this.parent);
-            this.parent.requiredFiles += 1;
 
         }
 
@@ -158,6 +156,7 @@ class OpenFile{
         //Convert single file and set attributes
         FileToPackets convertedFile = new FileToPackets(this.path);
         int packetIterator = 0;
+        this.parent.requiredFiles += 1;
 
         //Wait for file to finish processing
         //Add files to outputStream until depleted
