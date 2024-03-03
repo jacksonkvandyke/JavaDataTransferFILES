@@ -97,6 +97,7 @@ class GetDirectorySize extends Thread{
             //Add file size if file
             if (fileList[i].isFile()){
                 this.totalSize += fileList[i].length();
+                this.parent.requiredFiles += 1;
                 continue;
             }
 
@@ -156,7 +157,6 @@ class OpenFile{
         //Convert single file and set attributes
         FileToPackets convertedFile = new FileToPackets(this.path);
         int packetIterator = 0;
-        this.parent.requiredFiles += 1;
 
         //Wait for file to finish processing
         //Add files to outputStream until depleted
