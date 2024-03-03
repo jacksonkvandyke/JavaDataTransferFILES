@@ -59,7 +59,7 @@ public class connectoHostConnection {
             threads.execute(outThread);
 
             //Input thread
-            Runnable inThread = new inputThread(this.socket.getPort() + i + 2, dataStream);
+            Runnable inThread = new inputThread(this.socket.getPort() + i + 2);
             threads.execute(inThread);
 
         }
@@ -136,12 +136,10 @@ class inputThread extends Thread{
     private int port = 0;
     private Socket socket = null;
     
-    List<Packet> dataStream = null;
     ObjectInputStream inputStream = null;
     
-    public inputThread(int port, List<Packet> dataStream){
+    public inputThread(int port){
         this.port = port;
-        this.dataStream = dataStream;
     }
 
     public void run(){

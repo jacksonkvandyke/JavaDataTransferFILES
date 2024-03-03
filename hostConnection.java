@@ -53,7 +53,7 @@ public class hostConnection{
             threads.execute(outThread);
 
             //Input thread
-            Runnable inThread = new hostinputThread(this.socket.getLocalPort() + i + 2, this.dataStream);
+            Runnable inThread = new hostinputThread(this.socket.getLocalPort() + i + 2);
             threads.execute(inThread);
 
         }
@@ -127,12 +127,10 @@ class hostinputThread extends Thread{
     private ServerSocket serverSocket = null;
     private Socket socket = null;
 
-    List<Packet> dataStream = null;
     ObjectInputStream inputStream = null;
     
-    public hostinputThread(int port, List<Packet> dataStream){
+    public hostinputThread(int port){
         this.port = port;
-        this.dataStream = dataStream;
     }
 
     public void run(){
