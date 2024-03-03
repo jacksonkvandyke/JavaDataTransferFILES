@@ -265,6 +265,10 @@ class ConnectedSessionPage {
     Button sendButton = new Button();
 
     public ConnectedSessionPage(renderer renderer){
+        //Set renderer element
+        this.renderer = renderer;
+        
+        //Frame title
         this.frame = new Frame("Simple File Transfer");
 
         //Set homepage frame size
@@ -386,6 +390,9 @@ class WaitForFiles extends Thread{
                 //Prompt user to select a directory of files or file
                 if (parent.renderer.hostConnection != null){
                     files.StartTransfer(parent.renderer.hostConnection.dataStream);
+                }
+                if (parent.renderer.toConnection != null){
+                    files.StartTransfer(parent.renderer.toConnection.dataStream);
                 }
                 parent.statusLabels[0].setVisible(true);
                 parent.statusLabels[0].setText("Sending files...");
