@@ -1,9 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -221,6 +217,7 @@ class hostoutputThread extends Thread{
     void dataTransfer(){
         while(true){
             //Write data to output stream
+            System.out.println(this.dataStream.size());
             if (this.dataStream.size() > 0){
                 try{
                     System.out.print("Running transfer");
