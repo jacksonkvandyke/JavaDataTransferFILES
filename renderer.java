@@ -388,13 +388,8 @@ class WaitForFiles extends Thread{
         this.parent.sendButton.setVisible(true);
         this.parent.sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                //Prompt user to select a directory of files or file
-                if (parent.renderer.hostConnection != null){
-                    files.StartTransfer(parent.renderer.hostConnection.dataStream);
-                }
-                if (parent.renderer.toConnection != null){
-                    files.StartTransfer(parent.renderer.toConnection.dataStream);
-                }
+                //Start file transfer
+                files.StartTransfer(parent.renderer.hostConnection, parent.renderer.toConnection);
                 parent.statusLabels[0].setVisible(true);
                 UpdateUI();
             }

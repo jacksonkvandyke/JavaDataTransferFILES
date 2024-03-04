@@ -26,29 +26,51 @@ public class GatherAllFiles {
         }
     }
 
-    void StartTransfer(List<Packet> dataStream){
+    void StartTransfer(hostConnection hostConnection, connectoHostConnection toConnection){
+        //Determine if host or client
+        if (hostConnection != null){
+            //Checks for directories or files and then send over socket as packets
+            if (userPrompt.isDirectory()){
+                //Start thread to get all files
+                OpenDirectory threadObject = new OpenDirectory(hostConnection.dataStream, userPrompt.getAbsolutePath(), this);
+                Thread thread = new Thread(threadObject);
+                thread.start();
+            }
 
-        //Checks for directories or files and then send over socket as packets
-        if (userPrompt.isDirectory()){
-            //Start thread to get all files
-            OpenDirectory threadObject = new OpenDirectory(dataStream, userPrompt.getAbsolutePath(), this);
-            Thread thread = new Thread(threadObject);
-            thread.start();
+            if (userPrompt.isFile()){
+                //Start thread for single file
+                OpenFile threadObject = new OpenFile(hostConnection.dataStream, userPrompt.getAbsolutePath(), this);
+                Thread thread = new Thread(threadObject);
+                thread.start();
+            }
+
+            //Start file wait on thread
+            WaitCompletion waitObject = new WaitCompletion(this);
+            Thread waitThread = new Thread(waitObject);
+            waitThread.start();
         }
 
-        if (userPrompt.isFile()){
-            //Start thread for single file
-            OpenFile threadObject = new OpenFile(dataStream, userPrompt.getAbsolutePath(), this);
-            Thread thread = new Thread(threadObject);
-            thread.start();
-        }
+        if (toConnection != null){
+            //Checks for directories or files and then send over socket as packets
+            if (userPrompt.isDirectory()){
+                //Start thread to get all files
+                OpenDirectory threadObject = new OpenDirectory(toConnection.dataStream, userPrompt.getAbsolutePath(), this);
+                Thread thread = new Thread(threadObject);
+                thread.start();
+            }
 
-        //Start file wait on thread
-        WaitCompletion waitObject = new WaitCompletion(this);
-        Thread waitThread = new Thread(waitObject);
-        waitThread.start();
+            if (userPrompt.isFile()){
+                //Start thread for single file
+                OpenFile threadObject = new OpenFile(toConnection.dataStream, userPrompt.getAbsolutePath(), this);
+                Thread thread = new Thread(threadObject);
+                thread.start();
+            }
+
+            //Start file wait on thread
+            WaitCompletion waitObject = new WaitCompletion(this);
+            Thread waitThread = new Thread(waitObject);
+            waitThread.start();
     }
-
 }
 
 class GetDirectorySize extends Thread{
