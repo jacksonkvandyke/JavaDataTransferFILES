@@ -173,7 +173,7 @@ class OpenFile extends Thread{
                 threadList.add(convertedFile.packets[packetIterator]);
 
                 try{
-                    Thread.sleep(1000);
+                    Thread.sleep(10);
                 }catch(InterruptedException e){
                     System.out.println(e);
                 }
