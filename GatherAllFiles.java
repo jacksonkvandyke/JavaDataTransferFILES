@@ -160,7 +160,7 @@ class OpenFile{
 
         //Wait for file to finish processing
         //Add files to outputStream until depleted
-        while ((packetIterator < convertedFile.packets.length) && (convertedFile.packets.length != convertedFile.maxPackets)){
+        while ((packetIterator < convertedFile.packets.length) || (convertedFile.packets.length != convertedFile.maxPackets)){
             //Check if data can be added to stream
             if (this.dataStream.size() < 1000){
                 this.dataStream.add(convertedFile.packets[packetIterator]);
