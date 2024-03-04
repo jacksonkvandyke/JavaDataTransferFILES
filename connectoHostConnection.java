@@ -168,8 +168,8 @@ class inputThread extends Thread{
         while(true){
             try {
                 //Read from input stream
+                System.out.print("Running transfer");
                 Packet inPacket = (Packet) this.inputStream.readObject();
-                System.out.print(inPacket.getFilename());
                 this.assembler.SavePacket(inPacket);
 
             }catch (IOException | ClassNotFoundException e){

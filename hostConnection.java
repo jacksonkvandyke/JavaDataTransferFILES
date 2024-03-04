@@ -168,6 +168,7 @@ class hostinputThread extends Thread{
         while(true){
             try {
                 //Read from input stream
+                System.out.print("Running transfer");
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 this.assembler.SavePacket(inPacket);
 
