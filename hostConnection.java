@@ -217,7 +217,6 @@ class hostoutputThread extends Thread{
     void dataTransfer(){
         while(true){
             //Write data to output stream
-            System.out.println(this.dataStream.size());
             if (this.dataStream.size() > 0){
                 try{
                     System.out.print("Running transfer");
