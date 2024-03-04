@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GatherAllFiles {
@@ -8,6 +9,9 @@ public class GatherAllFiles {
     long totalSize = 0;
     int requiredFiles = 0;
     int currentFiles = 0;
+
+    //Packet transfer buffer
+    List<Packet> dataStream = new ArrayList<Packet>();
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
@@ -26,18 +30,18 @@ public class GatherAllFiles {
         }
     }
 
-    void StartTransfer(List<Packet> dataStream){
+    void StartTransfer(){
         //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
             //Start thread to get all files
-            OpenDirectory threadObject = new OpenDirectory(dataStream, userPrompt.getAbsolutePath(), this);
+            OpenDirectory threadObject = new OpenDirectory(this.dataStream, userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
             thread.start();
         }
 
         if (userPrompt.isFile()){
             //Start thread for single file
-            OpenFile threadObject = new OpenFile(dataStream, userPrompt.getAbsolutePath(), this);
+            OpenFile threadObject = new OpenFile(this.dataStream, userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
             thread.start();
         }

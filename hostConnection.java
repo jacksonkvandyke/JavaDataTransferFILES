@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,7 +12,7 @@ public class hostConnection{
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    List<Packet> dataStream = new ArrayList<Packet>();
+    GatherAllFiles dataStreamReference = null;
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
@@ -33,10 +32,6 @@ public class hostConnection{
 
     }
 
-    List<Packet> getList(){
-        return this.dataStream;
-    }
-
     void setCores(int cores){
         this.maxCores = cores;
 
@@ -53,7 +48,7 @@ public class hostConnection{
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1, this.dataStream);
+            Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1, this.dataStreamReference);
             threads.execute(outThread);
 
             //Input thread
@@ -185,12 +180,12 @@ class hostoutputThread extends Thread{
     private ServerSocket serverSocket = null;
     private Socket socket = null;
 
-    List<Packet> dataStream = null;
+    GatherAllFiles dataStreamReference = null;
     ObjectOutputStream outputStream = null;
     
-    public hostoutputThread(int port, List<Packet> dataStream){
+    public hostoutputThread(int port, GatherAllFiles dataStreamReference){
         this.port = port;
-        this.dataStream = dataStream;
+        this.dataStreamReference = dataStreamReference;
     }
 
     public void run(){
@@ -221,11 +216,13 @@ class hostoutputThread extends Thread{
     void dataTransfer(){
         while(true){
             //Write data to output stream
-            if (this.dataStream.size() > 0){
+            List<Packet> dataStream = this.dataStreamReference.dataStream;
+            if (dataStream.size() > 0){
                 try{
                     System.out.print("Running transfer");
-                    this.outputStream.writeObject(this.dataStream.remove(0));
+                    this.outputStream.writeObject(dataStream.remove(0));
                     this.outputStream.flush();
+                    this.dataStreamReference.dataStream = dataStream;
                 }catch (IOException e){
                     System.out.print(e);
                 }
