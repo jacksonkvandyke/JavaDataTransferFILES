@@ -169,7 +169,6 @@ class hostinputThread extends Thread{
             try {
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
-                System.out.print(inPacket.getFilename());
                 this.assembler.SavePacket(inPacket);
 
             }catch (IOException | ClassNotFoundException e){
@@ -224,8 +223,8 @@ class hostoutputThread extends Thread{
             //Write data to output stream
             if (this.dataStream.size() > 0){
                 try{
-                    this.outputStream.writeObject(this.dataStream.get(0));
-                    this.dataStream.remove(0);
+                    this.outputStream.writeObject(this.dataStream.remove(0));
+                    this.outputStream.flush();
                 }catch (IOException e){
                     System.out.print(e);
                 }
