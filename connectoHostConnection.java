@@ -223,12 +223,10 @@ class outputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            List<Packet> threadList = Collections.synchronizedList(this.dataStream);
-            
-            if (threadList.size() > 0){
+            if (dataStream.size() > 0){
                 try{
                     System.out.print("Sending");
-                    this.outputStream.writeObject(threadList.get(0));
+                    this.outputStream.writeObject(dataStream.get(0));
                     this.outputStream.flush();
                 }catch (IOException e){
                     System.out.print(e);

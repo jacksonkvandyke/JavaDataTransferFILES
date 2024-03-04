@@ -225,13 +225,10 @@ class hostoutputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            //Write data to output stream
-            List<Packet> threadList = Collections.synchronizedList(this.dataStream);
-
-            if (threadList.size() > 0){
+            if (dataStream.size() > 0){
                 System.out.print("Sending");
                 try{
-                    this.outputStream.writeObject(threadList.get(0));
+                    this.outputStream.writeObject(dataStream.get(0));
                     this.outputStream.flush();
                 }catch (IOException e){
                     System.out.print(e);
