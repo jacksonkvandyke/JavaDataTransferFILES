@@ -1,5 +1,4 @@
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GatherAllFiles {
@@ -108,7 +107,7 @@ class GetDirectorySize extends Thread{
 
 class OpenDirectory extends Thread{
     //This class opens the specified directory and checks for any files to send
-    List<Packet> dataStream = new ArrayList<Packet>();
+    List<Packet> dataStream = null;
     String directory = "";
     GatherAllFiles parent = null;
 
@@ -143,7 +142,7 @@ class OpenDirectory extends Thread{
 
 class OpenFile{
 
-    List<Packet> dataStream = new ArrayList<Packet>();
+    List<Packet> dataStream = null;
     String path = "";
     GatherAllFiles parent = null;
 
