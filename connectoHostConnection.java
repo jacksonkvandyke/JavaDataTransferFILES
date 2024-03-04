@@ -228,7 +228,7 @@ class outputThread extends Thread{
             if (threadList.size() > 0){
                 try{
                     System.out.print("Sending");
-                    this.outputStream.writeObject(threadList.remove(0));
+                    this.outputStream.writeObject(threadList.get(0));
                     this.outputStream.flush();
                 }catch (IOException e){
                     System.out.print(e);
