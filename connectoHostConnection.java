@@ -171,9 +171,17 @@ class inputThread extends Thread{
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 this.assembler.SavePacket(inPacket);
+                System.out.print(inPacket.getFilename());
 
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
+            }
+
+            //Slight slowdown to allow reads
+            try{
+                Thread.sleep(10);
+            }catch(InterruptedException e){
+                System.out.println(e);
             }
         }
     }
@@ -219,15 +227,16 @@ class outputThread extends Thread{
             
             if (threadList.size() > 0){
                 try{
-                    System.out.print("Running transfer");
+                    System.out.print("Sending");
                     this.outputStream.writeObject(threadList.remove(0));
                     this.outputStream.flush();
                 }catch (IOException e){
                     System.out.print(e);
                 }
 
+                //Slight slowdown to allow reads
                 try{
-                    Thread.sleep(1000);
+                    Thread.sleep(10);
                 }catch(InterruptedException e){
                     System.out.println(e);
                 }
