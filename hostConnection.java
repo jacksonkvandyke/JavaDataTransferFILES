@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -217,10 +218,11 @@ class hostoutputThread extends Thread{
     void dataTransfer(){
         while(true){
             //Write data to output stream
-            if (dataStream.size() > 0){
+            List<Packet> threadList = Collections.synchronizedList(this.dataStream);
+
+            if (threadList.size() > 0){
                 try{
-                    System.out.print("Running transfer");
-                    this.outputStream.writeObject(dataStream.remove(0));
+                    this.outputStream.writeObject(threadList.remove(0));
                     this.outputStream.flush();
                 }catch (IOException e){
                     System.out.print(e);
