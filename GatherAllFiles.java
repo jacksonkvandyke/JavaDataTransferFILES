@@ -162,6 +162,7 @@ class OpenFile{
         //Add files to outputStream until depleted
         while ((packetIterator < convertedFile.packets.length) || (convertedFile.packets.length != convertedFile.maxPackets) || (convertedFile.packets.length == 0)){
             //Check if data can be added to stream
+            System.out.print("Starting send");
             if (this.dataStream.size() < 1000){
                 this.dataStream.add(convertedFile.packets[packetIterator]);
                 System.out.print(this.dataStream.size());
