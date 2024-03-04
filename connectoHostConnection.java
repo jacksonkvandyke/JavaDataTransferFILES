@@ -165,13 +165,15 @@ class inputThread extends Thread{
     }
 
     void dataTransfer(){
-        try {
-            //Read from input stream
-            Packet inPacket = (Packet) this.inputStream.readObject();
-            this.assembler.SavePacket(inPacket);
+        while(true){
+            try {
+                //Read from input stream
+                Packet inPacket = (Packet) this.inputStream.readObject();
+                this.assembler.SavePacket(inPacket);
 
-        }catch (IOException | ClassNotFoundException e){
-            System.out.print(e);
+            }catch (IOException | ClassNotFoundException e){
+                System.out.print(e);
+            }
         }
     }
     
