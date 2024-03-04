@@ -38,7 +38,9 @@ public class GatherAllFiles {
 
         if (userPrompt.isFile()){
             //Start thread for single file
-            new OpenFile(dataStream, userPrompt.getAbsolutePath(), this);
+            OpenFile threadObject = new OpenFile(dataStream, userPrompt.getAbsolutePath(), this);
+            Thread thread = new Thread(threadObject);
+            thread.start();
         }
 
         //Start file wait on thread
@@ -133,14 +135,16 @@ class OpenDirectory extends Thread{
             }
 
             //Convert file to packets and update file size
-            new OpenFile(this.dataStream, fileList[i].getAbsolutePath(), this.parent);
+            OpenFile threadObject = new OpenFile(this.dataStream, fileList[i].getAbsolutePath(), this.parent);
+            Thread thread = new Thread(threadObject);
+            thread.start();
 
         }
 
     }
 }
 
-class OpenFile{
+class OpenFile extends Thread{
 
     List<Packet> dataStream = null;
     String path = "";
@@ -150,9 +154,6 @@ class OpenFile{
         this.dataStream = dataStream;
         this.path = userPrompt;
         this.parent = parent;
-
-        //Run transfer
-        run();
     }
 
     public void run() {
