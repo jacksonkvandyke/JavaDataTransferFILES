@@ -1,17 +1,9 @@
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 
 public class fileAssembler {
     String currentDirectory = null;
-    ObjectInputStream inputStream = null;
-
-    fileAssembler(ObjectInputStream inputStream){
-        this.inputStream = inputStream;
-
-    }
 
     void SavePacket(Packet packet){
         //Create file if it hasn't already been created

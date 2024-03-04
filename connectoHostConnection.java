@@ -137,9 +137,11 @@ class inputThread extends Thread{
     private Socket socket = null;
     
     ObjectInputStream inputStream = null;
+    fileAssembler assembler = null;
     
     public inputThread(int port){
         this.port = port;
+        this.assembler = new fileAssembler();
     }
 
     public void run(){
@@ -163,13 +165,13 @@ class inputThread extends Thread{
     }
 
     void dataTransfer(){
-        while(true){
-            try{
-                Thread.sleep(1000);
-            }catch(InterruptedException e){
-                System.out.println(e);
-            }
+        try {
+            //Read from input stream
+            Packet inPacket = (Packet) this.inputStream.readObject();
+            this.assembler.SavePacket(inPacket);
 
+        }catch (IOException | ClassNotFoundException e){
+            System.out.print(e);
         }
     }
     

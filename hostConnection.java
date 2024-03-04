@@ -132,9 +132,11 @@ class hostinputThread extends Thread{
     private Socket socket = null;
 
     ObjectInputStream inputStream = null;
+    fileAssembler assembler = null;
     
     public hostinputThread(int port){
         this.port = port;
+        this.assembler = new fileAssembler();
     }
 
     public void run(){
@@ -167,10 +169,7 @@ class hostinputThread extends Thread{
             try {
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
-
-                //Access packet and write to appropriate file
-                Path filepath = Paths.get(inPacket.getFilename());
-                OutputStream currentFile = Files.newOutputStream(filepath, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+                this.assembler.SavePacket(inPacket);
 
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
