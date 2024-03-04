@@ -39,6 +39,10 @@ public class connectoHostConnection {
 
     }
 
+    List<Packet> getList(){
+        return this.dataStream;
+    }
+
     void setCores(int cores){
         this.maxCores = cores;
 

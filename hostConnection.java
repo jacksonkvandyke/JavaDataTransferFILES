@@ -33,6 +33,10 @@ public class hostConnection{
 
     }
 
+    List<Packet> getList(){
+        return this.dataStream;
+    }
+
     void setCores(int cores){
         this.maxCores = cores;
 
