@@ -216,6 +216,7 @@ class outputThread extends Thread{
         while(true){
             if (this.dataStreamReference != null){
                 List<Packet> dataStream = this.dataStreamReference.dataStream;
+                System.out.print(dataStream.size());
                 if (dataStream.size() > 0){
                     try{
                         System.out.print("Running transfer");
