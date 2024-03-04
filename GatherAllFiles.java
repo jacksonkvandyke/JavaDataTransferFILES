@@ -70,6 +70,7 @@ public class GatherAllFiles {
             WaitCompletion waitObject = new WaitCompletion(this);
             Thread waitThread = new Thread(waitObject);
             waitThread.start();
+        }
     }
 }
 
