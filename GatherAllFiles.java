@@ -171,6 +171,12 @@ class OpenFile extends Thread{
             //Check if data can be added to stream
             if (threadList.size() < 1000){
                 threadList.add(convertedFile.packets[packetIterator]);
+
+                try{
+                    Thread.sleep(1000);
+                }catch(InterruptedException e){
+                    System.out.println(e);
+                }
             }
         }
         parent.currentFiles += 1;

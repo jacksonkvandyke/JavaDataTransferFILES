@@ -221,12 +221,19 @@ class hostoutputThread extends Thread{
             List<Packet> threadList = Collections.synchronizedList(this.dataStream);
 
             if (threadList.size() > 0){
+                System.out.print("Sending");
                 try{
                     this.outputStream.writeObject(threadList.remove(0));
                     this.outputStream.flush();
                 }catch (IOException e){
                     System.out.print(e);
                 }
+            }
+
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e){
+                System.out.println(e);
             }
         }
     }

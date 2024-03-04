@@ -225,6 +225,12 @@ class outputThread extends Thread{
                 }catch (IOException e){
                     System.out.print(e);
                 }
+
+                try{
+                    Thread.sleep(1000);
+                }catch(InterruptedException e){
+                    System.out.println(e);
+                }
             }
         }
     }
