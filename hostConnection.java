@@ -1,5 +1,9 @@
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -160,10 +164,16 @@ class hostinputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            try{
-                Thread.sleep(1000);
-            }catch(InterruptedException e){
-                System.out.println(e);
+            try {
+                //Read from input stream
+                Packet inPacket = (Packet) this.inputStream.readObject();
+
+                //Access packet and write to appropriate file
+                Path filepath = Paths.get(inPacket.getFilename());
+                OutputStream currentFile = Files.newOutputStream(filepath, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
+            }catch (IOException | ClassNotFoundException e){
+                System.out.print(e);
             }
 
         }

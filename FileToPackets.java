@@ -44,7 +44,7 @@ public class FileToPackets{
 
 }
 
-class Packet {
+class Packet implements Serializable {
 
     private String fileName = "";
     private int totalPackets = 0;
