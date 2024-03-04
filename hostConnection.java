@@ -216,18 +216,19 @@ class hostoutputThread extends Thread{
     void dataTransfer(){
         while(true){
             //Write data to output stream
-            List<Packet> dataStream = this.dataStreamReference.dataStream;
-            if (dataStream.size() > 0){
-                try{
-                    System.out.print("Running transfer");
-                    this.outputStream.writeObject(dataStream.remove(0));
-                    this.outputStream.flush();
-                    this.dataStreamReference.dataStream = dataStream;
-                }catch (IOException e){
-                    System.out.print(e);
+            if (this.dataStreamReference != null){
+                List<Packet> dataStream = this.dataStreamReference.dataStream;
+                if (dataStream.size() > 0){
+                    try{
+                        System.out.print("Running transfer");
+                        this.outputStream.writeObject(dataStream.remove(0));
+                        this.outputStream.flush();
+                        this.dataStreamReference.dataStream = dataStream;
+                    }catch (IOException e){
+                        System.out.print(e);
+                    }
                 }
             }
-
         }
     }
     
