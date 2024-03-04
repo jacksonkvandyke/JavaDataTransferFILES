@@ -1,5 +1,4 @@
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GatherAllFiles {
@@ -9,9 +8,6 @@ public class GatherAllFiles {
     long totalSize = 0;
     int requiredFiles = 0;
     int currentFiles = 0;
-
-    //Packet transfer buffer
-    List<Packet> dataStream = null;
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
@@ -30,26 +26,19 @@ public class GatherAllFiles {
         }
     }
 
-    void StartTransfer(hostConnection hostConnection, connectoHostConnection toConnection){
-        //Assign values based on what socket is being used
-        if (hostConnection != null){
-            this.dataStream = hostConnection.dataStream;
-        }
-        if (toConnection != null){
-            this.dataStream = toConnection.dataStream;
-        }
+    void StartTransfer(List<Packet> dataStream){
 
         //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
             //Start thread to get all files
-            OpenDirectory threadObject = new OpenDirectory(this.dataStream, userPrompt.getAbsolutePath(), this);
+            OpenDirectory threadObject = new OpenDirectory(dataStream, userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
             thread.start();
         }
 
         if (userPrompt.isFile()){
             //Start thread for single file
-            OpenFile threadObject = new OpenFile(this.dataStream, userPrompt.getAbsolutePath(), this);
+            OpenFile threadObject = new OpenFile(dataStream, userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
             thread.start();
         }
@@ -59,6 +48,7 @@ public class GatherAllFiles {
         Thread waitThread = new Thread(waitObject);
         waitThread.start();
     }
+
 }
 
 class GetDirectorySize extends Thread{
@@ -170,7 +160,7 @@ class OpenFile extends Thread{
         //Convert single file and set attributes
         FileToPackets convertedFile = new FileToPackets(this.path);
         int packetIterator = 0;
-
+  
         //Wait for file to finish processing
         //Add files to outputStream until depleted
         while ((packetIterator < convertedFile.packets.length) || (convertedFile.packets.length != convertedFile.maxPackets) || (convertedFile.packets.length == 0)){
