@@ -167,7 +167,6 @@ class OpenFile{
             //Check if data can be added to stream
             if (this.dataStream.size() < 1000){
                 this.dataStream.add(convertedFile.packets[packetIterator]);
-                System.out.print(this.dataStream.size());
             }
         }
         parent.currentFiles += 1;

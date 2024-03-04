@@ -214,6 +214,7 @@ class outputThread extends Thread{
 
     void dataTransfer(){
         while(true){
+            System.out.print(this.dataStream.size());
             //Write data to output stream
             if (this.dataStream.size() > 0){
                 try{
