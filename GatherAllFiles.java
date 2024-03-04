@@ -11,7 +11,7 @@ public class GatherAllFiles {
     int currentFiles = 0;
 
     //Packet transfer buffer
-    List<Packet> dataStream = new ArrayList<Packet>();
+    List<Packet> dataStream = null;
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
@@ -33,11 +33,12 @@ public class GatherAllFiles {
     void StartTransfer(hostConnection hostConnection, connectoHostConnection toConnection){
         //Assign values based on what socket is being used
         if (hostConnection != null){
-            hostConnection.dataStreamReference = this;
+            this.dataStream = hostConnection.dataStream;
         }
         if (toConnection != null){
-            toConnection.dataStreamReference = this;
+            this.dataStream = toConnection.dataStream;
         }
+
         //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
             //Start thread to get all files

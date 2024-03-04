@@ -13,7 +13,7 @@ public class connectoHostConnection {
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    GatherAllFiles dataStreamReference = null;
+    List<Packet> dataStream = new ArrayList<Packet>();
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -55,7 +55,7 @@ public class connectoHostConnection {
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new outputThread(this.socket.getPort() + i + 1, dataStreamReference);
+            Runnable outThread = new outputThread(this.socket.getPort() + i + 1, this.dataStream);
             threads.execute(outThread);
 
             //Input thread
@@ -184,12 +184,12 @@ class outputThread extends Thread{
     private int port = 0;
     private Socket socket = null;
 
-    GatherAllFiles dataStreamReference;
+    List<Packet> dataStream = null;
     ObjectOutputStream outputStream = null;
     
-    public outputThread(int port, GatherAllFiles dataStreamReference){
+    public outputThread(int port, List<Packet> dataStream){
         this.port = port;
-        this.dataStreamReference = dataStreamReference;
+        this.dataStream = dataStream;
     }
 
     public void run(){
@@ -214,18 +214,13 @@ class outputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            if (this.dataStreamReference != null){
-                List<Packet> dataStream = this.dataStreamReference.dataStream;
-                System.out.print(dataStream.size());
-                if (dataStream.size() > 0){
-                    try{
-                        System.out.print("Running transfer");
-                        this.outputStream.writeObject(dataStream.remove(0));
-                        this.outputStream.flush();
-                        this.dataStreamReference.dataStream = dataStream;
-                    }catch (IOException e){
-                        System.out.print(e);
-                    }
+            if (dataStream.size() > 0){
+                try{
+                    System.out.print("Running transfer");
+                    this.outputStream.writeObject(dataStream.remove(0));
+                    this.outputStream.flush();
+                }catch (IOException e){
+                    System.out.print(e);
                 }
             }
         }
