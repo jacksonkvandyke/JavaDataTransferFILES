@@ -223,10 +223,12 @@ class outputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            if (dataStream.size() > 0){
-                System.out.print(dataStream);
+            //Create thread safe dataStream
+            List<Packet> threadList = Collections.synchronizedList(dataStream);
+
+            if (threadList.size() > 0){
                 try{
-                    Packet packet = dataStream.remove(0);
+                    Packet packet = threadList.remove(0);
                     System.out.print(packet.getFilename());
                     this.outputStream.writeObject(packet);
                     this.outputStream.flush();
