@@ -40,7 +40,7 @@ public class FileToPackets{
         this.packets = new Packet[(int) maxPackets];
 
         //Create packets
-        ReadPacketThread threadObject = new ReadPacketThread(currentFile.getName(), fileInput, packets, currentPackets);
+        ReadPacketThread threadObject = new ReadPacketThread(currentFile.getName(), fileInput, packets, this);
         Thread thread = new Thread(threadObject);
         thread.start();
 
@@ -101,13 +101,13 @@ class ReadPacketThread extends Thread{
     int sequenceNumber = 0;
     Packet packets[] = null;
 
-    int currentPackets;
+    FileToPackets parent;
 
-    public ReadPacketThread(String fileName, InputStream fileInput, Packet packets[], int currentPackets){
+    public ReadPacketThread(String fileName, InputStream fileInput, Packet packets[], FileToPackets parent){
         this.fileName = fileName;
         this.fileInput = fileInput;
         this.packets = packets;
-        this.currentPackets = currentPackets;
+        this.parent = parent;
 
     }
 
@@ -134,7 +134,7 @@ class ReadPacketThread extends Thread{
                 Packet packet = new Packet(fileName, sequenceNumber, packetBuffer);
                 packets[sequenceNumber] = packet;
                 sequenceNumber += 1;
-                currentPackets += 1;
+                parent.currentPackets += 1;
 
             }
 
