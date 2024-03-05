@@ -14,7 +14,7 @@ public class connectoHostConnection {
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    List<Packet> dataStream = new ArrayList<Packet>();
+    List<Packet> dataStream = Collections.synchronizedList(new ArrayList<Packet>());
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -223,11 +223,10 @@ class outputThread extends Thread{
 
     void dataTransfer(){
         //Create thread safe dataStream
-        List<Packet> threadList = Collections.synchronizedList(dataStream);
         while(true){
-            if (threadList.size() > 0){
+            if (dataStream.size() > 0){
                 try{
-                    Packet packet = threadList.remove(0);
+                    Packet packet = dataStream.remove(0);
                     System.out.print(packet.getFilename());
                     this.outputStream.writeObject(packet);
                     this.outputStream.flush();
