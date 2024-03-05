@@ -36,8 +36,8 @@ public class FileToPackets{
 
         //Create packet from bytes and add to packets list
         int sequenceNumber = 0;
-        maxPackets = (long) Math.max(1, Math.ceil(fileSize / 1024));
-        packets = new Packet[(int) maxPackets];
+        this.maxPackets = (long) Math.max(1, Math.ceil(fileSize / 1024));
+        this.packets = new Packet[(int) maxPackets];
 
         //Create packets
         ReadPacketThread threadObject = new ReadPacketThread(currentFile.getName(), fileInput, sequenceNumber, packets);
@@ -53,7 +53,7 @@ public class FileToPackets{
 
 }
 
-class Packet{
+class Packet implements Serializable {
 
     private String fileName = "";
     private int totalPackets = 0;
@@ -85,6 +85,14 @@ class Packet{
         return this.packetData;
 
     }
+
+    private void readObject(ObjectInputStream res) 
+            throws IOException, 
+                   ClassNotFoundException 
+        { 
+            res.defaultReadObject(); 
+        } 
+    
 }
 
 class ReadPacketThread extends Thread{
@@ -117,6 +125,7 @@ class ReadPacketThread extends Thread{
             //Create packet, increment sequence, and increment fileSize to UI
             if (packetBuffer.length > 0){
                 Packet packet = new Packet(fileName, sequenceNumber, packetBuffer);
+                System.out.print(packet.getTotalPackets());
                 packetBuffer = new byte[1024];
                 packets[sequenceNumber] = packet;
 
