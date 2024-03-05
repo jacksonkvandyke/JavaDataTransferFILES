@@ -172,7 +172,7 @@ class OpenFile extends Thread{
                     packetIterator += 1;
                 }
 
-                System.out.print(convertedFile.packets);
+                System.out.print(convertedFile.GetNextPacket());
 
                 try{
                     Thread.sleep(1000);

@@ -12,6 +12,8 @@ public class FileToPackets{
     long maxPackets = 0;
     long fileSize = 0;
 
+    int packetIterator = -1;
+
     public FileToPackets(String location){
         //Open file and create scanner
         try{
@@ -40,6 +42,11 @@ public class FileToPackets{
         //Create packets
         new ReadPacketThread(currentFile.getName(), fileInput, sequenceNumber, packets);
 
+    }
+
+    public Packet GetNextPacket(){
+        packetIterator += 1;
+        return this.packets[packetIterator];
     }
 
 }
