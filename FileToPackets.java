@@ -53,7 +53,7 @@ public class FileToPackets{
 
 }
 
-class Packet implements Serializable {
+class Packet{
 
     private String fileName = "";
     private int totalPackets = 0;
@@ -85,14 +85,6 @@ class Packet implements Serializable {
         return this.packetData;
 
     }
-
-    private void readObject(ObjectInputStream res) 
-            throws IOException, 
-                   ClassNotFoundException 
-        { 
-            res.defaultReadObject(); 
-        } 
-    
 }
 
 class ReadPacketThread extends Thread{
