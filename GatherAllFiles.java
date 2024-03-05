@@ -165,7 +165,7 @@ class OpenFile extends Thread{
         //Add files to outputStream until depleted
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.packets.length == 0)){
             //Check if data can be added to stream
-            if ((dataStream.size() < 1000) && (convertedFile.packetIterator < convertedFile.packets.length)){
+            if ((dataStream.size() < 10) && (convertedFile.packetIterator < convertedFile.packets.length)){
                 //Create thread safe dataStream
                 List<Packet> threadList = Collections.synchronizedList(dataStream);
 
