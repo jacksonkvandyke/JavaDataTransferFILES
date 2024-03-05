@@ -45,6 +45,11 @@ public class FileToPackets{
         thread.start();
 
     }
+
+    public Packet[] GetPackets(){
+        return this.packets;
+    }
+
 }
 
 class Packet implements Serializable {
