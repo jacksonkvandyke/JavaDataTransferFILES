@@ -125,7 +125,7 @@ class ReadPacketThread extends Thread{
             }
 
             //Check if end of file
-            if (packetBuffer.length == 0){
+            if (parent.currentPackets == parent.maxPackets){
                 return;
             }
 
