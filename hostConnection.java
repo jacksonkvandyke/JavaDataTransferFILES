@@ -226,9 +226,7 @@ class hostoutputThread extends Thread{
     void dataTransfer(){
         //Create thread safe dataStream
         List<Packet> threadList = Collections.synchronizedList(dataStream);
-        
         while(true){
-
             if (threadList.size() > 0){
                 try{
                     Packet packet = threadList.remove(0);
