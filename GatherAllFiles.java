@@ -160,14 +160,14 @@ class OpenFile extends Thread{
     public void run() {
         //Convert single file and set attributes
         FileToPackets convertedFile = new FileToPackets(this.path);
-  
-        //Wait for file to finish processing
-        //Add files to outputStream until depleted
+
+        //Create thread safe dataStream
+        List<Packet> threadList = Collections.synchronizedList(dataStream);
+
+        //Add packets to outputStream until depleted
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.packets.length == 0)){
             //Check if data can be added to stream
             if ((dataStream.size() < 10) && (convertedFile.packetIterator < convertedFile.packets.length)){
-                //Create thread safe dataStream
-                List<Packet> threadList = Collections.synchronizedList(dataStream);
 
                 //Add packet to dataStream
                 if (convertedFile.packets[convertedFile.packetIterator + 1] != null){

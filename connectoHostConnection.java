@@ -222,9 +222,9 @@ class outputThread extends Thread{
     }
 
     void dataTransfer(){
+        //Create thread safe dataStream
+        List<Packet> threadList = Collections.synchronizedList(dataStream);
         while(true){
-            //Create thread safe dataStream
-            List<Packet> threadList = Collections.synchronizedList(dataStream);
 
             if (threadList.size() > 0){
                 try{
