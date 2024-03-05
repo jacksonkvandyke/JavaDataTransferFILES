@@ -162,9 +162,10 @@ class OpenFile extends Thread{
         FileToPackets convertedFile = new FileToPackets(this.path);
 
         //Add files to outputStream until depleted
-        while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.packets.length == 0)){
+        while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
             //Check if data can be added to stream
             if ((dataStream.size() < 10) && (convertedFile.packetIterator < convertedFile.currentPackets)){
+                System.out.print(convertedFile.packetIterator);
                 dataStream.add(convertedFile.packets[convertedFile.packetIterator]);
                 convertedFile.packetIterator += 1;
 
