@@ -227,7 +227,6 @@ class outputThread extends Thread{
             if (dataStream.size() > 0){
                 try{
                     Packet packet = dataStream.remove(0);
-                    System.out.print(packet.getFilename());
                     this.outputStream.writeObject(packet);
                     this.outputStream.flush();
                 }catch (IOException e){
