@@ -226,6 +226,7 @@ class hostoutputThread extends Thread{
     void dataTransfer(){
         while(true){
             if (dataStream.size() > 0){
+                System.out.print(dataStream);
                 try{
                     Packet packet = dataStream.remove(0);
                     System.out.print(packet.getFilename());
