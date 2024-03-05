@@ -35,12 +35,11 @@ public class FileToPackets{
         }
 
         //Create packet from bytes and add to packets list
-        int sequenceNumber = 0;
         this.maxPackets = (long) Math.max(1, Math.ceil(fileSize / 1024));
         this.packets = new Packet[(int) maxPackets];
 
         //Create packets
-        ReadPacketThread threadObject = new ReadPacketThread(currentFile.getName(), fileInput, sequenceNumber, packets);
+        ReadPacketThread threadObject = new ReadPacketThread(currentFile.getName(), fileInput, packets);
         Thread thread = new Thread(threadObject);
         thread.start();
 
@@ -102,19 +101,19 @@ class ReadPacketThread extends Thread{
     int sequenceNumber = 0;
     Packet packets[] = null;
 
-    public ReadPacketThread(String fileName, InputStream fileInput, int sequenceNumber, Packet packets[]){
+    public ReadPacketThread(String fileName, InputStream fileInput, Packet packets[]){
         this.fileName = fileName;
         this.fileInput = fileInput;
-        this.sequenceNumber = sequenceNumber;
         this.packets = packets;
 
     }
 
     public void run(){
-        //Read from file and add to buffer
-        byte packetBuffer[] = new byte[1024];
+        while (true){
+            //Read from file and add to buffer
+            byte packetBuffer[] = new byte[1024];
 
-        //Read data from file and put it into packetBuffer
+            //Read data from file and put it into packetBuffer
             try{
                 fileInput.read(packetBuffer);
             }catch (IOException i){
@@ -122,20 +121,25 @@ class ReadPacketThread extends Thread{
 
             }
 
+            //Check if end of file
+            if (packetBuffer.length == 0){
+                return;
+            }
+
             //Create packet, increment sequence, and increment fileSize to UI
             if (packetBuffer.length > 0){
                 Packet packet = new Packet(fileName, sequenceNumber, packetBuffer);
-                packetBuffer = new byte[1024];
                 packets[sequenceNumber] = packet;
+                sequenceNumber += 1;
 
             }
 
-        //Sleep reduces errors
-        try{
-            Thread.sleep(10);
-        }catch(InterruptedException e){
-            System.out.println(e);
+            //Sleep reduces errors
+            try{
+                Thread.sleep(10);
+            }catch(InterruptedException e){
+                System.out.println(e);
+            }
         }
-
     }
 }
