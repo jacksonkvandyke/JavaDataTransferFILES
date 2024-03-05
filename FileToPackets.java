@@ -97,7 +97,6 @@ class Packet implements Serializable {
         { 
             res.defaultReadObject(); 
         } 
-    
 }
 
 class ReadPacketThread extends Thread{

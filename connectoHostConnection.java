@@ -155,7 +155,7 @@ class inputThread extends Thread{
             System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
-            inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+            inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
             System.out.println(i);
         }
@@ -211,7 +211,7 @@ class outputThread extends Thread{
             System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
-            outputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
         }catch(IOException i){
             System.out.println(i);
         }
@@ -222,7 +222,6 @@ class outputThread extends Thread{
     }
 
     void dataTransfer(){
-        //Create thread safe dataStream
         while(true){
             if (dataStream.size() > 0){
                 try{
