@@ -44,12 +44,6 @@ public class FileToPackets{
         thread.start();
 
     }
-
-    public Packet GetNextPacket(){
-        packetIterator += 1;
-        return this.packets[packetIterator];
-    }
-
 }
 
 class Packet implements Serializable {

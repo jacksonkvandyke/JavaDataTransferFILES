@@ -169,8 +169,9 @@ class OpenFile extends Thread{
             //Check if data can be added to stream
             if ((threadList.size() < 10) && (convertedFile.packetIterator < convertedFile.packets.length)){
                 //Add packet to dataStream
-                if (convertedFile.packets[convertedFile.packetIterator + 1] != null){
-                    threadList.add(convertedFile.GetNextPacket());
+                if (convertedFile.packets[convertedFile.packetIterator] != null){
+                    threadList.add(convertedFile.packets[convertedFile.packetIterator]);
+                    convertedFile.packetIterator += 1;
                 }
 
                 try{
