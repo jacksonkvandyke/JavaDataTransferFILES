@@ -125,11 +125,17 @@ class ReadPacketThread extends Thread{
             //Create packet, increment sequence, and increment fileSize to UI
             if (packetBuffer.length > 0){
                 Packet packet = new Packet(fileName, sequenceNumber, packetBuffer);
-                System.out.print(packet.getTotalPackets());
                 packetBuffer = new byte[1024];
                 packets[sequenceNumber] = packet;
 
             }
+
+        //Sleep reduces errors
+        try{
+            Thread.sleep(10);
+        }catch(InterruptedException e){
+            System.out.println(e);
+        }
 
     }
 }
