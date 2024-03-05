@@ -12,7 +12,7 @@ public class FileToPackets{
     long maxPackets = 0;
     long fileSize = 0;
 
-    int packetIterator = -1;
+    int packetIterator = 0;
 
     public FileToPackets(String location){
         //Open file and create scanner
