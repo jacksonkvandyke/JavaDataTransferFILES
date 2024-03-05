@@ -169,10 +169,13 @@ class OpenFile extends Thread{
             if (dataStream.size() < 1000){
                 if (convertedFile.packets[packetIterator] != null){
                     dataStream.add(convertedFile.packets[packetIterator]);
+                    packetIterator += 1;
                 }
 
+                System.out.print(convertedFile.packets);
+
                 try{
-                    Thread.sleep(10);
+                    Thread.sleep(1000);
                 }catch(InterruptedException e){
                     System.out.println(e);
                 }
