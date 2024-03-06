@@ -63,7 +63,7 @@ public class connectoHostConnection {
             threads.execute(outThread);
 
             //Input thread
-            hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 2);
+            inputThread input = new inputThread(this.socket.getLocalPort() + i + 2);
             Thread inThread = new Thread(input);
             threads.execute(inThread);
 
