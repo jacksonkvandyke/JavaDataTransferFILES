@@ -227,7 +227,7 @@ class hostoutputThread extends Thread{
         while(true){
             if (dataStream.size() > 0){
                 try{
-                    Packet packet = dataStream.remove(0);
+                    Packet packet = dataStream.get(0);
                     this.outputStream.writeObject(packet);
                     this.outputStream.flush();
                 }catch (IOException e){
