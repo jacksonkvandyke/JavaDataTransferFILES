@@ -57,12 +57,12 @@ public class connectoHostConnection {
         //Create the threads and await for connection
         for (int i = 0; i < this.maxCores * 2; i += 2){
             //Output thread
-            outputThread output = new outputThread(this.socket.getLocalPort() + i + 1);
+            outputThread output = new outputThread(this.socket.getPort() + i + 1);
             Thread outThread = new Thread(output);
             outThread.start();
 
             //Input thread
-            inputThread input = new inputThread(this.socket.getLocalPort() + i + 2);
+            inputThread input = new inputThread(this.socket.getPort() + i + 2);
             Thread inThread = new Thread(input);
             inThread.start();
 
