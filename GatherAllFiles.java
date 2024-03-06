@@ -265,7 +265,7 @@ class OpenFile extends Thread{
             while (retrievedPacket != null){
                 if (retrievedPacket != null){
                     for (int i = 0; i < transferThreads.length; i++){
-                        if (transferThreads[i].currentPacket == null){
+                        if (transferThreads[i].getPacket() == null){
                             transferThreads[i].setPacket(retrievedPacket);
                         }
                     }

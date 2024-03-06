@@ -197,6 +197,7 @@ class hostOutputThread implements Runnable{
 
     ObjectOutputStream outputStream = null;
     Packet currentPacket = null;
+    int packetStatus = 0;
     
     public hostOutputThread(int port){
         this.port = port;
