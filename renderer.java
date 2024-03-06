@@ -389,12 +389,7 @@ class WaitForFiles extends Thread{
         this.parent.sendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //Start file transfer
-                if (parent.renderer.hostConnection != null){
-                    files.StartTransfer(parent.renderer.hostConnection.transferThreads);
-                }
-                if (parent.renderer.toConnection != null){
-                    files.StartTransfer(parent.renderer.toConnection.transferThreads);
-                }
+                files.StartTransfer(parent.renderer.hostConnection, parent.renderer.toConnection);
 
                 parent.statusLabels[0].setVisible(true);
                 UpdateUI();
