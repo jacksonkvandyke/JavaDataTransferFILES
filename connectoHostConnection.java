@@ -63,7 +63,8 @@ public class connectoHostConnection {
             threads.execute(outThread);
 
             //Input thread
-            Runnable inThread = new inputThread(this.socket.getLocalPort() + i + 2);
+            hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 2);
+            Thread inThread = new Thread(input);
             threads.execute(inThread);
 
             //Add output thread to transferThreads array
