@@ -136,7 +136,7 @@ class ReadPacketThread extends Thread{
             }
 
             //Create packet, increment sequence, and increment fileSize to UI
-            if (packetBuffer.length > 0){
+            if ((packetBuffer.length > 0) && (parent.currentPackets < parent.maxPackets)){
                 Packet packet = new Packet(fileName, sequenceNumber, packetBuffer);
                 packets[sequenceNumber] = packet;
                 sequenceNumber += 1;
