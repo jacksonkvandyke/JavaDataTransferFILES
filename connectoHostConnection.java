@@ -175,8 +175,12 @@ class inputThread extends Thread{
             try {
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
-                this.assembler.SavePacket(inPacket);
-                System.out.print(inPacket.getFilename());
+
+                //Check if packet was read
+                if (inPacket != null){
+                    this.assembler.SavePacket(inPacket);
+                    System.out.print(inPacket.getFilename());
+                }
 
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
@@ -235,9 +239,11 @@ class outputThread implements Runnable{
     void dataTransfer(){
         while(true){
             try{
-                this.outputStream.writeObject(this.currentPacket);
-                this.outputStream.flush();
-                this.currentPacket = null;
+                if (this.currentPacket != null){
+                    this.outputStream.writeObject(this.currentPacket);
+                    this.outputStream.flush();
+                    this.currentPacket = null;
+                }
             }catch (IOException e){
                 System.out.print(e);
             }
