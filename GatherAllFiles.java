@@ -27,18 +27,18 @@ public class GatherAllFiles {
 
     void StartTransfer(hostConnection hostConnection, connectoHostConnection toConnection){
         //Check if host or client
-        if (hostConnection == null){
+        if (hostConnection != null){
             //Checks for directories or files and then send over socket as packets
             if (userPrompt.isDirectory()){
                 //Start thread to get all files
-                OpenDirectory threadObject = new HostOpenDirectory(hostConnection.transferThreads, userPrompt.getAbsolutePath(), this);
+                HostOpenDirectory threadObject = new HostOpenDirectory(hostConnection.transferThreads, userPrompt.getAbsolutePath(), this);
                 Thread thread = new Thread(threadObject);
                 thread.start();
             }
 
             if (userPrompt.isFile()){
                 //Start thread for single file
-                OpenFile threadObject = new HostOpenFile(hostConnection.transferThreads, userPrompt.getAbsolutePath(), this);
+                HostOpenFile threadObject = new HostOpenFile(hostConnection.transferThreads, userPrompt.getAbsolutePath(), this);
                 Thread thread = new Thread(threadObject);
                 thread.start();
             }
@@ -62,8 +62,8 @@ public class GatherAllFiles {
         WaitCompletion waitObject = new WaitCompletion(this);
         Thread waitThread = new Thread(waitObject);
         waitThread.start();
+        }
     }
-
 }
 
 class GetDirectorySize extends Thread{
@@ -94,7 +94,6 @@ class GetDirectorySize extends Thread{
             }
 
         }
-
         return totalSize;
     }
 
@@ -155,7 +154,6 @@ class HostOpenDirectory extends Thread{
             thread.start();
 
         }
-
     }
 }
 
@@ -200,7 +198,6 @@ class HostOpenFile extends Thread{
         }
         parent.currentFiles += 1;
     }
-
 }
 
 
@@ -309,5 +306,4 @@ class WaitCompletion extends Thread{
 
         }
     }
-
 }
