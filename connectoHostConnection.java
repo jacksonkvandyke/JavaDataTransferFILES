@@ -52,20 +52,19 @@ public class connectoHostConnection {
 
     void connectThreads(){
         //Create thread list
-        this.transferThreads = new outputThread[(int) Math.ceil(this.maxCores)];
+        this.transferThreads = new outputThread[(int) Math.ceil(this.maxCores) + 1];
 
         //Create the threads and await for connection
-        ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
-        for (int i = 0; i < this.maxCores; i += 2){
+        for (int i = 0; i < this.maxCores * 2; i += 2){
             //Output thread
             outputThread output = new outputThread(this.socket.getLocalPort() + i + 1);
             Thread outThread = new Thread(output);
-            threads.execute(outThread);
+            outThread.start();
 
             //Input thread
             inputThread input = new inputThread(this.socket.getLocalPort() + i + 2);
             Thread inThread = new Thread(input);
-            threads.execute(inThread);
+            inThread.start();
 
             //Add output thread to transferThreads array
             if (i == 0){
