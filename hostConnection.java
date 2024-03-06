@@ -51,7 +51,7 @@ public class hostConnection{
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
             hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + i + 1);
-            Runnable outThread = output;
+            Thread outThread = new Thread(output);
             threads.execute(outThread);
 
             //Input thread
@@ -59,12 +59,8 @@ public class hostConnection{
             threads.execute(inThread);
 
             //Add output thread to transferThreads array
-            if (i == 0){
-                this.transferThreads[0] = output;
-            }else{
-                this.transferThreads[(int) Math.ceil(this.maxCores / 2)] = output;
-            }
-
+            this.transferThreads[(int) Math.ceil(this.maxCores / 2)] = output;
+            
         }
 
     }

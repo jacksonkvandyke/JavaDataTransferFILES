@@ -57,7 +57,7 @@ public class connectoHostConnection {
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
             outputThread output = new outputThread(this.socket.getLocalPort() + i + 1);
-            Runnable outThread = output;
+            Thread outThread = new Thread(output);
             threads.execute(outThread);
 
             //Input thread
