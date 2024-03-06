@@ -1,8 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,7 +11,7 @@ public class hostConnection{
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    List<Packet> dataStream = Collections.synchronizedList(new ArrayList<Packet>(50));
+    Runnable transferThreads[] = null;
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
@@ -46,11 +43,14 @@ public class hostConnection{
     }
 
     void connectThreads(){
+        //Create thread list
+        this.transferThreads = new Runnable[(int) Math.ceil(this.maxCores / 2)];
+
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1, this.dataStream, i);
+            Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1);
             threads.execute(outThread);
 
             //Input thread
@@ -184,20 +184,25 @@ class hostinputThread extends Thread{
     
 }
 
-class hostoutputThread extends Thread{
+class hostoutputThread implements Runnable{
 
     private int port = 0;
     private ServerSocket serverSocket = null;
     private Socket socket = null;
 
-    List<Packet> dataStream = null;
     ObjectOutputStream outputStream = null;
-    int listIndex = 0;
+    Packet currentPacket = null;
     
-    public hostoutputThread(int port, List<Packet> dataStream, int listIndex){
+    public hostoutputThread(int port){
         this.port = port;
-        this.dataStream = dataStream;
-        this.listIndex = listIndex;
+    }
+
+    public void setPacket(Packet packet){
+        this.currentPacket = packet;
+    }
+
+    public Packet getPacket(){
+        return this.currentPacket;
     }
 
     public void run(){
@@ -227,14 +232,12 @@ class hostoutputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            if (dataStream.size() > listIndex){
-                try{
-                    Packet packet = dataStream.remove(listIndex);
-                    this.outputStream.writeObject(packet);
-                    this.outputStream.flush();
-                }catch (IOException e){
-                    System.out.print(e);
-                }
+            try{
+                this.outputStream.writeObject(currentPacket);
+                this.outputStream.flush();
+                this.currentPacket = null;
+            }catch (IOException e){
+                System.out.print(e);
             }
 
             //Slight slowdown to allow reads

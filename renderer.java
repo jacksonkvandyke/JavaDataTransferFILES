@@ -390,10 +390,10 @@ class WaitForFiles extends Thread{
             public void actionPerformed(ActionEvent e){
                 //Start file transfer
                 if (parent.renderer.hostConnection != null){
-                    files.StartTransfer(parent.renderer.hostConnection.dataStream);
+                    files.StartTransfer(parent.renderer.hostConnection.transferThreads);
                 }
                 if (parent.renderer.toConnection != null){
-                    files.StartTransfer(parent.renderer.toConnection.dataStream);
+                    files.StartTransfer(parent.renderer.toConnection.transferThreads);
                 }
 
                 parent.statusLabels[0].setVisible(true);

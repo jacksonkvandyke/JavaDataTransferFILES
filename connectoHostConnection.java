@@ -1,8 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,7 +11,7 @@ public class connectoHostConnection {
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    List<Packet> dataStream = Collections.synchronizedList(new ArrayList<Packet>(50));
+    Runnable transferThreads[] = null;
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -52,11 +49,14 @@ public class connectoHostConnection {
     }
 
     void connectThreads(){
+        //Create thread list
+        this.transferThreads = new Runnable[(int) Math.ceil(this.maxCores / 2)];
+
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new outputThread(this.socket.getPort() + i + 1, this.dataStream, i);
+            Runnable outThread = new outputThread(this.socket.getPort() + i + 1);
             threads.execute(outThread);
 
             //Input thread
@@ -188,21 +188,25 @@ class inputThread extends Thread{
     
 }
 
-class outputThread extends Thread{
+class outputThread implements Runnable{
 
     private int port = 0;
     private Socket socket = null;
 
-    List<Packet> dataStream = null;
     ObjectOutputStream outputStream = null;
-    int listIndex = 0;
+    Packet currentPacket = null;
     
-    public outputThread(int port, List<Packet> dataStream, int listIndex){
+    public outputThread(int port){
         this.port = port;
-        this.dataStream = dataStream;
-        this.listIndex = listIndex;
     }
 
+    public void setPacket(Packet packet){
+        this.currentPacket = packet;
+    }
+
+    public Packet getPacket(){
+        return this.currentPacket;
+    }
     public void run(){
         //Create thread socket and connect to host socket
         socket = new Socket();
@@ -225,23 +229,20 @@ class outputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            if (dataStream.size() > listIndex){
-                try{
-                    Packet packet = dataStream.get(listIndex);
-                    this.outputStream.writeObject(packet);
-                    this.outputStream.flush();
-                }catch (IOException e){
-                    System.out.print(e);
-                }
+            try{
+                this.outputStream.writeObject(this.currentPacket);
+                this.outputStream.flush();
+                this.currentPacket = null;
+            }catch (IOException e){
+                System.out.print(e);
+            }
 
-                //Slight slowdown to allow reads
-                try{
-                    Thread.sleep(10);
-                }catch(InterruptedException e){
-                    System.out.println(e);
-                }
+            //Slight slowdown to allow reads
+            try{
+                Thread.sleep(10);
+            }catch(InterruptedException e){
+                System.out.println(e);
             }
         }
     }
-    
 }
