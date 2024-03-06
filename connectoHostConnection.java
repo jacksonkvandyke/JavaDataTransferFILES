@@ -52,7 +52,7 @@ public class connectoHostConnection {
 
     void connectThreads(){
         //Create thread list
-        this.transferThreads = new outputThread[(int) Math.ceil(this.maxCores) + 1];
+        this.transferThreads = new outputThread[(int) Math.ceil(this.maxCores)];
 
         //Create the threads and await for connection
         for (int i = 0; i < this.maxCores * 2; i += 2){

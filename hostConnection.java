@@ -1,7 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class hostConnection{
     //Initialize variables
@@ -41,7 +39,7 @@ public class hostConnection{
 
     void connectThreads(){
         //Create thread list
-        this.transferThreads = new hostOutputThread[(int) Math.ceil(this.maxCores) + 1];
+        this.transferThreads = new hostOutputThread[(int) Math.ceil(this.maxCores)];
 
         //Create the threads and await for connection
         for (int i = 0; i < this.maxCores * 2; i += 2){
