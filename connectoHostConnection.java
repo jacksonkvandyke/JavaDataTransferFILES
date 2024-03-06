@@ -11,7 +11,7 @@ public class connectoHostConnection {
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    Runnable transferThreads[] = null;
+    outputThread transferThreads[] = null;
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -50,18 +50,24 @@ public class connectoHostConnection {
 
     void connectThreads(){
         //Create thread list
-        this.transferThreads = new Runnable[(int) Math.ceil(this.maxCores / 2)];
+        this.transferThreads = new outputThread[(int) Math.ceil(this.maxCores / 2)];
 
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new outputThread(this.socket.getPort() + i + 1);
+            outputThread output = new outputThread(this.socket.getLocalPort() + i + 1);
+            Runnable outThread = output;
             threads.execute(outThread);
 
             //Input thread
-            Runnable inThread = new inputThread(this.socket.getPort() + i + 2);
+            Runnable inThread = new inputThread(this.socket.getLocalPort() + i + 2);
             threads.execute(inThread);
+
+            //Add output thread to transferThreads array
+            if (i == 0){
+                this.transferThreads[0] = output;
+            }
 
         }
 

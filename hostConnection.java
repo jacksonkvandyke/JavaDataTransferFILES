@@ -11,7 +11,7 @@ public class hostConnection{
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    Runnable transferThreads[] = null;
+    outputThread transferThreads[] = null;
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
@@ -44,18 +44,24 @@ public class hostConnection{
 
     void connectThreads(){
         //Create thread list
-        this.transferThreads = new Runnable[(int) Math.ceil(this.maxCores / 2)];
+        this.transferThreads = new outputThread[(int) Math.ceil(this.maxCores / 2)];
 
         //Create the threads and await for connection
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1);
+            outputThread output = new outputThread(this.socket.getLocalPort() + i + 1);
+            Runnable outThread = output;
             threads.execute(outThread);
 
             //Input thread
-            Runnable inThread = new hostinputThread(this.socket.getLocalPort() + i + 2);
+            Runnable inThread = new inputThread(this.socket.getLocalPort() + i + 2);
             threads.execute(inThread);
+
+            //Add output thread to transferThreads array
+            if (i == 0){
+                this.transferThreads[0] = output;
+            }
 
         }
 
@@ -122,7 +128,7 @@ class hostawaitThread extends Thread{
     }
 }
 
-class hostinputThread extends Thread{
+class inputThread extends Thread{
 
     private int port = 0;
     private ServerSocket serverSocket = null;
@@ -131,7 +137,7 @@ class hostinputThread extends Thread{
     ObjectInputStream inputStream = null;
     fileAssembler assembler = null;
     
-    public hostinputThread(int port){
+    public inputThread(int port){
         this.port = port;
         this.assembler = new fileAssembler();
     }
@@ -184,7 +190,7 @@ class hostinputThread extends Thread{
     
 }
 
-class hostoutputThread implements Runnable{
+class outputThread implements Runnable{
 
     private int port = 0;
     private ServerSocket serverSocket = null;
@@ -193,7 +199,7 @@ class hostoutputThread implements Runnable{
     ObjectOutputStream outputStream = null;
     Packet currentPacket = null;
     
-    public hostoutputThread(int port){
+    public outputThread(int port){
         this.port = port;
     }
 

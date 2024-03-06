@@ -1,5 +1,4 @@
 import java.io.File;
-import java.util.List;
 
 public class GatherAllFiles {
     //This class gathers all files and prepares them to be sent by converting them to packets
@@ -26,7 +25,7 @@ public class GatherAllFiles {
         }
     }
 
-    void StartTransfer(Runnable transferThreads[]){
+    void StartTransfer(outputThread transferThreads[]){
 
         //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
@@ -109,11 +108,11 @@ class GetDirectorySize extends Thread{
 
 class OpenDirectory extends Thread{
     //This class opens the specified directory and checks for any files to send
-    Runnable transferThreads[] = null;
+    outputThread transferThreads[] = null;
     String directory = "";
     GatherAllFiles parent = null;
 
-    OpenDirectory(Runnable transferThreads[], String userPrompt, GatherAllFiles parent) {
+    OpenDirectory(outputThread transferThreads[], String userPrompt, GatherAllFiles parent) {
         this.transferThreads = transferThreads;
         this.directory = userPrompt;
         this.parent = parent;
@@ -146,11 +145,11 @@ class OpenDirectory extends Thread{
 
 class OpenFile extends Thread{
 
-    Runnable transferThreads[] = null;
+    outputThread transferThreads[] = null;
     String path = "";
     GatherAllFiles parent = null;
 
-    OpenFile(Runnable transferThreads[], String userPrompt, GatherAllFiles parent) {
+    OpenFile(outputThread transferThreads[], String userPrompt, GatherAllFiles parent) {
         this.transferThreads = transferThreads;
         this.path = userPrompt;
         this.parent = parent;
