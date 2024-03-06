@@ -14,7 +14,7 @@ public class connectoHostConnection {
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    List<Packet> dataStream = Collections.synchronizedList(new ArrayList<Packet>());
+    List<Packet> dataStream = Collections.synchronizedList(new ArrayList<Packet>(50));
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -56,7 +56,7 @@ public class connectoHostConnection {
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new outputThread(this.socket.getPort() + i + 1, this.dataStream);
+            Runnable outThread = new outputThread(this.socket.getPort() + i + 1, this.dataStream, i);
             threads.execute(outThread);
 
             //Input thread
@@ -195,10 +195,12 @@ class outputThread extends Thread{
 
     List<Packet> dataStream = null;
     ObjectOutputStream outputStream = null;
+    int listIndex = 0;
     
-    public outputThread(int port, List<Packet> dataStream){
+    public outputThread(int port, List<Packet> dataStream, int listIndex){
         this.port = port;
         this.dataStream = dataStream;
+        this.listIndex = listIndex;
     }
 
     public void run(){
@@ -223,9 +225,9 @@ class outputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            if (dataStream.size() > 0){
+            if (dataStream.size() > listIndex){
                 try{
-                    Packet packet = dataStream.get(0);
+                    Packet packet = dataStream.get(listIndex);
                     this.outputStream.writeObject(packet);
                     this.outputStream.flush();
                 }catch (IOException e){

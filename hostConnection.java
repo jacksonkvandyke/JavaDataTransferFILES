@@ -14,7 +14,7 @@ public class hostConnection{
     int maxCores = 0;
     FileToPackets assembledPackets = null;
 
-    List<Packet> dataStream = Collections.synchronizedList(new ArrayList<Packet>());
+    List<Packet> dataStream = Collections.synchronizedList(new ArrayList<Packet>(50));
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
@@ -50,7 +50,7 @@ public class hostConnection{
         ExecutorService threads = Executors.newFixedThreadPool(this.maxCores);
         for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
-            Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1, this.dataStream);
+            Runnable outThread = new hostoutputThread(this.socket.getLocalPort() + i + 1, this.dataStream, i);
             threads.execute(outThread);
 
             //Input thread
@@ -192,10 +192,12 @@ class hostoutputThread extends Thread{
 
     List<Packet> dataStream = null;
     ObjectOutputStream outputStream = null;
+    int listIndex = 0;
     
-    public hostoutputThread(int port, List<Packet> dataStream){
+    public hostoutputThread(int port, List<Packet> dataStream, int listIndex){
         this.port = port;
         this.dataStream = dataStream;
+        this.listIndex = listIndex;
     }
 
     public void run(){
@@ -225,9 +227,9 @@ class hostoutputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            if (dataStream.size() > 0){
+            if (dataStream.size() > listIndex){
                 try{
-                    Packet packet = dataStream.get(0);
+                    Packet packet = dataStream.remove(listIndex);
                     this.outputStream.writeObject(packet);
                     this.outputStream.flush();
                 }catch (IOException e){

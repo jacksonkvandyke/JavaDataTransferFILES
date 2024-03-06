@@ -164,7 +164,7 @@ class OpenFile extends Thread{
         //Add files to outputStream until depleted
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
             //Check if data can be added to stream
-            if (dataStream.size() < 10){
+            if (dataStream.size() < 50){
                 Packet retrievedPacket = convertedFile.GetPacket();
 
                 if (retrievedPacket != null){
