@@ -9,7 +9,6 @@ public class hostConnection{
     ServerSocket socket = null;
     String address = "127.0.0.1";
     int maxCores = 0;
-    FileToPackets assembledPackets = null;
 
     hostOutputThread transferThreads[] = null;
 
@@ -36,10 +35,8 @@ public class hostConnection{
 
     }
 
-    void createPackets(String location){
-        System.out.println(maxCores);
-        assembledPackets = new FileToPackets(location);
-
+    hostOutputThread[] getOutThreads(){
+        return this.transferThreads;
     }
 
     void connectThreads(){

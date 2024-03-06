@@ -31,14 +31,14 @@ public class GatherAllFiles {
             //Checks for directories or files and then send over socket as packets
             if (userPrompt.isDirectory()){
                 //Start thread to get all files
-                HostOpenDirectory threadObject = new HostOpenDirectory(hostConnection.transferThreads, userPrompt.getAbsolutePath(), this);
+                HostOpenDirectory threadObject = new HostOpenDirectory(hostConnection, userPrompt.getAbsolutePath(), this);
                 Thread thread = new Thread(threadObject);
                 thread.start();
             }
 
             if (userPrompt.isFile()){
                 //Start thread for single file
-                HostOpenFile threadObject = new HostOpenFile(hostConnection.transferThreads, userPrompt.getAbsolutePath(), this);
+                HostOpenFile threadObject = new HostOpenFile(hostConnection, userPrompt.getAbsolutePath(), this);
                 Thread thread = new Thread(threadObject);
                 thread.start();
             }
@@ -46,14 +46,14 @@ public class GatherAllFiles {
             //Checks for directories or files and then send over socket as packets
             if (userPrompt.isDirectory()){
                 //Start thread to get all files
-                OpenDirectory threadObject = new OpenDirectory(toConnection.transferThreads, userPrompt.getAbsolutePath(), this);
+                OpenDirectory threadObject = new OpenDirectory(toConnection, userPrompt.getAbsolutePath(), this);
                 Thread thread = new Thread(threadObject);
                 thread.start();
             }
 
             if (userPrompt.isFile()){
                 //Start thread for single file
-                OpenFile threadObject = new OpenFile(toConnection.transferThreads, userPrompt.getAbsolutePath(), this);
+                OpenFile threadObject = new OpenFile(toConnection, userPrompt.getAbsolutePath(), this);
                 Thread thread = new Thread(threadObject);
                 thread.start();
         }
@@ -123,12 +123,12 @@ class GetDirectorySize extends Thread{
 
 class HostOpenDirectory extends Thread{
     //This class opens the specified directory and checks for any files to send
-    hostOutputThread transferThreads[] = null;
+    hostConnection connection = null;
     String directory = "";
     GatherAllFiles parent = null;
 
-    HostOpenDirectory(hostOutputThread transferThreads[], String userPrompt, GatherAllFiles parent) {
-        this.transferThreads = transferThreads;
+    HostOpenDirectory(hostConnection connection, String userPrompt, GatherAllFiles parent) {
+        this.connection = connection;
         this.directory = userPrompt;
         this.parent = parent;
     }
@@ -142,14 +142,14 @@ class HostOpenDirectory extends Thread{
         for (int i = 0; i < fileList.length; i++){
             if (fileList[i].isDirectory()){
                 //Start thread to get all files
-                HostOpenDirectory threadObject = new HostOpenDirectory(this.transferThreads, fileList[i].getAbsolutePath(), this.parent);
+                HostOpenDirectory threadObject = new HostOpenDirectory(this.connection, fileList[i].getAbsolutePath(), this.parent);
                 Thread thread = new Thread(threadObject);
                 thread.start();
                 continue;
             }
 
             //Convert file to packets and update file size
-            HostOpenFile threadObject = new HostOpenFile(this.transferThreads, fileList[i].getAbsolutePath(), this.parent);
+            HostOpenFile threadObject = new HostOpenFile(this.connection, fileList[i].getAbsolutePath(), this.parent);
             Thread thread = new Thread(threadObject);
             thread.start();
 
@@ -159,12 +159,12 @@ class HostOpenDirectory extends Thread{
 
 class HostOpenFile extends Thread{
 
-    hostOutputThread transferThreads[] = null;
+    hostConnection connection = null;
     String path = "";
     GatherAllFiles parent = null;
 
-    HostOpenFile(hostOutputThread transferThreads[], String userPrompt, GatherAllFiles parent) {
-        this.transferThreads = transferThreads;
+    HostOpenFile(hostConnection connection, String userPrompt, GatherAllFiles parent) {
+        this.connection = connection;
         this.path = userPrompt;
         this.parent = parent;
     }
@@ -177,11 +177,12 @@ class HostOpenFile extends Thread{
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
             //Check if data can be added to stream
             Packet retrievedPacket = convertedFile.GetPacket();
+            hostOutputThread transferThreads[] = connection.getOutThreads();
             
             //Continue waiting until packet is added to thread
             while (retrievedPacket != null){
                 if (retrievedPacket != null){
-                    for (int i = 0; i < this.transferThreads.length; i++){
+                    for (int i = 0; i < transferThreads.length; i++){
                         if (transferThreads[i].currentPacket == null){
                             transferThreads[i].setPacket(retrievedPacket);
                         }
@@ -203,12 +204,12 @@ class HostOpenFile extends Thread{
 
 class OpenDirectory extends Thread{
     //This class opens the specified directory and checks for any files to send
-    outputThread transferThreads[] = null;
+    connectoHostConnection connection = null;
     String directory = "";
     GatherAllFiles parent = null;
 
-    OpenDirectory(outputThread transferThreads[], String userPrompt, GatherAllFiles parent) {
-        this.transferThreads = transferThreads;
+    OpenDirectory(connectoHostConnection connection, String userPrompt, GatherAllFiles parent) {
+        this.connection = connection;
         this.directory = userPrompt;
         this.parent = parent;
     }
@@ -222,14 +223,14 @@ class OpenDirectory extends Thread{
         for (int i = 0; i < fileList.length; i++){
             if (fileList[i].isDirectory()){
                 //Start thread to get all files
-                OpenDirectory threadObject = new OpenDirectory(this.transferThreads, fileList[i].getAbsolutePath(), this.parent);
+                OpenDirectory threadObject = new OpenDirectory(this.connection, fileList[i].getAbsolutePath(), this.parent);
                 Thread thread = new Thread(threadObject);
                 thread.start();
                 continue;
             }
 
             //Convert file to packets and update file size
-            OpenFile threadObject = new OpenFile(this.transferThreads, fileList[i].getAbsolutePath(), this.parent);
+            OpenFile threadObject = new OpenFile(this.connection, fileList[i].getAbsolutePath(), this.parent);
             Thread thread = new Thread(threadObject);
             thread.start();
 
@@ -240,12 +241,12 @@ class OpenDirectory extends Thread{
 
 class OpenFile extends Thread{
 
-    outputThread transferThreads[] = null;
+    connectoHostConnection connection = null;
     String path = "";
     GatherAllFiles parent = null;
 
-    OpenFile(outputThread transferThreads[], String userPrompt, GatherAllFiles parent) {
-        this.transferThreads = transferThreads;
+    OpenFile(connectoHostConnection connection, String userPrompt, GatherAllFiles parent) {
+        this.connection = connection;
         this.path = userPrompt;
         this.parent = parent;
     }
@@ -258,11 +259,12 @@ class OpenFile extends Thread{
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
             //Check if data can be added to stream
             Packet retrievedPacket = convertedFile.GetPacket();
+            outputThread transferThreads[] = connection.getOutThreads();
             
             //Continue waiting until packet is added to thread
             while (retrievedPacket != null){
                 if (retrievedPacket != null){
-                    for (int i = 0; i < this.transferThreads.length; i++){
+                    for (int i = 0; i < transferThreads.length; i++){
                         if (transferThreads[i].currentPacket == null){
                             transferThreads[i].setPacket(retrievedPacket);
                         }
