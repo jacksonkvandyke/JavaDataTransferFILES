@@ -16,6 +16,11 @@ public class connectoHostConnection {
         //Create socket and link streams
         socket = new Socket();
         System.out.println("Socket successfully created.");
+        try{
+            Thread.sleep(1000);
+        }catch(InterruptedException e){
+            System.out.print(e);
+        }
 
         //Connect to ensure connection
         try{
