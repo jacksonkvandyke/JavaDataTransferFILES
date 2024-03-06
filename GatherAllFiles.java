@@ -178,14 +178,15 @@ class HostOpenFile extends Thread{
             //Check if data can be added to stream
             Packet retrievedPacket = convertedFile.GetPacket();
             hostOutputThread transferThreads[] = connection.getOutThreads();
-            System.out.print(transferThreads);
             
             //Continue waiting until packet is added to thread
             while (retrievedPacket != null){
                 if (retrievedPacket != null){
                     for (int i = 0; i < transferThreads.length; i++){
-                        if (transferThreads[i].currentPacket == null){
-                            transferThreads[i].setPacket(retrievedPacket);
+                        if (transferThreads[i] != null){
+                            if (transferThreads[i].currentPacket == null){
+                                transferThreads[i].setPacket(retrievedPacket);
+                            }
                         }
                     }
                 }
