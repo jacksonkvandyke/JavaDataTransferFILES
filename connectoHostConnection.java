@@ -67,6 +67,8 @@ public class connectoHostConnection {
             //Add output thread to transferThreads array
             if (i == 0){
                 this.transferThreads[0] = output;
+            }else{
+                this.transferThreads[(int) Math.ceil(this.maxCores / 2)] = output;
             }
 
         }

@@ -61,6 +61,8 @@ public class hostConnection{
             //Add output thread to transferThreads array
             if (i == 0){
                 this.transferThreads[0] = output;
+            }else{
+                this.transferThreads[(int) Math.ceil(this.maxCores / 2)] = output;
             }
 
         }
@@ -225,7 +227,7 @@ class hostOutputThread implements Runnable{
             socket = serverSocket.accept();
 
             //Assign input and output streams
-            outputStream = new  ObjectOutputStream(socket.getOutputStream());
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
         }catch(IOException i){
             System.out.println(i);
             return;
