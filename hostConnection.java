@@ -149,6 +149,7 @@ class hostInputThread extends Thread{
         //Wait for connection then accept
         try{
             socket = serverSocket.accept();
+            System.out.printf("Input Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
             inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -217,6 +218,7 @@ class hostOutputThread implements Runnable{
         //Wait for connection then accept
         try{
             socket = serverSocket.accept();
+            System.out.printf("Output Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));

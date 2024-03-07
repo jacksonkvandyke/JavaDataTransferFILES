@@ -155,7 +155,7 @@ class inputThread extends Thread{
         //Wait for connection then accept
         try{
             socket.connect(new InetSocketAddress("127.0.0.1", this.port));
-            System.out.printf("Socket connected on port: %d\n", this.port);
+            System.out.printf("Input Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
             inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -203,7 +203,7 @@ class outputThread implements Runnable{
         //Wait for connection then accept
         try{
             socket.connect(new InetSocketAddress("127.0.0.1", this.port));
-            System.out.printf("Socket connected on port: %d\n", this.port);
+            System.out.printf("Output Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
