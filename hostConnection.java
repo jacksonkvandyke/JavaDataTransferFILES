@@ -1,8 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class hostConnection{
     //Initialize variables
@@ -41,7 +38,7 @@ public class hostConnection{
 
     void connectThreads(){
         //Create the threads and await for connection
-        for (int i = 0; i < this.maxCores; i += 2){
+        for (int i = 0; i < this.maxCores; i++){
             //Output thread
             hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + i + 1, this.outBuffer);
             Thread outThread = new Thread(output);
@@ -239,7 +236,6 @@ class hostOutputThread implements Runnable{
                 if (!this.outBuffer.packets.isEmpty()){
                     Packet sendPacket = this.outBuffer.getPacket();
                     this.outputStream.writeObject(sendPacket);
-                    System.out.print(this.outputStream);
                 }
             }catch (IOException e){
                 System.out.print(e);
