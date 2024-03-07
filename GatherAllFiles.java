@@ -32,7 +32,7 @@ public class GatherAllFiles {
         if (hostConnection != null){
             packets = hostConnection.getPackets();
         }else{
-
+            packets = toConnection.getPackets();
         }
 
         //Checks for directories or files and then send over socket as packets
