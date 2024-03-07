@@ -176,13 +176,6 @@ class OpenFile extends Thread{
                     retrievedPacket = null;
                 }
             }
-
-            //Short sleep to allow computations
-            try{
-                Thread.sleep(10);
-            }catch(InterruptedException e){
-                System.out.println(e);
-            }
         }
         parent.currentFiles += 1;
     }

@@ -164,6 +164,7 @@ class inputThread extends Thread{
             try {
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
+                System.out.print(inPacket);
 
                 //Check if packet was read
                 if (inPacket != null){
@@ -224,19 +225,11 @@ class outputThread implements Runnable{
             try{
                 if (!this.outBuffer.packets.isEmpty()){
                     Packet sendPacket = this.outBuffer.getPacket();
-                    System.out.print(sendPacket.getFilename());
                     this.outputStream.writeObject(sendPacket);
                     this.outputStream.flush();
                 }
             }catch (IOException e){
                 System.out.print(e);
-            }
-
-            //Slight slowdown to allow reads
-            try{
-                Thread.sleep(10);
-            }catch(InterruptedException e){
-                System.out.println(e);
             }
         }
     }

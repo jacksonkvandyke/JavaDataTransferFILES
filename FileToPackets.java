@@ -143,13 +143,6 @@ class ReadPacketThread extends Thread{
                 parent.currentPackets += 1;
 
             }
-
-            //Sleep reduces errors
-            try{
-                Thread.sleep(10);
-            }catch(InterruptedException e){
-                System.out.println(e);
-            }
         }
     }
 }
