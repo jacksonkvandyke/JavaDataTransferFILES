@@ -230,7 +230,7 @@ class hostOutputThread implements Runnable{
                 if (!this.outBuffer.packets.isEmpty()){
                     Packet sendPacket = this.outBuffer.getPacket();
                     this.outputStream.writeObject(sendPacket);
-                    this.outputStream.flush();
+                    System.out.print(this.outputStream);
                 }
             }catch (IOException e){
                 System.out.print(e);
