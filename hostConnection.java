@@ -145,7 +145,7 @@ class hostInputThread extends Thread{
             socket = serverSocket.accept();
 
             //Assign input and output streams
-            inputStream = new ObjectInputStream(socket.getInputStream());
+            inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
         }catch(IOException i){
             System.out.println(i);
             return;
@@ -212,7 +212,7 @@ class hostOutputThread implements Runnable{
             socket = serverSocket.accept();
 
             //Assign input and output streams
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            outputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         }catch(IOException i){
             System.out.println(i);
             return;

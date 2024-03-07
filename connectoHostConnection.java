@@ -149,7 +149,7 @@ class inputThread extends Thread{
             System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
-            inputStream = new ObjectInputStream(socket.getInputStream());
+            inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
         }catch(IOException i){
             System.out.println(i);
         }
@@ -210,7 +210,7 @@ class outputThread implements Runnable{
             System.out.printf("Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            outputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
         }catch(IOException i){
             System.out.println(i);
         }
