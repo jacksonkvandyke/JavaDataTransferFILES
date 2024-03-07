@@ -168,7 +168,7 @@ class OpenFile extends Thread{
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
             //Check if data can be added to stream
             Packet retrievedPacket = convertedFile.GetPacket();
-            System.out.print(this.outBuffer);
+            System.out.print(this.outBuffer.packets);
             
             //Continue waiting until packet is added to thread
             while (retrievedPacket != null){
