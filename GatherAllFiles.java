@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.List;
 
 public class GatherAllFiles {
     //This class gathers all files and prepares them to be sent by converting them to packets
@@ -27,42 +28,32 @@ public class GatherAllFiles {
 
     void StartTransfer(hostConnection hostConnection, connectoHostConnection toConnection){
         //Check if host or client
+        List<Packet> packets = null;
         if (hostConnection != null){
-            //Checks for directories or files and then send over socket as packets
-            if (userPrompt.isDirectory()){
-                //Start thread to get all files
-                HostOpenDirectory threadObject = new HostOpenDirectory(hostConnection, userPrompt.getAbsolutePath(), this);
-                Thread thread = new Thread(threadObject);
-                thread.start();
-            }
-
-            if (userPrompt.isFile()){
-                //Start thread for single file
-                HostOpenFile threadObject = new HostOpenFile(hostConnection, userPrompt.getAbsolutePath(), this);
-                Thread thread = new Thread(threadObject);
-                thread.start();
-            }
+            packets = hostConnection.getPackets();
         }else{
-            //Checks for directories or files and then send over socket as packets
-            if (userPrompt.isDirectory()){
-                //Start thread to get all files
-                OpenDirectory threadObject = new OpenDirectory(toConnection, userPrompt.getAbsolutePath(), this);
-                Thread thread = new Thread(threadObject);
-                thread.start();
-            }
 
-            if (userPrompt.isFile()){
-                //Start thread for single file
-                OpenFile threadObject = new OpenFile(toConnection, userPrompt.getAbsolutePath(), this);
-                Thread thread = new Thread(threadObject);
-                thread.start();
+        }
+
+        //Checks for directories or files and then send over socket as packets
+        if (userPrompt.isDirectory()){
+            //Start thread to get all files
+            OpenDirectory threadObject = new OpenDirectory(packets, userPrompt.getAbsolutePath(), this);
+            Thread thread = new Thread(threadObject);
+            thread.start();
+        }
+
+        if (userPrompt.isFile()){
+            //Start thread for single file
+            OpenFile threadObject = new OpenFile(packets, userPrompt.getAbsolutePath(), this);
+            Thread thread = new Thread(threadObject);
+            thread.start();
         }
 
         //Start file wait on thread
         WaitCompletion waitObject = new WaitCompletion(this);
         Thread waitThread = new Thread(waitObject);
         waitThread.start();
-        }
     }
 }
 
@@ -121,99 +112,16 @@ class GetDirectorySize extends Thread{
 
 }
 
-class HostOpenDirectory extends Thread{
-    //This class opens the specified directory and checks for any files to send
-    hostConnection connection = null;
-    String directory = "";
-    GatherAllFiles parent = null;
-
-    HostOpenDirectory(hostConnection connection, String userPrompt, GatherAllFiles parent) {
-        this.connection = connection;
-        this.directory = userPrompt;
-        this.parent = parent;
-    }
-
-    public void run() {
-        //Get all files in directory then convert each to packets
-        File directoryFile = new File(this.directory);
-        File fileList[] = directoryFile.listFiles();
-
-        //Call packet creation on each file or open start operation on directory if directory
-        for (int i = 0; i < fileList.length; i++){
-            if (fileList[i].isDirectory()){
-                //Start thread to get all files
-                HostOpenDirectory threadObject = new HostOpenDirectory(this.connection, fileList[i].getAbsolutePath(), this.parent);
-                Thread thread = new Thread(threadObject);
-                thread.start();
-                continue;
-            }
-
-            //Convert file to packets and update file size
-            HostOpenFile threadObject = new HostOpenFile(this.connection, fileList[i].getAbsolutePath(), this.parent);
-            Thread thread = new Thread(threadObject);
-            thread.start();
-
-        }
-    }
-}
-
-class HostOpenFile extends Thread{
-
-    hostConnection connection = null;
-    String path = "";
-    GatherAllFiles parent = null;
-
-    HostOpenFile(hostConnection connection, String userPrompt, GatherAllFiles parent) {
-        this.connection = connection;
-        this.path = userPrompt;
-        this.parent = parent;
-    }
-
-    public void run() {
-        //Convert single file and set attributes
-        FileToPackets convertedFile = new FileToPackets(this.path);
-
-        //Add files to outputStream until depleted
-        while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
-            //Check if data can be added to stream
-            Packet retrievedPacket = convertedFile.GetPacket();
-            hostOutputThread transferThreads[] = connection.getOutThreads();
-            
-            //Continue waiting until packet is added to thread
-            while (retrievedPacket != null){
-                if (retrievedPacket != null){
-                    for (int i = 0; i < transferThreads.length; i++){
-                        if (transferThreads[i] != null){
-                            if (transferThreads[i].currentPacket == null){
-                                transferThreads[i].setPacket(retrievedPacket);
-                            }
-                        }
-                    }
-                }
-            }
-
-            //Short sleep to allow computations
-            try{
-                Thread.sleep(10);
-            }catch(InterruptedException e){
-                System.out.println(e);
-            }
-        }
-        parent.currentFiles += 1;
-    }
-}
-
-
 class OpenDirectory extends Thread{
     //This class opens the specified directory and checks for any files to send
-    connectoHostConnection connection = null;
     String directory = "";
     GatherAllFiles parent = null;
+    List<Packet> packets = null;
 
-    OpenDirectory(connectoHostConnection connection, String userPrompt, GatherAllFiles parent) {
-        this.connection = connection;
+    OpenDirectory(List<Packet> packets, String userPrompt, GatherAllFiles parent) {
         this.directory = userPrompt;
         this.parent = parent;
+        this.packets = packets;
     }
 
     public void run() {
@@ -225,14 +133,14 @@ class OpenDirectory extends Thread{
         for (int i = 0; i < fileList.length; i++){
             if (fileList[i].isDirectory()){
                 //Start thread to get all files
-                OpenDirectory threadObject = new OpenDirectory(this.connection, fileList[i].getAbsolutePath(), this.parent);
+                OpenDirectory threadObject = new OpenDirectory(this.packets, fileList[i].getAbsolutePath(), this.parent);
                 Thread thread = new Thread(threadObject);
                 thread.start();
                 continue;
             }
 
             //Convert file to packets and update file size
-            OpenFile threadObject = new OpenFile(this.connection, fileList[i].getAbsolutePath(), this.parent);
+            OpenFile threadObject = new OpenFile(this.packets, fileList[i].getAbsolutePath(), this.parent);
             Thread thread = new Thread(threadObject);
             thread.start();
 
@@ -242,15 +150,14 @@ class OpenDirectory extends Thread{
 }
 
 class OpenFile extends Thread{
-
-    connectoHostConnection connection = null;
     String path = "";
     GatherAllFiles parent = null;
+    List<Packet> packets = null;
 
-    OpenFile(connectoHostConnection connection, String userPrompt, GatherAllFiles parent) {
-        this.connection = connection;
+    OpenFile(List<Packet> packets, String userPrompt, GatherAllFiles parent) {
         this.path = userPrompt;
         this.parent = parent;
+        this.packets = packets;
     }
 
     public void run() {
@@ -261,17 +168,12 @@ class OpenFile extends Thread{
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
             //Check if data can be added to stream
             Packet retrievedPacket = convertedFile.GetPacket();
-            outputThread transferThreads[] = connection.getOutThreads();
-            System.out.print(transferThreads);
+            System.out.print(this.packets);
             
             //Continue waiting until packet is added to thread
             while (retrievedPacket != null){
-                if (retrievedPacket != null){
-                    for (int i = 0; i < transferThreads.length; i++){
-                        if (transferThreads[i].getPacket() == null){
-                            transferThreads[i].setPacket(retrievedPacket);
-                        }
-                    }
+                if (this.packets.size() < 50){
+                    this.packets.add(retrievedPacket);
                 }
             }
 

@@ -1,7 +1,8 @@
 import java.io.*;
 import java.net.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class connectoHostConnection {
     //Initialize variables
@@ -10,7 +11,7 @@ public class connectoHostConnection {
     String address = "127.0.0.1";
     int maxCores = 0;
 
-    outputThread transferThreads[] = null;
+    List<Packet> packets = Collections.synchronizedList(new ArrayList<Packet>(50));
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -46,18 +47,15 @@ public class connectoHostConnection {
 
     }
 
-    outputThread[] getOutThreads(){
-        return this.transferThreads;
+    List<Packet> getPackets(){
+        return this.packets;
     }
 
     void connectThreads(){
-        //Create thread list
-        this.transferThreads = new outputThread[(int) Math.ceil(this.maxCores)];
-
         //Create the threads and await for connection
         for (int i = 0; i < this.maxCores * 2; i += 2){
             //Output thread
-            outputThread output = new outputThread(this.socket.getPort() + i + 1);
+            outputThread output = new outputThread(this.socket.getPort() + i + 1, packets);
             Thread outThread = new Thread(output);
             outThread.start();
 
@@ -65,14 +63,6 @@ public class connectoHostConnection {
             inputThread input = new inputThread(this.socket.getPort() + i + 2);
             Thread inThread = new Thread(input);
             inThread.start();
-
-            //Add output thread to transferThreads array
-            if (i == 0){
-                this.transferThreads[0] = output;
-            }else{
-                this.transferThreads[(int) Math.ceil(this.maxCores / 2)] = output;
-            }
-
         }
 
     }
@@ -208,19 +198,13 @@ class outputThread implements Runnable{
     private Socket socket = null;
 
     ObjectOutputStream outputStream = null;
-    Packet currentPacket = null;
+    List<Packet> packets = null;
     
-    public outputThread(int port){
+    public outputThread(int port, List<Packet> packets){
         this.port = port;
+        this.packets = packets;
     }
 
-    public void setPacket(Packet packet){
-        this.currentPacket = packet;
-    }
-
-    public Packet getPacket(){
-        return this.currentPacket;
-    }
     public void run(){
         //Create thread socket and connect to host socket
         socket = new Socket();
@@ -244,10 +228,9 @@ class outputThread implements Runnable{
     void dataTransfer(){
         while(true){
             try{
-                if (this.currentPacket != null){
-                    this.outputStream.writeObject(this.currentPacket);
+                if (!this.packets.isEmpty()){
+                    this.outputStream.writeObject(this.packets.remove(0));
                     this.outputStream.flush();
-                    this.currentPacket = null;
                 }
             }catch (IOException e){
                 System.out.print(e);

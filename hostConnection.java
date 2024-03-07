@@ -1,5 +1,8 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class hostConnection{
     //Initialize variables
@@ -8,7 +11,7 @@ public class hostConnection{
     String address = "127.0.0.1";
     int maxCores = 0;
 
-    hostOutputThread transferThreads[] = null;
+    List<Packet> packets = Collections.synchronizedList(new ArrayList<Packet>(50));
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
@@ -30,21 +33,17 @@ public class hostConnection{
 
     void setCores(int cores){
         this.maxCores = cores;
-
     }
 
-    hostOutputThread[] getOutThreads(){
-        return this.transferThreads;
+    List<Packet> getPackets(){
+        return this.packets;
     }
 
     void connectThreads(){
-        //Create thread list
-        this.transferThreads = new hostOutputThread[(int) Math.ceil(this.maxCores)];
-
         //Create the threads and await for connection
         for (int i = 0; i < this.maxCores * 2; i += 2){
             //Output thread
-            hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + i + 1);
+            hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + i + 1, packets);
             Thread outThread = new Thread(output);
             outThread.start();
 
@@ -52,9 +51,6 @@ public class hostConnection{
             hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 2);
             Thread inThread = new Thread(input);
             inThread.start();
-
-            //Add output thread to transferThreads array
-            this.transferThreads[(int) Math.ceil(this.maxCores / 2)] = output;
             
         }
 
@@ -194,19 +190,11 @@ class hostOutputThread implements Runnable{
     private Socket socket = null;
 
     ObjectOutputStream outputStream = null;
-    Packet currentPacket = null;
-    int packetStatus = 0;
+    List<Packet> packets = null;
     
-    public hostOutputThread(int port){
+    public hostOutputThread(int port, List<Packet> packets){
         this.port = port;
-    }
-
-    public void setPacket(Packet packet){
-        this.currentPacket = packet;
-    }
-
-    public Packet getPacket(){
-        return this.currentPacket;
+        this.packets = packets;
     }
 
     public void run(){
@@ -237,10 +225,9 @@ class hostOutputThread implements Runnable{
     void dataTransfer(){
         while(true){
             try{
-                if (this.currentPacket != null){
-                    this.outputStream.writeObject(this.currentPacket);
+                if (!this.packets.isEmpty()){
+                    this.outputStream.writeObject(this.packets.remove(0));
                     this.outputStream.flush();
-                    this.currentPacket = null;
                 }
             }catch (IOException e){
                 System.out.print(e);
