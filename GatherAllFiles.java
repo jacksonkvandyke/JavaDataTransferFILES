@@ -174,7 +174,7 @@ class OpenFile extends Thread{
             while (retrievedPacket != null){
                 if (this.outBuffer.packets.size() < 50){
                     this.outBuffer.addPacket(retrievedPacket);
-                    System.out.print(retrievedPacket.getFilename());
+                    retrievedPacket = null;
                 }
             }
 
