@@ -226,7 +226,9 @@ class hostOutputThread implements Runnable{
         while(true){
             try{
                 if (!this.outBuffer.packets.isEmpty()){
-                    this.outputStream.writeObject(this.outBuffer.getPacket());
+                    Packet sendPacket = this.outBuffer.getPacket();
+                    System.out.print(sendPacket.getFilename());
+                    this.outputStream.writeObject(sendPacket);
                     this.outputStream.flush();
                 }
             }catch (IOException e){
