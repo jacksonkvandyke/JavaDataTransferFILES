@@ -46,19 +46,28 @@ public class connectoHostConnection {
     }
 
     void connectThreads(){
-        //Create the threads and await for connection
-        for (int i = 0; i < this.maxCores * 2; i += 2){
+        //Create the output Threads and await for connection
+        for (int i = 0; i < this.maxCores; i++){
             //Output thread
             outputThread output = new outputThread(this.socket.getPort() + i + 1, outBuffer);
             Thread outThread = new Thread(output);
             outThread.start();
+        }
 
+        //Sleep so all output threads can be made on both sides
+        try{
+            Thread.sleep(1000);
+        }catch (InterruptedException e){
+            System.out.print(e);
+        }
+
+        //Create the input threads
+        for (int i = this.maxCores; i < this.maxCores * 2; i++){
             //Input thread
-            inputThread input = new inputThread(this.socket.getPort() + i + 2);
+            inputThread input = new inputThread(this.socket.getPort() + i);
             Thread inThread = new Thread(input);
             inThread.start();
         }
-
     }
 
 }
@@ -164,14 +173,8 @@ class inputThread extends Thread{
             try {
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
-                System.out.print(inPacket);
-
-                //Check if packet was read
-                if (inPacket != null){
-                    this.assembler.SavePacket(inPacket);
-                    System.out.print(inPacket.getFilename());
-                }
-
+                this.assembler.SavePacket(inPacket);
+                System.out.print(inPacket.getFilename());
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
             }
@@ -219,7 +222,6 @@ class outputThread implements Runnable{
                 if (!this.outBuffer.packets.isEmpty()){
                     Packet sendPacket = this.outBuffer.getPacket();
                     this.outputStream.writeObject(sendPacket);
-                    System.out.print(this.outputStream);
                 }
             }catch (IOException e){
                 System.out.print(e);

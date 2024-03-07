@@ -41,17 +41,26 @@ public class hostConnection{
 
     void connectThreads(){
         //Create the threads and await for connection
-        for (int i = 0; i < this.maxCores * 2; i += 2){
+        for (int i = 0; i < this.maxCores; i += 2){
             //Output thread
             hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + i + 1, this.outBuffer);
             Thread outThread = new Thread(output);
             outThread.start();
+        }
 
+        //Sleep so all output threads can be made on both sides
+        try{
+            Thread.sleep(1000);
+        }catch (InterruptedException e){
+            System.out.print(e);
+        }
+
+        //Create the input threads
+        for (int i = this.maxCores; i < this.maxCores * 2; i++){
             //Input thread
-            hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 2);
+            hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i);
             Thread inThread = new Thread(input);
             inThread.start();
-            
         }
 
     }
