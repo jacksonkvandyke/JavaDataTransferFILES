@@ -172,13 +172,6 @@ class hostInputThread extends Thread{
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
             }
-
-            //Slight slowdown to allow reads
-            try{
-                Thread.sleep(10);
-            }catch(InterruptedException e){
-                System.out.println(e);
-            }
         }
     }
     

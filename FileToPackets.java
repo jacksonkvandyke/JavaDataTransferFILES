@@ -90,13 +90,6 @@ class Packet implements Serializable {
         return this.packetData;
 
     }
-
-    private void readObject(ObjectInputStream res) 
-            throws IOException, 
-                   ClassNotFoundException 
-        { 
-            res.defaultReadObject(); 
-        } 
 }
 
 class ReadPacketThread extends Thread{
