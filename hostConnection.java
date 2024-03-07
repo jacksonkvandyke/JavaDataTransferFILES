@@ -160,15 +160,23 @@ class hostInputThread extends Thread{
         while(true){
             try {
                 //Read from input stream
-                Packet inPacket = (Packet) this.inputStream.readUnshared();
-                System.out.print(inPacket);
-
-                //Check if packet was read
-                if (inPacket != null){
-                    this.assembler.SavePacket(inPacket);
-                    System.out.print(inPacket.getFilename());
+                if (this.inputStream.available() != 0){
+                    Packet inPacket = (Packet) this.inputStream.readObject();
+                    System.out.print(inPacket);
+    
+                    //Check if packet was read
+                    if (inPacket != null){
+                        this.assembler.SavePacket(inPacket);
+                        System.out.print(inPacket.getFilename());
+                    }
+                }else{
+                    System.out.print("Nothing available");
+                    try{
+                        Thread.sleep(1000);
+                    }catch(InterruptedException e){
+                        System.out.print(e);
+                    }
                 }
-
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
             }
