@@ -160,7 +160,7 @@ class hostInputThread extends Thread{
         while(true){
             try {
                 //Read from input stream
-                Packet inPacket = (Packet) this.inputStream.readObject();
+                Packet inPacket = (Packet) this.inputStream.readUnshared();
                 System.out.print(inPacket);
 
                 //Check if packet was read
