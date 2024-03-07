@@ -28,24 +28,24 @@ public class GatherAllFiles {
 
     void StartTransfer(hostConnection hostConnection, connectoHostConnection toConnection){
         //Check if host or client
-        List<Packet> packets = null;
+        OutputByteBuffer outBuffer = null;
         if (hostConnection != null){
-            packets = hostConnection.getPackets();
+            outBuffer = hostConnection.outBuffer;
         }else{
-            packets = toConnection.getPackets();
+            outBuffer = toConnection.outBuffer;
         }
 
         //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
             //Start thread to get all files
-            OpenDirectory threadObject = new OpenDirectory(packets, userPrompt.getAbsolutePath(), this);
+            OpenDirectory threadObject = new OpenDirectory(outBuffer, userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
             thread.start();
         }
 
         if (userPrompt.isFile()){
             //Start thread for single file
-            OpenFile threadObject = new OpenFile(packets, userPrompt.getAbsolutePath(), this);
+            OpenFile threadObject = new OpenFile(outBuffer, userPrompt.getAbsolutePath(), this);
             Thread thread = new Thread(threadObject);
             thread.start();
         }
@@ -116,12 +116,12 @@ class OpenDirectory extends Thread{
     //This class opens the specified directory and checks for any files to send
     String directory = "";
     GatherAllFiles parent = null;
-    List<Packet> packets = null;
+    OutputByteBuffer outBuffer = null;
 
-    OpenDirectory(List<Packet> packets, String userPrompt, GatherAllFiles parent) {
+    OpenDirectory(OutputByteBuffer outBuffer, String userPrompt, GatherAllFiles parent) {
         this.directory = userPrompt;
         this.parent = parent;
-        this.packets = packets;
+        this.outBuffer = outBuffer;
     }
 
     public void run() {
@@ -133,14 +133,14 @@ class OpenDirectory extends Thread{
         for (int i = 0; i < fileList.length; i++){
             if (fileList[i].isDirectory()){
                 //Start thread to get all files
-                OpenDirectory threadObject = new OpenDirectory(this.packets, fileList[i].getAbsolutePath(), this.parent);
+                OpenDirectory threadObject = new OpenDirectory(this.outBuffer, fileList[i].getAbsolutePath(), this.parent);
                 Thread thread = new Thread(threadObject);
                 thread.start();
                 continue;
             }
 
             //Convert file to packets and update file size
-            OpenFile threadObject = new OpenFile(this.packets, fileList[i].getAbsolutePath(), this.parent);
+            OpenFile threadObject = new OpenFile(this.outBuffer, fileList[i].getAbsolutePath(), this.parent);
             Thread thread = new Thread(threadObject);
             thread.start();
 
@@ -152,12 +152,12 @@ class OpenDirectory extends Thread{
 class OpenFile extends Thread{
     String path = "";
     GatherAllFiles parent = null;
-    List<Packet> packets = null;
+    OutputByteBuffer outBuffer = null;
 
-    OpenFile(List<Packet> packets, String userPrompt, GatherAllFiles parent) {
+    OpenFile(OutputByteBuffer outBuffer, String userPrompt, GatherAllFiles parent) {
         this.path = userPrompt;
         this.parent = parent;
-        this.packets = packets;
+        this.outBuffer = outBuffer;
     }
 
     public void run() {
@@ -168,12 +168,12 @@ class OpenFile extends Thread{
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
             //Check if data can be added to stream
             Packet retrievedPacket = convertedFile.GetPacket();
-            System.out.print(this.packets);
+            System.out.print(this.outBuffer);
             
             //Continue waiting until packet is added to thread
             while (retrievedPacket != null){
-                if (this.packets.size() < 50){
-                    this.packets.add(retrievedPacket);
+                if (this.outBuffer.packets.size() < 50){
+                    this.outBuffer.addPacket(retrievedPacket);
                 }
             }
 

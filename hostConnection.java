@@ -11,7 +11,7 @@ public class hostConnection{
     String address = "127.0.0.1";
     int maxCores = 0;
 
-    List<Packet> packets = Collections.synchronizedList(new ArrayList<Packet>(50));
+    OutputByteBuffer outBuffer = new OutputByteBuffer();
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
@@ -35,15 +35,15 @@ public class hostConnection{
         this.maxCores = cores;
     }
 
-    List<Packet> getPackets(){
-        return this.packets;
+    OutputByteBuffer getBuffer(){
+        return this.outBuffer;
     }
 
     void connectThreads(){
         //Create the threads and await for connection
         for (int i = 0; i < this.maxCores * 2; i += 2){
             //Output thread
-            hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + i + 1, packets);
+            hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + i + 1, this.outBuffer);
             Thread outThread = new Thread(output);
             outThread.start();
 
@@ -190,11 +190,11 @@ class hostOutputThread implements Runnable{
     private Socket socket = null;
 
     ObjectOutputStream outputStream = null;
-    List<Packet> packets = null;
+    OutputByteBuffer outBuffer;
     
-    public hostOutputThread(int port, List<Packet> packets){
+    public hostOutputThread(int port, OutputByteBuffer outBuffer){
         this.port = port;
-        this.packets = packets;
+        this.outBuffer = outBuffer;
     }
 
     public void run(){
@@ -225,8 +225,8 @@ class hostOutputThread implements Runnable{
     void dataTransfer(){
         while(true){
             try{
-                if (!this.packets.isEmpty()){
-                    this.outputStream.writeObject(this.packets.remove(0));
+                if (!this.outBuffer.packets.isEmpty()){
+                    this.outputStream.writeObject(this.outBuffer.getPacket());
                     this.outputStream.flush();
                 }
             }catch (IOException e){

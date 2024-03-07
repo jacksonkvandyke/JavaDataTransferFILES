@@ -1,7 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class connectoHostConnection {
@@ -11,7 +9,7 @@ public class connectoHostConnection {
     String address = "127.0.0.1";
     int maxCores = 0;
 
-    List<Packet> packets = Collections.synchronizedList(new ArrayList<Packet>(50));
+    OutputByteBuffer outBuffer = new OutputByteBuffer();
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -47,15 +45,11 @@ public class connectoHostConnection {
 
     }
 
-    List<Packet> getPackets(){
-        return this.packets;
-    }
-
     void connectThreads(){
         //Create the threads and await for connection
         for (int i = 0; i < this.maxCores * 2; i += 2){
             //Output thread
-            outputThread output = new outputThread(this.socket.getPort() + i + 1, packets);
+            outputThread output = new outputThread(this.socket.getPort() + i + 1, outBuffer);
             Thread outThread = new Thread(output);
             outThread.start();
 
@@ -198,11 +192,11 @@ class outputThread implements Runnable{
     private Socket socket = null;
 
     ObjectOutputStream outputStream = null;
-    List<Packet> packets = null;
+    OutputByteBuffer outBuffer;
     
-    public outputThread(int port, List<Packet> packets){
+    public outputThread(int port, OutputByteBuffer outBuffer){
         this.port = port;
-        this.packets = packets;
+        this.outBuffer = outBuffer;
     }
 
     public void run(){
@@ -228,8 +222,8 @@ class outputThread implements Runnable{
     void dataTransfer(){
         while(true){
             try{
-                if (!this.packets.isEmpty()){
-                    this.outputStream.writeObject(this.packets.remove(0));
+                if (!this.outBuffer.packets.isEmpty()){
+                    this.outputStream.writeObject(this.outBuffer.getPacket());
                     this.outputStream.flush();
                 }
             }catch (IOException e){
