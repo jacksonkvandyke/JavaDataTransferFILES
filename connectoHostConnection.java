@@ -157,6 +157,8 @@ class inputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
+            Packet setupPacket = new Packet("Setup", 0, new byte[0]);
+            outputStream.writeObject(setupPacket);
             outputStream.flush();
             inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
@@ -216,6 +218,8 @@ class outputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
+            Packet setupPacket = new Packet("Setup", 0, new byte[0]);
+            outputStream.writeObject(setupPacket);
             outputStream.flush();
             inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
