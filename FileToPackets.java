@@ -64,13 +64,14 @@ class Packet implements Serializable {
     private long totalPackets = 0;
     private int packetSequence = 0;
     private byte packetData[];
+    private int dataLength;
 
-    public Packet(String fileName, long maxPackets, int sequence, byte data[]){
+    public Packet(String fileName, long maxPackets, int sequence, byte data[], int dataLength){
         this.fileName = fileName;
         this.totalPackets = maxPackets;
         this.packetSequence = sequence;
         this.packetData = data;
-
+        this.dataLength = dataLength;
     }
 
     public String getFilename() {
@@ -83,12 +84,14 @@ class Packet implements Serializable {
 
     public int getSequence() {
         return this.packetSequence;
-
     }
 
     public byte[] getData() {
         return this.packetData;
+    }
 
+    public int getDataLength(){
+        return dataLength;
     }
 }
 
@@ -130,7 +133,7 @@ class ReadPacketThread extends Thread{
 
             //Create packet, increment sequence, and increment fileSize to UI
             if ((packetBuffer.length > 0) && (parent.currentPackets < parent.maxPackets)){
-                Packet packet = new Packet(fileName, parent.maxPackets, sequenceNumber, packetBuffer);
+                Packet packet = new Packet(fileName, parent.maxPackets, sequenceNumber, packetBuffer, currentRead);
                 packets[sequenceNumber] = packet;
                 sequenceNumber += 1;
                 parent.currentPackets += 1;
