@@ -63,7 +63,7 @@ public class connectoHostConnection {
         //Create the input threads
         for (int i = this.maxCores; i < this.maxCores * 2; i++){
             //Input thread
-            inputThread input = new inputThread(this.socket.getPort() + i);
+            inputThread input = new inputThread(this.socket.getPort() + i + 1);
             Thread inThread = new Thread(input);
             inThread.start();
         }

@@ -55,7 +55,7 @@ public class hostConnection{
         //Create the input threads
         for (int i = this.maxCores; i < this.maxCores * 2; i++){
             //Input thread
-            hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i);
+            hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 1);
             Thread inThread = new Thread(input);
             inThread.start();
         }
