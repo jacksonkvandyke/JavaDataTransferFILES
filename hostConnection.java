@@ -157,6 +157,13 @@ class hostInputThread extends Thread{
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.flush();
+
+            //Small sleep to allow client socket streams to be created
+            try{
+                Thread.sleep(1000);
+            }catch (InterruptedException e){
+                System.out.print(e);
+            }
             inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
             System.out.println(i);
