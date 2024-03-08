@@ -9,7 +9,7 @@ public class fileAssembler {
         //Create file if it hasn't already been created
         File file = new File(packet.getFilename());
 
-        if (!file.exists()){
+        if (!file.isFile()){
             try{
                 //Create file and write empty data
                 file.createNewFile();
