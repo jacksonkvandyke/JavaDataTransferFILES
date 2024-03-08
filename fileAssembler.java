@@ -1,31 +1,56 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class fileAssembler {
     String currentDirectory = null;
-    File file = null;
+    boolean threadStarted = false;
 
-    void SavePacket(Packet packet){
-        //Create file if it hasn't already been created
-        file = new File(packet.getFilename());
+    List<Packet> packets = Collections.synchronizedList(new ArrayList<Packet>(50));
 
-        synchronized(file){
-            if (!file.exists()){
-                try{
-                    //Create file and write empty data
-                    file.createNewFile();
-                    System.out.println("File successfully created!");
+    synchronized void AddPacket(Packet packet){
+        if (packets.size() < 50){
+            packets.add(packet);
 
-                    FileOutputStream currentWriter = new FileOutputStream(file.getAbsolutePath());
-                    currentWriter.write(new byte[packet.getTotalPackets() * 1024]);
-                    currentWriter.flush();
-                    currentWriter.close();
-                }catch (IOException e){
-                    System.out.print(e);
-                }
+            //Start save packet thread if not started
+            if (!threadStarted){
+                SavePackets savepackets = new SavePackets(this);
+                Thread thread = new Thread(savepackets);
+                thread.start();
+                threadStarted = true;
             }
         }
     }
+}
 
+class SavePackets extends Thread{
+
+    fileAssembler assembler = null;
+
+    SavePackets(fileAssembler assembler){
+        this.assembler = assembler;
+    }
+
+    void savePackets(Packet packet){
+        //Create file if it hasn't already been created
+        File file = new File(packet.getFilename());
+
+        if (!file.exists()){
+            try{
+                //Create file and write empty data
+                file.createNewFile();
+                System.out.println("File successfully created!");
+
+                FileOutputStream currentWriter = new FileOutputStream(file.getAbsolutePath());
+                currentWriter.write(new byte[packet.getTotalPackets() * 1024]);
+                currentWriter.flush();
+                currentWriter.close();
+            }catch (IOException e){
+                System.out.print(e);
+            }
+        }
+    }
 }
