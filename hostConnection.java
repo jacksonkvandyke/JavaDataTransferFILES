@@ -172,6 +172,7 @@ class hostInputThread extends Thread{
             try {
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
+                System.out.print(inPacket);
 
                 if ((inPacket != null) && (inPacket.getData().length != 0)){
                     System.out.print(inPacket.getFilename());
