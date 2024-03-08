@@ -30,9 +30,12 @@ public class GatherAllFiles {
         //Check if host or client
         OutputByteBuffer outBuffer = null;
         if (hostConnection != null){
+            //Create transfer threads and get outBuffer
             outBuffer = hostConnection.outBuffer;
+            hostConnection.connectThreads();
         }else{
             outBuffer = toConnection.outBuffer;
+            toConnection.connectThreads();
         }
 
         //Checks for directories or files and then send over socket as packets

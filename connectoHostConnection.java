@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.List;
 
 public class connectoHostConnection {
     //Initialize variables
@@ -121,18 +120,16 @@ class connectThread extends Thread{
         //Set max cores and start transfer threads
         connection.setCores((int) ( Math.max(cores, otherCores) / 2));
 
-        //Sleep for one second to allow host threads to be created
+        //Short sleep to allow host threads to be created
         try{
             Thread.sleep(1000);
-        }catch(InterruptedException e){
+        }catch (InterruptedException e){
             System.out.print(e);
         }
 
-        //Start transfer threads
+        //Connect threads
         connection.connectThreads();
-
     }
-    
 }
 
 class inputThread extends Thread{
@@ -171,10 +168,14 @@ class inputThread extends Thread{
     void dataTransfer(){
         while(true){
             try {
-                //Read from input stream
-                Packet inPacket = (Packet) this.inputStream.readObject();
-                this.assembler.SavePacket(inPacket);
-                System.out.print(inPacket.getFilename());
+                if (this.inputStream.available() != 0){
+                    //Read from input stream
+                    Packet inPacket = (Packet) this.inputStream.readObject();
+                    this.assembler.SavePacket(inPacket);
+                    System.out.print(inPacket.getFilename());
+                }else{
+                    System.out.print("Empty");
+                }
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
             }
@@ -222,6 +223,8 @@ class outputThread implements Runnable{
                 if (!this.outBuffer.packets.isEmpty()){
                     Packet sendPacket = this.outBuffer.getPacket();
                     this.outputStream.writeObject(sendPacket);
+                }else{
+                    return;
                 }
             }catch (IOException e){
                 System.out.print(e);

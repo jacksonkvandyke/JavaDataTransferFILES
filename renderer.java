@@ -328,6 +328,12 @@ class ConnectedSessionPage {
             @Override
             public void windowClosing(WindowEvent e) 
             { 
+                //Close input and output threads
+                if (renderer.hostConnection != null){
+                    renderer.hostConnection.outBuffer.killThreads();
+                }else{
+                    renderer.toConnection.outBuffer.killThreads();
+                }
                 System.exit(0); 
             } 
         }); 
@@ -390,7 +396,6 @@ class WaitForFiles extends Thread{
             public void actionPerformed(ActionEvent e){
                 //Start file transfer
                 files.StartTransfer(parent.renderer.hostConnection, parent.renderer.toConnection);
-
                 parent.statusLabels[0].setVisible(true);
                 UpdateUI();
             }

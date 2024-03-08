@@ -118,8 +118,9 @@ class hostawaitThread extends Thread{
 
         //Set max cores and start transfer threads
         this.connection.setCores((int) ( Math.max(cores, otherCores) / 2));
-        connection.connectThreads();
 
+        //Connect threads
+        connection.connectThreads();
     }
 }
 
@@ -177,12 +178,7 @@ class hostInputThread extends Thread{
                         System.out.print(inPacket.getFilename());
                     }
                 }else{
-                    System.out.print("Nothing available");
-                    try{
-                        Thread.sleep(1000);
-                    }catch(InterruptedException e){
-                        System.out.print(e);
-                    }
+                    System.out.print("Empty");
                 }
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
@@ -238,6 +234,8 @@ class hostOutputThread implements Runnable{
                 if (!this.outBuffer.packets.isEmpty()){
                     Packet sendPacket = this.outBuffer.getPacket();
                     this.outputStream.writeObject(sendPacket);
+                }else{
+                    return;
                 }
             }catch (IOException e){
                 System.out.print(e);
