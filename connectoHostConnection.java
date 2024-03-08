@@ -155,7 +155,9 @@ class inputThread extends Thread{
             System.out.printf("Input Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
+            System.out.print("Empty");
             inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+            System.out.print("D");
         }catch(IOException i){
             System.out.println(i);
         }
@@ -168,7 +170,6 @@ class inputThread extends Thread{
     void dataTransfer(){
         while(true){
             try {
-                System.out.print("Empty");
                 if (this.inputStream.available() != 0){
                     //Read from input stream
                     Packet inPacket = (Packet) this.inputStream.readObject();
