@@ -55,7 +55,7 @@ public class connectoHostConnection {
 
         //Sleep so all output threads can be made on both sides
         try{
-            Thread.sleep(1000);
+            Thread.sleep(5000);
         }catch (InterruptedException e){
             System.out.print(e);
         }
