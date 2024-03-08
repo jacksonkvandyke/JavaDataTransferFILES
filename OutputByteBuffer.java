@@ -7,11 +7,11 @@ public class OutputByteBuffer {
     List<Packet> packets = Collections.synchronizedList(new ArrayList<Packet>(50));
     List<Thread> threads = Collections.synchronizedList(new ArrayList<Thread>());
 
-    public Packet getPacket(){
+    synchronized public Packet getPacket(){
         return this.packets.remove(0);
     }
 
-    public void addPacket(Packet packet){
+    synchronized public void addPacket(Packet packet){
         this.packets.add(packet);
     }
 
