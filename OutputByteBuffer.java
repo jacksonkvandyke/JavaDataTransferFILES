@@ -8,7 +8,10 @@ public class OutputByteBuffer {
     List<Thread> threads = Collections.synchronizedList(new ArrayList<Thread>());
 
     synchronized public Packet getPacket(){
-        return this.packets.remove(0);
+        if (this.packets.size() > 0){
+            return this.packets.remove(0);
+        }
+        return null;
     }
 
     synchronized public void addPacket(Packet packet){

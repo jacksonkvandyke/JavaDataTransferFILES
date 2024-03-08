@@ -228,8 +228,10 @@ class outputThread extends Thread{
             try{
                 if (!this.outBuffer.packets.isEmpty()){
                     Packet sendPacket = this.outBuffer.getPacket();
-                    this.outputStream.writeObject(sendPacket);
-                    this.outputStream.flush();
+                    if (sendPacket != null){
+                        this.outputStream.writeObject(sendPacket);
+                        this.outputStream.flush();
+                    }
                 }
             }catch (IOException e){
                 System.out.print(e);
