@@ -171,14 +171,12 @@ class inputThread extends Thread{
     void dataTransfer(){
         while(true){
             try {
-                if (this.inputStream.available() != 0){
-                    //Read from input stream
-                    Packet inPacket = (Packet) this.inputStream.readObject();
+                //Read from input stream
+                Packet inPacket = (Packet) this.inputStream.readObject();
 
-                    if ((inPacket != null) && (inPacket.getData().length != 0)){
-                        this.assembler.SavePacket(inPacket);
-                        System.out.print(inPacket.getFilename());
-                    }
+                if ((inPacket != null) && (inPacket.getData().length != 0)){
+                    this.assembler.SavePacket(inPacket);
+                    System.out.print(inPacket.getFilename());
                 }
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
