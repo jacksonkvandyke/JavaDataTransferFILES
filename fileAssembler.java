@@ -10,9 +10,9 @@ public class fileAssembler {
         //Create file if it hasn't already been created
         file = new File(packet.getFilename());
 
-        if (!file.exists()){
-            try{
-                synchronized(file){
+        synchronized(file){
+            if (!file.exists()){
+                try{
                     //Create file and write empty data
                     file.createNewFile();
                     System.out.println("File successfully created!");
@@ -21,9 +21,9 @@ public class fileAssembler {
                     currentWriter.write(new byte[packet.getTotalPackets() * 1024]);
                     currentWriter.flush();
                     currentWriter.close();
+                }catch (IOException e){
+                    System.out.print(e);
                 }
-            }catch (IOException e){
-                System.out.print(e);
             }
         }
     }
