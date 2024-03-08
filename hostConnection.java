@@ -156,8 +156,6 @@ class hostInputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
-            Packet setupPacket = new Packet("Setup", 0, new byte[0]);
-            outputStream.writeObject(setupPacket);
             outputStream.flush();
             inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
@@ -224,8 +222,7 @@ class hostOutputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
-            Packet setupPacket = new Packet("Setup", 0, new byte[0]);
-            outputStream.writeObject(setupPacket);
+            outputStream.writeObject(null);
             outputStream.flush();
             inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
@@ -240,15 +237,15 @@ class hostOutputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            try{
-                if (!this.outBuffer.packets.isEmpty()){
-                    Packet sendPacket = this.outBuffer.getPacket();
-                    if (sendPacket != null){
-                        this.outputStream.writeObject(sendPacket);
-                        this.outputStream.flush();
-                    }
+            try {
+                //Read from input stream
+                Packet inPacket = (Packet) this.inputStream.readObject();
+                System.out.print(inPacket);
+
+                if ((inPacket != null) && (inPacket.getData().length != 0)){
+                    System.out.print(inPacket.getFilename());
                 }
-            }catch (IOException e){
+            }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
             }
         }

@@ -157,8 +157,6 @@ class inputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
-            Packet setupPacket = new Packet("Setup", 0, new byte[0]);
-            outputStream.writeObject(setupPacket);
             outputStream.flush();
             inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
@@ -173,16 +171,12 @@ class inputThread extends Thread{
     void dataTransfer(){
         while(true){
             try {
-                if (this.inputStream.available() > 0){
-                    //Read from input stream
-                    Packet inPacket = (Packet) this.inputStream.readObject();
-                    System.out.print(inPacket);
+                //Read from input stream
+                Packet inPacket = (Packet) this.inputStream.readObject();
+                System.out.print(inPacket);
 
-                    if ((inPacket != null) && (inPacket.getData().length != 0)){
-                        System.out.print(inPacket.getFilename());
-                    }
-                }else{
-                    System.out.print("Empty");
+                if ((inPacket != null) && (inPacket.getData().length != 0)){
+                    System.out.print(inPacket.getFilename());
                 }
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
@@ -218,8 +212,7 @@ class outputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
-            Packet setupPacket = new Packet("Setup", 0, new byte[0]);
-            outputStream.writeObject(setupPacket);
+            outputStream.writeObject(null);
             outputStream.flush();
             inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
