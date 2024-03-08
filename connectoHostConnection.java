@@ -137,6 +137,7 @@ class inputThread extends Thread{
     private int port = 0;
     private Socket socket = null;
     
+    ObjectOutputStream outputStream = null;
     ObjectInputStream inputStream = null;
     fileAssembler assembler = null;
     
@@ -155,6 +156,7 @@ class inputThread extends Thread{
             System.out.printf("Input Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
             System.out.print("Passed");
         }catch(IOException i){
@@ -194,6 +196,8 @@ class outputThread extends Thread{
     private Socket socket = null;
 
     ObjectOutputStream outputStream = null;
+    ObjectInputStream inputStream = null;
+
     OutputByteBuffer outBuffer;
     
     public outputThread(int port, OutputByteBuffer outBuffer){
@@ -212,10 +216,7 @@ class outputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
-
-            Packet setupPacket = new Packet("Setup", 0, new byte[0]);
-            outputStream.writeObject(setupPacket);
-            outputStream.flush();
+            inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
             System.out.println(i);
         }

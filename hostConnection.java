@@ -130,7 +130,9 @@ class hostInputThread extends Thread{
     private ServerSocket serverSocket = null;
     private Socket socket = null;
 
+    ObjectOutputStream outputStream = null;
     ObjectInputStream inputStream = null;
+
     fileAssembler assembler = null;
     
     public hostInputThread(int port){
@@ -153,6 +155,7 @@ class hostInputThread extends Thread{
             System.out.printf("Input Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
             System.out.print("Passed");
         }catch(IOException i){
@@ -195,6 +198,8 @@ class hostOutputThread extends Thread{
     private Socket socket = null;
 
     ObjectOutputStream outputStream = null;
+    ObjectInputStream inputStream = null;
+
     OutputByteBuffer outBuffer;
     
     public hostOutputThread(int port, OutputByteBuffer outBuffer){
@@ -218,10 +223,7 @@ class hostOutputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
-
-            Packet setupPacket = new Packet("Setup", 0, new byte[0]);
-            outputStream.writeObject(setupPacket);
-            outputStream.flush();
+            inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
             System.out.println(i);
             return;
