@@ -56,7 +56,7 @@ class SavePackets extends Thread{
                         System.out.println("File successfully created!");
 
                         FileOutputStream currentWriter = new FileOutputStream(file.getAbsolutePath());
-                        currentWriter.write(new byte[packet.getTotalPackets() * 1024]);
+                        currentWriter.write(new byte[(int) (packet.getTotalPackets() * 1024)]);
                         currentWriter.flush();
                         currentWriter.close();
                     }catch (IOException e){
