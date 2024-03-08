@@ -62,7 +62,7 @@ class SavePackets extends Thread{
 
                 //Write data to file
                 try{
-                    RandomAccessFile currentWriter = new RandomAccessFile(file.getAbsolutePath(), "w");
+                    RandomAccessFile currentWriter = new RandomAccessFile(file.getAbsolutePath(), "rw");
                     currentWriter.seek(packet.getSequence() * 1024);
                     currentWriter.write(packet.getData());
                     currentWriter.close();
