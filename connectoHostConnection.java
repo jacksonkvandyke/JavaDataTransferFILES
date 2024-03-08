@@ -179,8 +179,6 @@ class inputThread extends Thread{
                         this.assembler.SavePacket(inPacket);
                         System.out.print(inPacket.getFilename());
                     }
-                }else{
-                    System.out.print("Empty");
                 }
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
