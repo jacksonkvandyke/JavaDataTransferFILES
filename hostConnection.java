@@ -172,9 +172,8 @@ class hostInputThread extends Thread{
                 if (this.inputStream.available() != 0){
                     Packet inPacket = (Packet) this.inputStream.readObject();
                     System.out.print(inPacket);
-    
-                    //Check if packet was read
-                    if (inPacket != null){
+
+                    if ((inPacket != null) && (inPacket.getData() != null)){
                         this.assembler.SavePacket(inPacket);
                         System.out.print(inPacket.getFilename());
                     }
@@ -219,7 +218,7 @@ class hostOutputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
-            
+
             Packet setupPacket = new Packet("Setup", 0, null);
             outputStream.writeObject(setupPacket);
             outputStream.flush();
