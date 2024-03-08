@@ -235,8 +235,12 @@ class hostOutputThread extends Thread{
             try{
                 if (!this.outBuffer.packets.isEmpty()){
                     Packet sendPacket = this.outBuffer.getPacket();
-                    this.outputStream.writeObject(sendPacket);
-                    this.outputStream.flush();
+                    try{
+                        this.outputStream.writeObject(sendPacket);
+                        this.outputStream.flush();
+                    }catch (InvalidClassException e){
+                        System.out.print(e);
+                    }
                 }else{
                     return;
                 }
