@@ -157,6 +157,7 @@ class inputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
+            outputStream.flush();
             inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
             System.out.println(i);
@@ -211,6 +212,7 @@ class outputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
+            outputStream.flush();
             inputStream = new ObjectInputStream(socket.getInputStream());
         }catch(IOException i){
             System.out.println(i);
