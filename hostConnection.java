@@ -47,7 +47,7 @@ public class hostConnection{
 
         //Sleep so all output threads can be made on both sides
         try{
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         }catch (InterruptedException e){
             System.out.print(e);
         }
@@ -189,7 +189,7 @@ class hostInputThread extends Thread{
     
 }
 
-class hostOutputThread implements Runnable{
+class hostOutputThread extends Thread{
 
     private int port = 0;
     private ServerSocket serverSocket = null;

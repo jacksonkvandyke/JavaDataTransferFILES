@@ -55,7 +55,7 @@ public class connectoHostConnection {
 
         //Sleep so all output threads can be made on both sides
         try{
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         }catch (InterruptedException e){
             System.out.print(e);
         }
@@ -185,7 +185,7 @@ class inputThread extends Thread{
     
 }
 
-class outputThread implements Runnable{
+class outputThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
