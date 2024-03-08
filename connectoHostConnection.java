@@ -158,7 +158,6 @@ class inputThread extends Thread{
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
-            System.out.print("Passed");
         }catch(IOException i){
             System.out.println(i);
         }
