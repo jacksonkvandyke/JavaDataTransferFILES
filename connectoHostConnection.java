@@ -225,6 +225,7 @@ class outputThread extends Thread{
                 if (!this.outBuffer.packets.isEmpty()){
                     Packet sendPacket = this.outBuffer.getPacket();
                     this.outputStream.writeObject(sendPacket);
+                    this.outputStream.flush();
                 }else{
                     return;
                 }
