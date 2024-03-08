@@ -55,11 +55,6 @@ class SavePackets extends Thread{
                         //Create file and write empty data
                         file.createNewFile();
                         System.out.println("File successfully created!");
-
-                        FileOutputStream currentWriter = new FileOutputStream(file.getAbsolutePath());
-                        currentWriter.write(new byte[(int) (packet.getTotalPackets() * 1024)]);
-                        currentWriter.flush();
-                        currentWriter.close();
                     }catch (IOException e){
                         System.out.print(e);
                     }
@@ -67,7 +62,7 @@ class SavePackets extends Thread{
 
                 //Write data to file
                 try{
-                    RandomAccessFile currentWriter = new RandomAccessFile(file.getAbsolutePath(), "rw");
+                    RandomAccessFile currentWriter = new RandomAccessFile(file.getAbsolutePath(), "w");
                     currentWriter.seek(packet.getSequence() * 1024);
                     currentWriter.write(packet.getData());
                     currentWriter.close();
