@@ -364,9 +364,11 @@ class SelectFile {
         }
 
         //Create thread that waits for file preperation
-        WaitForFiles threadObject = new WaitForFiles(userPrompt, parent);
-        Thread thread = new Thread(threadObject);
-        thread.start();
+        if (userPrompt != null){
+            WaitForFiles threadObject = new WaitForFiles(userPrompt, parent);
+            Thread thread = new Thread(threadObject);
+            thread.start();
+        }
 
     }
 }
