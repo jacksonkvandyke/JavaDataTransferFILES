@@ -233,15 +233,15 @@ class hostOutputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            try {
-                //Read from input stream
-                Packet inPacket = (Packet) this.inputStream.readObject();
-                System.out.print(inPacket);
-
-                if ((inPacket != null) && (inPacket.getData().length != 0)){
-                    System.out.print(inPacket.getFilename());
+            try{
+                if (!this.outBuffer.packets.isEmpty()){
+                    Packet sendPacket = this.outBuffer.getPacket();
+                    if (sendPacket != null){
+                        this.outputStream.writeObject(sendPacket);
+                        this.outputStream.flush();
+                    }
                 }
-            }catch (IOException | ClassNotFoundException e){
+            }catch (IOException e){
                 System.out.print(e);
             }
         }

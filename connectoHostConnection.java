@@ -172,7 +172,6 @@ class inputThread extends Thread{
         while(true){
             try {
                 //Read from input stream
-                System.out.print("Reading");
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 System.out.print(inPacket);
 
