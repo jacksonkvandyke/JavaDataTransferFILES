@@ -172,6 +172,7 @@ class hostInputThread extends Thread{
         while(true){
             try {
                 //Read from input stream
+                System.out.print("reading");
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 System.out.print(inPacket);
 
@@ -236,7 +237,6 @@ class hostOutputThread extends Thread{
                 if (!this.outBuffer.packets.isEmpty()){
                     Packet sendPacket = this.outBuffer.getPacket();
                     if (sendPacket != null){
-                        System.out.print(sendPacket.getFilename());
                         this.outputStream.writeObject(sendPacket);
                         this.outputStream.flush();
                     }
