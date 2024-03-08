@@ -168,6 +168,7 @@ class hostInputThread extends Thread{
         while(true){
             try {
                 //Read from input stream
+                System.out.print("Empty");
                 if (this.inputStream.available() != 0){
                     Packet inPacket = (Packet) this.inputStream.readObject();
                     System.out.print(inPacket);

@@ -168,6 +168,7 @@ class inputThread extends Thread{
     void dataTransfer(){
         while(true){
             try {
+                System.out.print("Empty");
                 if (this.inputStream.available() != 0){
                     //Read from input stream
                     Packet inPacket = (Packet) this.inputStream.readObject();
