@@ -5,7 +5,7 @@ import java.io.IOException;
 public class fileAssembler {
     String currentDirectory = null;
 
-    void SavePacket(Packet packet){
+    synchronized void SavePacket(Packet packet){
         //Create file if it hasn't already been created
         File file = new File(packet.getFilename());
 
