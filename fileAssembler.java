@@ -23,18 +23,6 @@ public class fileAssembler {
                 System.out.print(e);
             }
         }
-
-        try{
-            //Create file writer and write components to file
-            FileOutputStream currentWriter = new FileOutputStream(file.getAbsolutePath());
-            currentWriter.write(packet.getData(), packet.getSequence() * 1024, packet.getData().length);
-            currentWriter.flush();
-
-            //Close file writer
-            currentWriter.close();
-        }catch(IOException e){
-            System.out.print(e);
-        }
     }
 
 }
