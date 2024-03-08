@@ -1,5 +1,4 @@
 import java.io.File;
-import java.util.List;
 
 public class GatherAllFiles {
     //This class gathers all files and prepares them to be sent by converting them to packets
@@ -29,6 +28,11 @@ public class GatherAllFiles {
     void StartTransfer(hostConnection hostConnection, connectoHostConnection toConnection){
         //Check if host or client
         OutputByteBuffer outBuffer = null;
+        if (hostConnection != null){
+            outBuffer = hostConnection.outBuffer;
+        }else{
+            outBuffer = toConnection.outBuffer;
+        }
 
         //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
