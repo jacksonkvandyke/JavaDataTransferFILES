@@ -8,12 +8,12 @@ public class fileAssembler {
 
     void SavePacket(Packet packet){
         //Create file if it hasn't already been created
+        file = new File(packet.getFilename());
 
         if (!file.exists()){
             try{
                 synchronized(file){
                     //Create file and write empty data
-                    file = new File(packet.getFilename());
                     file.createNewFile();
                     System.out.println("File successfully created!");
 
