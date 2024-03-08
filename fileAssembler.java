@@ -35,21 +35,24 @@ class SavePackets extends Thread{
     }
 
     void savePackets(Packet packet){
-        //Create file if it hasn't already been created
-        File file = new File(packet.getFilename());
+        //Continues to run until all packets are saved
+        while (true){
+            //Create file if it hasn't already been created
+            File file = new File(packet.getFilename());
 
-        if (!file.exists()){
-            try{
-                //Create file and write empty data
-                file.createNewFile();
-                System.out.println("File successfully created!");
+            if (!file.exists()){
+                try{
+                    //Create file and write empty data
+                    file.createNewFile();
+                    System.out.println("File successfully created!");
 
-                FileOutputStream currentWriter = new FileOutputStream(file.getAbsolutePath());
-                currentWriter.write(new byte[packet.getTotalPackets() * 1024]);
-                currentWriter.flush();
-                currentWriter.close();
-            }catch (IOException e){
-                System.out.print(e);
+                    FileOutputStream currentWriter = new FileOutputStream(file.getAbsolutePath());
+                    currentWriter.write(new byte[packet.getTotalPackets() * 1024]);
+                    currentWriter.flush();
+                    currentWriter.close();
+                }catch (IOException e){
+                    System.out.print(e);
+                }
             }
         }
     }
