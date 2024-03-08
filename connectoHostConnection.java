@@ -209,6 +209,9 @@ class outputThread extends Thread{
 
             //Assign input and output streams
             outputStream = new ObjectOutputStream(socket.getOutputStream());
+            
+            Packet setupPacket = new Packet("Setup", 0, null);
+            outputStream.writeObject(setupPacket);
             outputStream.flush();
         }catch(IOException i){
             System.out.println(i);
