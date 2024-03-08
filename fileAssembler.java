@@ -4,14 +4,15 @@ import java.io.IOException;
 
 public class fileAssembler {
     String currentDirectory = null;
+    File file = null;
 
-    synchronized void SavePacket(Packet packet){
+    synchronized void SavePacket(Packet packet, File file){
         //Create file if it hasn't already been created
-        File file = new File(packet.getFilename());
 
-        if (!file.isFile()){
+        if (!file.exists()){
             try{
                 //Create file and write empty data
+                file = new File(packet.getFilename());
                 file.createNewFile();
                 System.out.println("File successfully created!");
 
