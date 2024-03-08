@@ -11,8 +11,13 @@ public class fileAssembler {
 
         if (!file.exists()){
             try{
+                //Create file and write empty data
                 file.createNewFile();
                 System.out.println("File successfully created!");
+
+                FileOutputStream currentWriter = new FileOutputStream(file.getAbsolutePath());
+                currentWriter.write(new byte[packet.getTotalPackets() * 1024]);
+                currentWriter.close();
             }catch (IOException e){
                 System.out.print(e);
             }
