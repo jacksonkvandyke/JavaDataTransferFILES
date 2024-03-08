@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,9 +67,9 @@ class SavePackets extends Thread{
 
                 //Write data to file
                 try{
-                    FileOutputStream currentWriter = new FileOutputStream(file.getAbsolutePath(), true);
-                    currentWriter.write(packet.getData(), packet.getSequence() * 1024, packet.getDataLength());
-                    currentWriter.flush();
+                    RandomAccessFile currentWriter = new RandomAccessFile(file.getAbsolutePath(), "rw");
+                    currentWriter.seek(packet.getSequence() * 1024);
+                    currentWriter.write(packet.getData());
                     currentWriter.close();
                 }catch (IOException e){
                     System.out.print(e);
