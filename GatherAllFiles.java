@@ -51,6 +51,7 @@ public class GatherAllFiles {
             OpenFile threadObject = new OpenFile(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer);
             Thread thread = new Thread(threadObject);
             gatherFilesExecutor.execute(thread);
+            this.requiredFiles += 1;
         }
     }
 }
@@ -139,13 +140,18 @@ class OpenDirectory extends Thread{
                 newDirectoryName = this.directoryname + "/" + fileList[i].getName();
 
                 //Start process to get all files
-                new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, outBuffer);
+                OpenDirectory threadObject = new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, outBuffer);
+                Thread thread = new Thread(threadObject);
+                this.parent.gatherFilesExecutor.execute(thread);
                 continue;
             }
 
             //Convert file to packets and update file size
             newFileName = this.directoryname + "/" + fileList[i].getName();
-            new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
+            OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
+            Thread thread = new Thread(threadObject);
+            this.parent.gatherFilesExecutor.execute(thread);
+            this.parent.requiredFiles += 1;
         }
     }
 }
