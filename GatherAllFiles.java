@@ -139,23 +139,14 @@ class OpenDirectory extends Thread{
                 //Create new directory name
                 newDirectoryName = this.directoryname + "/" + fileList[i].getName();
 
-                //Start thread to get all files
-                try{
-                    OpenDirectory threadObject = new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, this.outBuffer);
-                    Thread thread = new Thread(threadObject);
-                    thread.start();
-                    thread.join();
-                }catch (InterruptedException e){
-                    System.out.print(e);
-                }
+                //Start process to get all files
+                new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, this.outBuffer);
                 continue;
             }
 
             //Convert file to packets and update file size
             newFileName = this.directoryname + "/" + fileList[i].getName();
-            OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
-            Thread thread = new Thread(threadObject);
-            thread.start();
+            new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
         }
         return;
     }
