@@ -1,4 +1,6 @@
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GatherAllFiles {
     //This class gathers all files and prepares them to be sent by converting them to packets
@@ -7,6 +9,8 @@ public class GatherAllFiles {
     long totalSize = 0;
     int requiredFiles = 0;
     int currentFiles = 0;
+
+    ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(2);
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
@@ -39,20 +43,15 @@ public class GatherAllFiles {
             //Start thread to get all files
             OpenDirectory threadObject = new OpenDirectory(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer);
             Thread thread = new Thread(threadObject);
-            thread.start();
+            gatherFilesExecutor.execute(thread);
         }
 
         if (userPrompt.isFile()){
             //Start thread for single file
             OpenFile threadObject = new OpenFile(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer);
             Thread thread = new Thread(threadObject);
-            thread.start();
+            gatherFilesExecutor.execute(thread);
         }
-
-        //Start file wait on thread
-        WaitCompletion waitObject = new WaitCompletion(this);
-        Thread waitThread = new Thread(waitObject);
-        waitThread.start();
     }
 }
 
@@ -142,13 +141,15 @@ class OpenDirectory extends Thread{
                 //Start process to get all files
                 OpenDirectory threadObject = new OpenDirectory(directoryFile.getAbsolutePath(), newDirectoryName, this.parent, outBuffer);
                 Thread thread = new Thread(threadObject);
-                thread.start();
+                this.parent.gatherFilesExecutor.execute(thread);
                 continue;
             }
 
             //Convert file to packets and update file size
             newFileName = this.directoryname + "/" + fileList[i].getName();
-            new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
+            OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
+            Thread thread = new Thread(threadObject);
+            this.parent.gatherFilesExecutor.execute(thread);
         }
         return;
     }
@@ -189,25 +190,4 @@ class OpenFile extends Thread{
         parent.currentFiles += 1;
     }
 
-}
-
-class WaitCompletion extends Thread{
-
-    GatherAllFiles parent = null;
-
-    WaitCompletion(GatherAllFiles parent){
-        this.parent = parent;
-    }
-
-    public void run(){
-        //Wait for files to finish processing
-        while (true){
-            try{
-                Thread.sleep(1000);
-            }catch(InterruptedException e){
-                System.out.println(e);
-            }
-
-        }
-    }
 }
