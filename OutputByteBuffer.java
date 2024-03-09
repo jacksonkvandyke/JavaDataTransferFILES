@@ -1,24 +1,21 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 
 public class OutputByteBuffer {
 
-    List<Packet> packets = Collections.synchronizedList(new ArrayList<Packet>(50));
+    BlockingQueue<Packet> packets = new ArrayBlockingQueue<Packet>(50);
 
     ExecutorService outputExecutor = null;
     ExecutorService inputExecutor = null;
 
-    synchronized public Packet getPacket(){
-        if (this.packets.size() > 0){
-            return this.packets.remove(0);
-        }
-        return null;
+    synchronized public Packet getPacket() throws InterruptedException{
+        return this.packets.take();
     }
 
-    synchronized public void addPacket(Packet packet){
-        this.packets.add(packet);
+    synchronized public boolean addPacket(Packet packet){
+        return this.packets.offer(packet);
     }
 
     public void killThreads(){

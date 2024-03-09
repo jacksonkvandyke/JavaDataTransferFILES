@@ -243,7 +243,7 @@ class hostOutputThread extends Thread{
     void dataTransfer(){
         while(true){
             try{
-                if (!this.outBuffer.packets.isEmpty()){
+                if (this.outBuffer.packets.peek() != null){
                     Packet sendPacket = this.outBuffer.getPacket();
                     if (sendPacket != null){
                         this.outputStream.writeObject(sendPacket);

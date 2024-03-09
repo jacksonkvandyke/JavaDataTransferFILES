@@ -181,8 +181,7 @@ class OpenFile extends Thread{
             
             //Continue waiting until packet is added to thread
             while (retrievedPacket != null){
-                if (this.outBuffer.packets.size() < 50){
-                    this.outBuffer.addPacket(retrievedPacket);
+                if (this.outBuffer.addPacket(retrievedPacket)){
                     retrievedPacket = null;
                 }
             }
