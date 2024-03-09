@@ -38,7 +38,7 @@ public class FileToPackets{
         }
 
         //Create packet from bytes and add to packets list
-        this.maxPackets = (long) Math.max(1, Math.ceil((double) fileSize / (double) 10240));
+        this.maxPackets = (long) Math.max(1, Math.ceil((double) fileSize / (double) 102400));
         this.packets = new Packet[(int) maxPackets];
 
         //Create packets
