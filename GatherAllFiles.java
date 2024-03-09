@@ -156,6 +156,7 @@ class OpenDirectory extends Thread{
             OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
             Thread thread = new Thread(threadObject);
             thread.start();
+            thread.join();
 
         }
         return;
