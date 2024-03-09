@@ -7,21 +7,18 @@ import java.util.List;
 
 public class fileAssembler {
     String currentDirectory = null;
-    boolean threadStarted = false;
-
     List<Packet> packets = Collections.synchronizedList(new ArrayList<Packet>(50));
+
+    //Start file assembler on object creation
+    fileAssembler(){
+        SavePackets savepackets = new SavePackets(this);
+        Thread thread = new Thread(savepackets);
+        thread.start();
+    }
 
     synchronized void AddPacket(Packet packet){
         if (packets.size() < 50){
             packets.add(packet);
-
-            //Start save packet thread if not started
-            if (!threadStarted){
-                SavePackets savepackets = new SavePackets(this);
-                Thread thread = new Thread(savepackets);
-                thread.start();
-                threadStarted = true;
-            }
         }
     }
 
