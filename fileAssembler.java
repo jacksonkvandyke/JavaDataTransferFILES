@@ -27,8 +27,9 @@ public class fileAssembler {
     }
 
     List<Packet> GetPackets(){
+        List<Packet> currentPackets = packets;
         this.packets.clear();
-        return this.packets;
+        return currentPackets;
     }
 }
 
