@@ -26,7 +26,10 @@ public class fileAssembler {
     }
 
     Packet GetPacket(){
-        return this.packets.remove(0);
+        if (this.packets.size() > 0){
+            return this.packets.remove(0);
+        }
+        return null;
     }
 }
 
@@ -44,6 +47,11 @@ class SavePackets extends Thread{
                 //Get current packet
                 Packet packet = assembler.GetPacket();
 
+                //Return if null packet
+                if (packet == null){
+                    continue;
+                }
+
                 //Create file if it hasn't already been created
                 File file = new File(packet.getFilename());
 
@@ -52,7 +60,6 @@ class SavePackets extends Thread{
                         //Create file and write empty data
                         file.getParentFile().mkdirs();
                         file.createNewFile();
-                        System.out.println("File successfully created!");
                     }catch (IOException e){
                         System.out.print(e);
                     }
