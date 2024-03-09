@@ -123,7 +123,7 @@ class ReadPacketThread extends Thread{
             }
 
             //Check if read elements was less than packet buffers size
-            if (currentRead < 1024){
+            if ((currentRead < 1024) && (currentRead > -1)){
                 byte newBuffer[] = new byte[currentRead];
 
                 //Add all elements to new buffer
