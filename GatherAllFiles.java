@@ -214,11 +214,6 @@ class WaitCompletion extends Thread{
     public void run(){
         //Wait for files to finish processing
         while (true){
-            if (parent.requiredFiles == parent.currentFiles && parent.requiredFiles != 0){
-                parent.progress = 100;
-                return;
-            }
-
             try{
                 Thread.sleep(1000);
             }catch(InterruptedException e){
