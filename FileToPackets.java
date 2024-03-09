@@ -36,7 +36,6 @@ public class FileToPackets{
         }
 
         //Create packet from bytes and add to packets list
-        System.out.print((double) fileSize / (double) 1024);
         this.maxPackets = (long) Math.max(1, Math.ceil((double) fileSize / (double) 1024));
         this.packets = new Packet[(int) maxPackets];
 
@@ -119,6 +118,17 @@ class ReadPacketThread extends Thread{
             }catch (IOException i){
                 System.out.print(i);
 
+            }
+
+            //Check if read elements was less than packet buffers size
+            if (currentRead < 1024){
+                byte newBuffer[] = new byte[currentRead];
+
+                //Add all elements to new buffer
+                for (int i = 0; i < currentRead; i++){
+                    newBuffer[i] = packetBuffer[i];
+                }
+                packetBuffer = newBuffer;
             }
 
             //Check if any data was returned
