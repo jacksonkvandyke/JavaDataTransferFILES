@@ -10,7 +10,7 @@ public class GatherAllFiles {
     int requiredFiles = 0;
     int currentFiles = 0;
 
-    ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(4);
+    ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(2);
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
@@ -139,19 +139,13 @@ class OpenDirectory extends Thread{
                 newDirectoryName = this.directoryname + "/" + fileList[i].getName();
 
                 //Start process to get all files
-                OpenDirectory threadObject = new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, outBuffer);
-                Thread thread = new Thread(threadObject);
-                this.parent.gatherFilesExecutor.execute(thread);
-                System.out.print("Executed");
+                new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, outBuffer);
                 continue;
             }
 
             //Convert file to packets and update file size
             newFileName = this.directoryname + "/" + fileList[i].getName();
-            OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
-            Thread thread = new Thread(threadObject);
-            System.out.print("Executed");
-            this.parent.gatherFilesExecutor.execute(thread);
+            new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
         }
     }
 }
