@@ -27,6 +27,7 @@ public class fileAssembler {
     }
 
     List<Packet> GetPackets(){
+        this.packets.clear();
         return this.packets;
     }
 }
