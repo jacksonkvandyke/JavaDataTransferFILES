@@ -7,7 +7,7 @@ public class FileToPackets{
 
     Packet packets[] = null;
     File currentFile = null;
-    File parentDirectory = null;
+    String filename = "";
     InputStream fileInput = null;
     long maxPackets = 0;
     long fileSize = 0;
@@ -15,11 +15,13 @@ public class FileToPackets{
     int currentPackets = 0;
     int packetIterator = -1;
 
-    public FileToPackets(String location){
+    public FileToPackets(String location, String filename){
+        //Assign filename
+        this.filename = filename;
+
         //Open file and create scanner
         try{
             currentFile = new File(location);
-            parentDirectory = currentFile.getParentFile();
             fileInput = new FileInputStream(currentFile);
 
             //Get file size
@@ -40,7 +42,7 @@ public class FileToPackets{
         this.packets = new Packet[(int) maxPackets];
 
         //Create packets
-        ReadPacketThread threadObject = new ReadPacketThread(currentFile.getName(), fileInput, packets, this);
+        ReadPacketThread threadObject = new ReadPacketThread(filename, fileInput, packets, this);
         Thread thread = new Thread(threadObject);
         thread.start();
 

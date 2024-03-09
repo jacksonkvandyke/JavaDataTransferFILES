@@ -37,14 +37,14 @@ public class GatherAllFiles {
         //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
             //Start thread to get all files
-            OpenDirectory threadObject = new OpenDirectory(outBuffer, userPrompt.getAbsolutePath(), this);
+            OpenDirectory threadObject = new OpenDirectory(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer);
             Thread thread = new Thread(threadObject);
             thread.start();
         }
 
         if (userPrompt.isFile()){
             //Start thread for single file
-            OpenFile threadObject = new OpenFile(outBuffer, userPrompt.getAbsolutePath(), this);
+            OpenFile threadObject = new OpenFile(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer);
             Thread thread = new Thread(threadObject);
             thread.start();
         }
@@ -114,11 +114,13 @@ class GetDirectorySize extends Thread{
 class OpenDirectory extends Thread{
     //This class opens the specified directory and checks for any files to send
     String directory = "";
+    String directoryname = "";
     GatherAllFiles parent = null;
     OutputByteBuffer outBuffer = null;
 
-    OpenDirectory(OutputByteBuffer outBuffer, String userPrompt, GatherAllFiles parent) {
+    OpenDirectory(String userPrompt, String directoryname, GatherAllFiles parent, OutputByteBuffer outBuffer) {
         this.directory = userPrompt;
+        this.directoryname = directoryname;
         this.parent = parent;
         this.outBuffer = outBuffer;
     }
@@ -131,15 +133,19 @@ class OpenDirectory extends Thread{
         //Call packet creation on each file or open start operation on directory if directory
         for (int i = 0; i < fileList.length; i++){
             if (fileList[i].isDirectory()){
+                //Create new directory name
+                String newDirectoryName = this.directoryname + "/" + fileList[i].getName();
+
                 //Start thread to get all files
-                OpenDirectory threadObject = new OpenDirectory(this.outBuffer, fileList[i].getAbsolutePath(), this.parent);
+                OpenDirectory threadObject = new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, this.outBuffer);
                 Thread thread = new Thread(threadObject);
                 thread.start();
                 continue;
             }
 
             //Convert file to packets and update file size
-            OpenFile threadObject = new OpenFile(this.outBuffer, fileList[i].getAbsolutePath(), this.parent);
+            String newFileName = this.directoryname + "/" + fileList[i].getName();
+            OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
             Thread thread = new Thread(threadObject);
             thread.start();
 
@@ -150,10 +156,11 @@ class OpenDirectory extends Thread{
 
 class OpenFile extends Thread{
     String path = "";
+    String filename = "";
     GatherAllFiles parent = null;
     OutputByteBuffer outBuffer = null;
 
-    OpenFile(OutputByteBuffer outBuffer, String userPrompt, GatherAllFiles parent) {
+    OpenFile(String userPrompt, String filename, GatherAllFiles parent, OutputByteBuffer outBuffer) {
         this.path = userPrompt;
         this.parent = parent;
         this.outBuffer = outBuffer;
@@ -161,7 +168,7 @@ class OpenFile extends Thread{
 
     public void run() {
         //Convert single file and set attributes
-        FileToPackets convertedFile = new FileToPackets(this.path);
+        FileToPackets convertedFile = new FileToPackets(this.path, this.filename);
 
         //Add files to outputStream until depleted
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
