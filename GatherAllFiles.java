@@ -158,7 +158,7 @@ class OpenDirectory extends Thread{
             thread.start();
 
         }
-
+        return;
     }
 }
 
