@@ -9,6 +9,7 @@ public class hostConnection{
     int maxCores = 0;
 
     OutputByteBuffer outBuffer = new OutputByteBuffer();
+    fileAssembler assembler = new fileAssembler();
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
@@ -55,7 +56,7 @@ public class hostConnection{
         //Create the input threads
         for (int i = 0; i < this.maxCores; i++){
             //Input thread
-            hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 1);
+            hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 1, assembler);
             Thread inThread = new Thread(input);
             inThread.start();
         }
@@ -135,9 +136,9 @@ class hostInputThread extends Thread{
 
     fileAssembler assembler = null;
     
-    public hostInputThread(int port){
+    public hostInputThread(int port, fileAssembler assembler){
         this.port = port;
-        this.assembler = new fileAssembler();
+        this.assembler = assembler;
     }
 
     public void run(){
