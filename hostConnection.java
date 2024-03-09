@@ -176,10 +176,10 @@ class hostInputThread extends Thread{
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 if ((inPacket != null) && (inPacket.getData().length != 0)){
-                    this.assembler.AddPacket(inPacket);
+                    this.assembler.packets.put(inPacket);
                 }
 
-            }catch (IOException | ClassNotFoundException e){
+            }catch (IOException | ClassNotFoundException | InterruptedException e){
                 System.out.print(e);
             }
         }

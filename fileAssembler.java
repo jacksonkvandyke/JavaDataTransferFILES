@@ -1,32 +1,18 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class fileAssembler {
     String currentDirectory = null;
-    List<Packet> packets = Collections.synchronizedList(new ArrayList<Packet>(50));
+    BlockingQueue<Packet> packets = new ArrayBlockingQueue<Packet>(10);
 
     //Start file assembler on object creation
     fileAssembler(){
         SavePackets savepackets = new SavePackets(this);
         Thread thread = new Thread(savepackets);
         thread.start();
-    }
-
-    synchronized void AddPacket(Packet packet){
-        if (packets.size() < 50){
-            packets.add(packet);
-        }
-    }
-
-    Packet GetPacket(){
-        if (this.packets.size() > 0){
-            return this.packets.remove(0);
-        }
-        return null;
     }
 }
 
@@ -40,9 +26,9 @@ class SavePackets extends Thread{
 
     public void run(){
         while (true){
-            if (assembler.packets.size() > 0){
-                //Get current packet
-                Packet packet = assembler.GetPacket();
+            //Get current packet
+            try{
+                Packet packet = this.assembler.packets.take();
 
                 //Return if null packet
                 if (packet == null){
@@ -73,6 +59,8 @@ class SavePackets extends Thread{
                 }catch (IOException e){
                     System.out.print(e);
                 }
+            }catch (InterruptedException e){
+                System.out.print(e);
             }
         }
     }

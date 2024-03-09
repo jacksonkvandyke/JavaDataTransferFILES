@@ -135,7 +135,7 @@ class ReadPacketThread extends Thread{
 
             //Check if any data was returned
             if (currentRead == 0){
-                return;
+                break;
             }
 
             //Create packet, increment sequence, and increment fileSize to UI
