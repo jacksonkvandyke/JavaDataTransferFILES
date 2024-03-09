@@ -142,6 +142,7 @@ class OpenDirectory extends Thread{
                 OpenDirectory threadObject = new OpenDirectory(directoryFile.getAbsolutePath(), newDirectoryName, this.parent, outBuffer);
                 Thread thread = new Thread(threadObject);
                 this.parent.gatherFilesExecutor.execute(thread);
+                System.out.print("Executed");
                 continue;
             }
 
@@ -149,9 +150,9 @@ class OpenDirectory extends Thread{
             newFileName = this.directoryname + "/" + fileList[i].getName();
             OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
             Thread thread = new Thread(threadObject);
+            System.out.print("Executed");
             this.parent.gatherFilesExecutor.execute(thread);
         }
-        return;
     }
 }
 
