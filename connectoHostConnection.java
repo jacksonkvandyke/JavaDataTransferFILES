@@ -51,7 +51,7 @@ public class connectoHostConnection {
         ExecutorService executors = Executors.newFixedThreadPool(2);
 
         //Output thread
-        outputThread output = new outputThread(this.socket.getLocalPort() + 2, this.outBuffer);
+        outputThread output = new outputThread(this.socket.getPort() + 2, this.outBuffer);
         Thread outThread = new Thread(output);
         executors.execute(outThread);
 
@@ -63,7 +63,7 @@ public class connectoHostConnection {
         }
 
         //Input thread
-        inputThread input = new inputThread(this.socket.getLocalPort() + 1);
+        inputThread input = new inputThread(this.socket.getPort() + 1);
         Thread inThread = new Thread(input);
         executors.execute(inThread);
 
