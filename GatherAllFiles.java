@@ -152,12 +152,15 @@ class OpenDirectory extends Thread{
             }
 
             //Convert file to packets and update file size
-            newFileName = this.directoryname + "/" + fileList[i].getName();
-            OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
-            Thread thread = new Thread(threadObject);
-            thread.start();
-            thread.join();
-
+            try{
+                newFileName = this.directoryname + "/" + fileList[i].getName();
+                OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
+                Thread thread = new Thread(threadObject);
+                thread.start();
+                thread.join();
+            }catch (InterruptedException e){
+                System.out.print(e);
+            }
         }
         return;
     }
