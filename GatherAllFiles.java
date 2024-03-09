@@ -169,6 +169,7 @@ class OpenFile extends Thread{
     public void run() {
         //Convert single file and set attributes
         FileToPackets convertedFile = new FileToPackets(this.path, this.filename);
+        System.out.print(this.filename);
 
         //Add files to outputStream until depleted
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
