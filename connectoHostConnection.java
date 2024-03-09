@@ -47,7 +47,7 @@ public class connectoHostConnection {
 
     void connectThreads(){
         //Create the output Threads and await for connection
-        for (int i = 0; i < this.maxCores; i++){
+        for (int i = 0; i < this.maxCores / 2; i++){
             //Output thread
             outputThread output = new outputThread(this.socket.getPort() + i + 1, outBuffer);
             Thread outThread = new Thread(output);
@@ -62,7 +62,7 @@ public class connectoHostConnection {
         }
 
         //Create the input threads
-        for (int i = this.maxCores; i < this.maxCores * 2; i++){
+        for (int i = this.maxCores; i < this.maxCores; i++){
             //Input thread
             inputThread input = new inputThread(this.socket.getPort() + i + 1, this.assembler);
             Thread inThread = new Thread(input);
