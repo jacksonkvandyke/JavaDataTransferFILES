@@ -185,10 +185,7 @@ class inputThread extends Thread{
                     this.assembler.AddPacket(inPacket);
                 }
 
-                //Short sleep to reduce cpu usage
-                Thread.sleep(5);
-
-            }catch (IOException | ClassNotFoundException | InterruptedException e){
+            }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
             }
         }
@@ -237,17 +234,12 @@ class outputThread extends Thread{
     void dataTransfer(){
         while(true){
             try{
-                if (!this.outBuffer.packets.isEmpty()){
-                    Packet sendPacket = this.outBuffer.getPacket();
-                    if (sendPacket != null){
-                        this.outputStream.writeObject(sendPacket);
-                        this.outputStream.flush();
-                    }
-
-                //Short sleep to reduce cpu usage
-                Thread.sleep(5);
-
+                Packet sendPacket = this.outBuffer.packets.take();
+                if (sendPacket != null){
+                    this.outputStream.writeObject(sendPacket);
+                    this.outputStream.flush();
                 }
+
             }catch (IOException | InterruptedException e){
                 System.out.print(e);
             }

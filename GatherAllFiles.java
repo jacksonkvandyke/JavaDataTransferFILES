@@ -180,9 +180,13 @@ class OpenFile extends Thread{
             Packet retrievedPacket = convertedFile.GetPacket();
             
             //Continue waiting until packet is added to thread
-            while (retrievedPacket != null){
-                this.outBuffer.addPacket(retrievedPacket);
-                retrievedPacket = null;
+            try{
+                if (retrievedPacket != null){
+                    this.outBuffer.packets.put(retrievedPacket);
+                    retrievedPacket = null;
+                }
+            }catch (InterruptedException e){
+                System.out.print(e);
             }
         }
         parent.currentFiles += 1;
