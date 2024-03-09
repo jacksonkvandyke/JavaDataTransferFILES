@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class hostConnection{
     //Initialize variables
@@ -38,11 +40,12 @@ public class hostConnection{
 
     void connectThreads(){
         //Create the threads and await for connection
+        ExecutorService outputExecutor = Executors.newFixedThreadPool(this.maxCores / 2);
         for (int i = this.maxCores / 2; i < this.maxCores; i++){
             //Output thread
             hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + i + 1, this.outBuffer);
             Thread outThread = new Thread(output);
-            outThread.start();
+            outputExecutor.execute(outThread);
         }
 
         //Sleep so all output threads can be made on both sides
@@ -52,13 +55,17 @@ public class hostConnection{
             System.out.print(e);
         }
 
-        //Create the input threads
+        ExecutorService inputExecutor = Executors.newFixedThreadPool(this.maxCores / 2);
         for (int i = 0; i < this.maxCores / 2; i++){
             //Input thread
             hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 1);
             Thread inThread = new Thread(input);
-            inThread.start();
+            inputExecutor.execute(inThread);
         }
+
+        //Add services to OutputBuffer
+        outBuffer.outputExecutor = outputExecutor;
+        outBuffer.inputExecutor = inputExecutor;
 
     }
 

@@ -1,11 +1,14 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class OutputByteBuffer {
 
     List<Packet> packets = Collections.synchronizedList(new ArrayList<Packet>(50));
-    List<Thread> threads = Collections.synchronizedList(new ArrayList<Thread>());
+
+    ExecutorService outputExecutor = null;
+    ExecutorService inputExecutor = null;
 
     synchronized public Packet getPacket(){
         if (this.packets.size() > 0){
@@ -18,13 +21,12 @@ public class OutputByteBuffer {
         this.packets.add(packet);
     }
 
-    public void addThread(Thread thread){
-        this.threads.add(thread);
-    }
-
     public void killThreads(){
-        while (!threads.isEmpty()){
-            threads.remove(0).interrupt();
+        if (outputExecutor != null){
+            outputExecutor.shutdown();
+        }
+        if (inputExecutor != null){
+            inputExecutor.shutdown();
         }
     }
     
