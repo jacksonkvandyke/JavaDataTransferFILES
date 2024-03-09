@@ -40,13 +40,12 @@ public class hostConnection{
 
     void connectThreads(){
         //Create the threads and await for connection
-        ExecutorService outputExecutor = Executors.newFixedThreadPool(this.maxCores / 2);
-        for (int i = this.maxCores / 2; i < this.maxCores; i++){
-            //Output thread
-            hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + i + 1, this.outBuffer);
-            Thread outThread = new Thread(output);
-            outputExecutor.execute(outThread);
-        }
+        ExecutorService executors = Executors.newFixedThreadPool(2);
+
+        //Output thread
+        hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + 1, this.outBuffer);
+        Thread outThread = new Thread(output);
+        executors.execute(outThread);
 
         //Sleep so all output threads can be made on both sides
         try{
@@ -55,17 +54,13 @@ public class hostConnection{
             System.out.print(e);
         }
 
-        ExecutorService inputExecutor = Executors.newFixedThreadPool(this.maxCores / 2);
-        for (int i = 0; i < this.maxCores / 2; i++){
-            //Input thread
-            hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 1);
-            Thread inThread = new Thread(input);
-            inputExecutor.execute(inThread);
-        }
+        //Input thread
+        hostInputThread input = new hostInputThread(this.socket.getLocalPort() + 2);
+        Thread inThread = new Thread(input);
+        executors.execute(inThread);
 
         //Add services to OutputBuffer
-        outBuffer.outputExecutor = outputExecutor;
-        outBuffer.inputExecutor = inputExecutor;
+        outBuffer.executors = executors;
 
     }
 

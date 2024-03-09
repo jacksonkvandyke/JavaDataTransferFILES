@@ -6,15 +6,11 @@ public class OutputByteBuffer {
 
     BlockingQueue<Packet> packets = new ArrayBlockingQueue<Packet>(10);
 
-    ExecutorService outputExecutor = null;
-    ExecutorService inputExecutor = null;
+    ExecutorService executors = null;
 
     public void killThreads(){
-        if (outputExecutor != null){
-            outputExecutor.shutdown();
-        }
-        if (inputExecutor != null){
-            inputExecutor.shutdown();
+        if (executors != null){
+            executors.shutdown();
         }
     }
     
