@@ -132,9 +132,12 @@ class OpenDirectory extends Thread{
 
         //Call packet creation on each file or open start operation on directory if directory
         for (int i = 0; i < fileList.length; i++){
+            String newDirectoryName = "";
+            String newFileName = "";
+
             if (fileList[i].isDirectory()){
                 //Create new directory name
-                String newDirectoryName = this.directoryname + "/" + fileList[i].getName();
+                newDirectoryName = this.directoryname + "/" + fileList[i].getName();
 
                 //Start thread to get all files
                 OpenDirectory threadObject = new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, this.outBuffer);
@@ -144,7 +147,7 @@ class OpenDirectory extends Thread{
             }
 
             //Convert file to packets and update file size
-            String newFileName = this.directoryname + "/" + fileList[i].getName();
+            newFileName = this.directoryname + "/" + fileList[i].getName();
             OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
             Thread thread = new Thread(threadObject);
             thread.start();
@@ -162,6 +165,7 @@ class OpenFile extends Thread{
 
     OpenFile(String userPrompt, String filename, GatherAllFiles parent, OutputByteBuffer outBuffer) {
         this.path = userPrompt;
+        this.filename = filename;
         this.parent = parent;
         this.outBuffer = outBuffer;
     }
@@ -169,7 +173,6 @@ class OpenFile extends Thread{
     public void run() {
         //Convert single file and set attributes
         FileToPackets convertedFile = new FileToPackets(this.path, this.filename);
-        System.out.print(this.filename);
 
         //Add files to outputStream until depleted
         while ((convertedFile.packetIterator != convertedFile.maxPackets) || (convertedFile.currentPackets == 0)){
