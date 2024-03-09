@@ -140,7 +140,7 @@ class OpenDirectory extends Thread{
                 newDirectoryName = this.directoryname + "/" + fileList[i].getName();
 
                 //Start process to get all files
-                OpenDirectory threadObject = new OpenDirectory(directoryFile.getAbsolutePath(), newDirectoryName, this, outBuffer);
+                OpenDirectory threadObject = new OpenDirectory(directoryFile.getAbsolutePath(), newDirectoryName, this.parent, outBuffer);
                 Thread thread = new Thread(threadObject);
                 thread.start();
                 continue;
