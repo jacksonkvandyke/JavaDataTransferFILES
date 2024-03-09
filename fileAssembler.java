@@ -55,7 +55,9 @@ class SavePackets extends Thread{
                 if (!file.exists()){
                     try{
                         //Create file and write empty data
-                        file.getParentFile().mkdirs();
+                        if (file.getParentFile() != null){
+                            file.getParentFile().mkdirs();
+                        }
                         file.createNewFile();
                     }catch (IOException e){
                         System.out.print(e);
