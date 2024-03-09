@@ -75,6 +75,13 @@ class SavePackets extends Thread{
                     System.out.print(e);
                 }
             }
+
+            //Small sleep to save resources
+            try{
+                Thread.sleep(1);
+            }catch (InterruptedException e){
+
+            }
         }
     }
 }

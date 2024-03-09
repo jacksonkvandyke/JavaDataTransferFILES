@@ -179,6 +179,14 @@ class hostInputThread extends Thread{
             }catch (IOException | ClassNotFoundException e){
                 System.out.print(e);
             }
+
+            //Small sleep to save resources
+            try{
+                Thread.sleep(1);
+            }catch (InterruptedException e){
+
+            }
+            
         }
     }
     
@@ -241,6 +249,13 @@ class hostOutputThread extends Thread{
                 }
             }catch (IOException e){
                 System.out.print(e);
+            }
+
+            //Small sleep to save resources
+            try{
+                Thread.sleep(1);
+            }catch (InterruptedException e){
+
             }
         }
     }
