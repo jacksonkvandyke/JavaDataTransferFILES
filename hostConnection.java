@@ -39,7 +39,7 @@ public class hostConnection{
 
     void connectThreads(){
         //Create the threads and await for connection
-        for (int i = this.maxCores; i < this.maxCores; i++){
+        for (int i = this.maxCores / 2; i < this.maxCores; i++){
             //Output thread
             hostOutputThread output = new hostOutputThread(this.socket.getLocalPort() + i + 1, this.outBuffer);
             Thread outThread = new Thread(output);
