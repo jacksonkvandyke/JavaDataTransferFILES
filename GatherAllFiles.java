@@ -10,7 +10,7 @@ public class GatherAllFiles {
     int requiredFiles = 0;
     int currentFiles = 0;
 
-    ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(2);
+    ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(4);
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
