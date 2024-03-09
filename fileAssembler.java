@@ -26,10 +26,8 @@ public class fileAssembler {
         }
     }
 
-    List<Packet> GetPackets(){
-        List<Packet> currentPackets = packets;
-        this.packets.clear();
-        return currentPackets;
+    Packet GetPacket(){
+        return this.packets.remove(0);
     }
 }
 
@@ -43,11 +41,9 @@ class SavePackets extends Thread{
 
     public void run(){
         while (true){
-            List<Packet> packets = assembler.GetPackets();
-
-            if (packets.size() > 0){
+            if (assembler.packets.size() > 0){
                 //Get current packet
-                Packet packet = packets.remove(0);
+                Packet packet = assembler.GetPacket();
 
                 //Create file if it hasn't already been created
                 File file = new File(packet.getFilename());
