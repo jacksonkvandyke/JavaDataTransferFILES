@@ -9,7 +9,6 @@ public class connectoHostConnection {
     int maxCores = 0;
 
     OutputByteBuffer outBuffer = new OutputByteBuffer();
-    fileAssembler assembler = new fileAssembler();
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -64,7 +63,7 @@ public class connectoHostConnection {
         //Create the input threads
         for (int i = this.maxCores / 2; i < this.maxCores; i++){
             //Input thread
-            inputThread input = new inputThread(this.socket.getPort() + i + 1, this.assembler);
+            inputThread input = new inputThread(this.socket.getPort() + i + 1);
             Thread inThread = new Thread(input);
             inThread.start();
         }
@@ -142,9 +141,9 @@ class inputThread extends Thread{
     ObjectInputStream inputStream = null;
     fileAssembler assembler = null;
     
-    public inputThread(int port, fileAssembler assembler){
+    public inputThread(int port){
         this.port = port;
-        this.assembler = assembler;
+        this.assembler = new fileAssembler();
     }
 
     public void run(){
