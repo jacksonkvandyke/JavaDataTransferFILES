@@ -176,7 +176,11 @@ class inputThread extends Thread{
                 if ((inPacket != null) && (inPacket.getData().length != 0)){
                     this.assembler.AddPacket(inPacket);
                 }
-            }catch (IOException | ClassNotFoundException e){
+
+                //Short sleep to reduce cpu usage
+                Thread.sleep(5);
+
+            }catch (IOException | ClassNotFoundException | InterruptedException e){
                 System.out.print(e);
             }
         }
@@ -231,12 +235,12 @@ class outputThread extends Thread{
                         this.outputStream.writeObject(sendPacket);
                         this.outputStream.flush();
                     }
-                }else{
-                    while(true){
-                        
-                    }
+
+                //Short sleep to reduce cpu usage
+                Thread.sleep(5);
+
                 }
-            }catch (IOException e){
+            }catch (IOException | InterruptedException e){
                 System.out.print(e);
             }
         }
