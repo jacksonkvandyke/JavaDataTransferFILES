@@ -46,6 +46,7 @@ class SavePackets extends Thread{
 
                 //Create file if it hasn't already been created
                 File file = new File(packet.getFilename());
+                System.out.print(packet.getFilename());
 
                 if (!file.exists()){
                     try{
