@@ -238,6 +238,10 @@ class hostOutputThread extends Thread{
                         this.outputStream.writeObject(sendPacket);
                         this.outputStream.flush();
                     }
+                }else{
+                    while(true){
+                        
+                    }
                 }
             }catch (IOException e){
                 System.out.print(e);
