@@ -1,6 +1,9 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -37,12 +40,8 @@ class SavePackets extends Thread{
 
                 //Check if file is directory and create directory
                 if (packet.CheckDirectory()){
-                    File file = new File(packet.getFilename());
-                    
-                    if (file.getParentFile() != null){
-                        file.getParentFile().mkdirs();
-                    }
-                    file.mkdir();
+                    Path directoryPath = Paths.get(packet.getFilename());
+                    Files.createDirectory(directoryPath);
 
                 }
 
@@ -62,15 +61,12 @@ class SavePackets extends Thread{
                 }
 
                 //Write data to file
-                try{
-                    RandomAccessFile currentWriter = new RandomAccessFile(file.getAbsolutePath(), "rw");
-                    currentWriter.seek(packet.getSequence() * 1024);
-                    currentWriter.write(packet.getData());
-                    currentWriter.close();
-                }catch (IOException e){
-                    System.out.print(e);
-                }
-            }catch (InterruptedException e){
+                RandomAccessFile currentWriter = new RandomAccessFile(file.getAbsolutePath(), "rw");
+                currentWriter.seek(packet.getSequence() * 1024);
+                currentWriter.write(packet.getData());
+                currentWriter.close();
+                
+            }catch (InterruptedException | IOException e){
                 System.out.print(e);
             }
         }
