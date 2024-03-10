@@ -51,7 +51,7 @@ public class connectoHostConnection {
         ExecutorService executors = Executors.newFixedThreadPool(this.maxCores);
 
         //Output threads
-        for (int i = this.maxCores / 2; i < this.maxCores; i++){
+        for (int i = this.maxCores; i < this.maxCores * 2; i++){
             outputThread output = new outputThread(this.socket.getPort() + i + 1, this.outBuffer);
             Thread outThread = new Thread(output);
             executors.execute(outThread);
@@ -65,7 +65,7 @@ public class connectoHostConnection {
         }
 
         //Input thread
-        for (int i = 0; i < this.maxCores / 2; i++){
+        for (int i = 0; i < this.maxCores; i++){
         inputThread input = new inputThread(this.socket.getPort() + i + 1);
         Thread inThread = new Thread(input);
         executors.execute(inThread);
