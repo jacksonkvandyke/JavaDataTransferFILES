@@ -424,7 +424,7 @@ class UpdateUI extends Thread{
     public void run(){
         while (this.parent.files.sentBytes != this.parent.files.totalSize){
             //Update UI on send
-            this.parent.parent.statusLabels[0].setText(String.format("Sending files... Progress: %d", this.parent.files.sentBytes / this.parent.files.totalSize * 100));
+            this.parent.parent.statusLabels[0].setText(String.format("Sending files... Progress: %d", ((double) this.parent.files.sentBytes / (double) this.parent.files.totalSize * 100)));
             this.parent.parent.frame.validate();
 
             //Sleep to reduce CPU usage
