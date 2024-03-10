@@ -42,7 +42,7 @@ public class FileToPackets{
 
         //Create packet from bytes and add to packets list
         this.maxPackets = (long) Math.max(1, Math.ceil((double) fileSize / (double) 1024));
-        this.packets = new ArrayBlockingQueue<Packet>((int) this.maxPackets);
+        this.packets = new ArrayBlockingQueue<Packet>(10);
 
         //Create packets
         ReadPacketThread threadObject = new ReadPacketThread(filename, fileInput, this);
