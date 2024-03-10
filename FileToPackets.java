@@ -39,7 +39,7 @@ public class FileToPackets{
         }
 
         //Create packet from bytes and add to packets list
-        this.maxPackets = (long) Math.max(1, Math.ceil((double) fileSize / (double) 102400));
+        this.maxPackets = (long) Math.max(1, Math.ceil((double) fileSize / (double) 1024));
         this.packets = new Packet[(int) maxPackets];
 
         //Create packets
@@ -112,7 +112,7 @@ class ReadPacketThread extends Thread{
     public void run(){
         while (true){
             //Read from file and add to buffer
-            byte packetBuffer[] = new byte[102400];
+            byte packetBuffer[] = new byte[1024];
             int currentRead = 0;
 
             //Read data from file and put it into packetBuffer
@@ -124,7 +124,7 @@ class ReadPacketThread extends Thread{
             }
 
             //Check if read elements was less than packet buffers size
-            if ((currentRead < 102400) && (currentRead > -1)){
+            if ((currentRead < 1024) && (currentRead > -1)){
                 byte newBuffer[] = new byte[currentRead];
 
                 //Add all elements to new buffer
@@ -135,7 +135,7 @@ class ReadPacketThread extends Thread{
             }
 
             //Check if any data was returned
-            if ((currentRead == -1) && (parent.packetIterator == parent.maxPackets)){
+            if ((currentRead == -1) && (parent.packetIterator == parent.maxPackets - 1)){
                 this.parent.processingFile = false;
                 break;
             }
