@@ -191,6 +191,7 @@ class OpenFile extends Thread{
             }
         }
         parent.currentFiles += 1;
+        System.out.print("File packed");
     }
 
 }
