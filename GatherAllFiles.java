@@ -132,11 +132,12 @@ class ProcessFiles extends Thread{
                     ReadDirectory(fileList[i], newDirectoryName, this.parent, outBuffer);
                     continue;
                 }
-    
                 //Convert file to packets and update file size
                 newFileName = this.directoryname + "/" + fileList[i].getName();
                 ReadFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
             }
+        }else {
+            ReadFile(directoryFile.getAbsolutePath(), newFileName, this.parent, this.outBuffer);
         }
     }
 
