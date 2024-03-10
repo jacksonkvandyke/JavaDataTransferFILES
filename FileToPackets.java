@@ -14,9 +14,7 @@ public class FileToPackets{
     long maxPackets = 0;
     long fileSize = 0;
     boolean processingFile = true;
-
     int currentPackets = 0;
-    int packetIterator = -1;
 
     public FileToPackets(String location, String filename){
         //Assign filename
@@ -126,7 +124,7 @@ class ReadPacketThread extends Thread{
             }
 
             //Check if any data was returned
-            if ((currentRead == -1) && (parent.packetIterator == parent.maxPackets - 1)){
+            if ((currentRead == -1) && (this.parent.packets.isEmpty())){
                 this.parent.processingFile = false;
                 break;
             }
