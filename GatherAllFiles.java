@@ -149,6 +149,7 @@ class OpenDirectory extends Thread{
             Thread thread = new Thread(threadObject);
             this.parent.gatherFilesExecutor.execute(thread);
         }
+        System.out.print("Check directory");
     }
 }
 
