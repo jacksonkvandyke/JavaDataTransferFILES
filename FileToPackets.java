@@ -2,10 +2,12 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class FileToPackets{
 
-    Packet packets[] = null;
+    BlockingQueue<Packet> packets = null;
     File currentFile = null;
     String filename = "";
     InputStream fileInput = null;
@@ -40,25 +42,14 @@ public class FileToPackets{
 
         //Create packet from bytes and add to packets list
         this.maxPackets = (long) Math.max(1, Math.ceil((double) fileSize / (double) 1024));
-        this.packets = new Packet[(int) maxPackets];
+        this.packets = new ArrayBlockingQueue<Packet>((int) this.maxPackets);
 
         //Create packets
-        ReadPacketThread threadObject = new ReadPacketThread(filename, fileInput, packets, this);
+        ReadPacketThread threadObject = new ReadPacketThread(filename, fileInput, this);
         Thread thread = new Thread(threadObject);
         thread.start();
 
     }
-
-    public Packet GetPacket(){
-        //Check if packet is available
-        if (this.packetIterator < this.currentPackets - 1){
-            //Check if iterator needs to be incremented
-            this.packetIterator += 1;
-            return this.packets[packetIterator];
-        }
-        return null;
-    }
-
 }
 
 class Packet implements Serializable {
@@ -97,15 +88,15 @@ class ReadPacketThread extends Thread{
     String fileName = "";
     InputStream fileInput = null;
     int sequenceNumber = 0;
-    Packet packets[] = null;
+    BlockingQueue<Packet> packets = null;
 
     FileToPackets parent;
 
-    public ReadPacketThread(String fileName, InputStream fileInput, Packet packets[], FileToPackets parent){
+    public ReadPacketThread(String fileName, InputStream fileInput, FileToPackets parent){
         this.fileName = fileName;
         this.fileInput = fileInput;
-        this.packets = packets;
         this.parent = parent;
+        this.packets = this.parent.packets;
 
     }
 
@@ -142,11 +133,14 @@ class ReadPacketThread extends Thread{
 
             //Create packet, increment sequence, and increment fileSize to UI
             if ((packetBuffer.length > 0) && (parent.currentPackets < parent.maxPackets)){
-                Packet packet = new Packet(fileName, parent.maxPackets, sequenceNumber, packetBuffer);
-                packets[sequenceNumber] = packet;
-                sequenceNumber += 1;
-                parent.currentPackets += 1;
-
+                try{
+                    Packet packet = new Packet(fileName, parent.maxPackets, sequenceNumber, packetBuffer);
+                    packets.put(packet);
+                    sequenceNumber += 1;
+                    parent.currentPackets += 1;
+                }catch (InterruptedException e){
+                    System.out.print(e);
+                }
             }
         }
     }

@@ -147,19 +147,18 @@ class ProcessFiles extends Thread{
          //Add files to outputStream until depleted
          while (convertedFile.processingFile == true){
              //Check if data can be added to stream
-             Packet retrievedPacket = convertedFile.GetPacket();
-             
-             //Continue waiting until packet is added to thread
-             try{
-                 if (retrievedPacket != null){
-                     this.outBuffer.packets.put(retrievedPacket); 
-                     retrievedPacket = null;
-                 }
-             }catch (InterruptedException e){
-                 System.out.print(e);
-             }
-         }
-         this.parent.sentBytes += convertedFile.fileSize;
-         System.out.print(this.parent.sentBytes);
+            try{
+                Packet retrievedPacket = convertedFile.packets.take();
+
+                if (retrievedPacket != null){
+                    this.outBuffer.packets.put(retrievedPacket); 
+                    retrievedPacket = null;
+                }
+            }catch (InterruptedException e){
+                System.out.print(e);
+            }
+        }
+        this.parent.sentBytes += convertedFile.fileSize;
+        System.out.print(this.parent.sentBytes);
     }
 }
