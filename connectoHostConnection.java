@@ -159,9 +159,9 @@ class inputThread extends Thread{
             System.out.printf("Input Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            outputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             outputStream.flush();
-            inputStream = new ObjectInputStream(socket.getInputStream());
+            inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
         }catch(IOException i){
             System.out.println(i);
         }
@@ -213,10 +213,9 @@ class outputThread extends Thread{
             System.out.printf("Output Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            outputStream.writeObject(null);
+            outputStream = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             outputStream.flush();
-            inputStream = new ObjectInputStream(socket.getInputStream());
+            inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
         }catch(IOException i){
             System.out.println(i);
         }
