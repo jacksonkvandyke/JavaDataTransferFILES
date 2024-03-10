@@ -140,7 +140,7 @@ class HostPage {
 
         //Get socket address for address label and port label
         InetSocketAddress address = (InetSocketAddress)renderer.hostConnection.socket.getLocalSocketAddress();
-        Label addressLabel = new Label(String.format("Address: %s", address.getAddress().toString().replace("/", "")));
+        Label addressLabel = new Label(String.format("Address: %s", address.getHostString()));
         Font addressFont = new Font("Arial", Font.PLAIN, 24);
         addressLabel.setAlignment(1);
         addressLabel.setFont(addressFont);
