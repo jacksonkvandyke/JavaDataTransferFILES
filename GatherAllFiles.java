@@ -98,46 +98,44 @@ class GetDirectorySize extends Thread{
 
 class ProcessFiles extends Thread{
     //This class opens the specified directory and checks for any files to send
-    String directory = "";
-    String directoryname = "";
+    String userInput = "";
+    String fileName = "";
     GatherAllFiles parent = null;
     OutputByteBuffer outBuffer = null;
 
-    ProcessFiles(String userPrompt, String directoryname, GatherAllFiles parent, OutputByteBuffer outBuffer) {
-        this.directory = userPrompt;
-        this.directoryname = directoryname;
+    ProcessFiles(String userInput, String fileName, GatherAllFiles parent, OutputByteBuffer outBuffer) {
+        this.userInput = userInput;
+        this.fileName = fileName;
         this.parent = parent;
         this.outBuffer = outBuffer;
     }
 
     public void run() {
-        File directoryFile = new File(this.directory);
-        String newDirectoryName = "";
-        ReadDirectory(directoryFile, newDirectoryName, parent, outBuffer);
+        File userFile = new File(this.userInput);
+        ReadDirectory(userFile, fileName, parent, outBuffer);
     }
 
-    void ReadDirectory(File directoryFile, String newDirectoryName, GatherAllFiles parent, OutputByteBuffer outBuffer2){
+    void ReadDirectory(File userInput, String fileName, GatherAllFiles parent, OutputByteBuffer outBuffer2){
         //Get all files in directory then convert each to packets
-        File fileList[] = directoryFile.listFiles();
-        String newFileName = "";
+        File fileList[] = userInput.listFiles();
 
         //Call packet creation on each file or open start operation on directory if directory
         if (fileList != null){
             for (int i = 0; i < fileList.length; i++){
                 if (fileList[i].isDirectory()){
                     //Create new directory name
-                    newDirectoryName = this.directoryname + "/" + fileList[i].getName();
+                    fileName = this.fileName + "/" + fileList[i].getName();
     
                     //Start process to get all files
-                    ReadDirectory(fileList[i], newDirectoryName, this.parent, outBuffer);
+                    ReadDirectory(fileList[i], fileName, this.parent, outBuffer);
                     continue;
                 }
                 //Convert file to packets and update file size
-                newFileName = this.directoryname + "/" + fileList[i].getName();
-                ReadFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
+                fileName = this.fileName + "/" + fileList[i].getName();
+                ReadFile(fileList[i].getAbsolutePath(), fileName, this.parent, this.outBuffer);
             }
         }else {
-            ReadFile(directoryFile.getAbsolutePath(), newFileName, this.parent, this.outBuffer);
+            ReadFile(userInput.getAbsolutePath(), fileName, this.parent, this.outBuffer);
         }
     }
 
