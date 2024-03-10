@@ -161,7 +161,6 @@ class OpenFile extends Thread{
     public void run() {
         //Convert single file and set attributes
         FileToPackets convertedFile = new FileToPackets(this.path, this.filename);
-        this.parent.sentBytes += convertedFile.fileSize;
 
         //Add files to outputStream until depleted
         while (convertedFile.processingFile == true){
@@ -178,5 +177,6 @@ class OpenFile extends Thread{
                 System.out.print(e);
             }
         }
+        this.parent.sentBytes += convertedFile.fileSize;
     }
 }
