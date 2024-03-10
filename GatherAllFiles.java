@@ -9,7 +9,7 @@ public class GatherAllFiles {
     long totalSize = 0;
     long sentBytes = 0;
 
-    ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(2);
+    ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(1);
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
@@ -124,15 +124,15 @@ class ProcessFiles extends Thread{
             for (int i = 0; i < fileList.length; i++){
                 if (fileList[i].isDirectory()){
                     //Create new directory name
-                    fileName = this.fileName + "/" + fileList[i].getName();
+                    String newfileName = fileName + "/" + fileList[i].getName();
     
                     //Start process to get all files
-                    ReadDirectory(fileList[i], fileName, this.parent, outBuffer);
+                    ReadDirectory(fileList[i], newfileName, this.parent, this.outBuffer);
                     continue;
                 }
                 //Convert file to packets and update file size
-                fileName = this.fileName + "/" + fileList[i].getName();
-                ReadFile(fileList[i].getAbsolutePath(), fileName, this.parent, this.outBuffer);
+                String newfileName = fileName + "/" + fileList[i].getName();
+                ReadFile(fileList[i].getAbsolutePath(), newfileName, this.parent, this.outBuffer);
             }
         }else {
             ReadFile(userInput.getAbsolutePath(), fileName, this.parent, this.outBuffer);
