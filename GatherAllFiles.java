@@ -136,7 +136,6 @@ class ProcessFiles extends Thread{
             newFileName = this.directoryname + "/" + fileList[i].getName();
             ReadFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
         }
-        System.out.print("Check directory");
     }
 
     void ReadFile(String userPrompt, String filename, GatherAllFiles parent, OutputByteBuffer outBuffer) {
@@ -159,5 +158,6 @@ class ProcessFiles extends Thread{
              }
          }
          this.parent.sentBytes += convertedFile.fileSize;
+         System.out.print(this.parent.sentBytes);
     }
 }
