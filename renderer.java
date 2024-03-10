@@ -379,6 +379,7 @@ class WaitForFiles extends Thread{
     File userPrompt = null;
     ConnectedSessionPage parent = null;
     GatherAllFiles files = null;
+    WaitForFiles self = this;
  
     WaitForFiles(File userPrompt, ConnectedSessionPage parent){
         this.userPrompt = userPrompt;
@@ -399,7 +400,9 @@ class WaitForFiles extends Thread{
                 //Start file transfer
                 files.StartTransfer(parent.renderer.hostConnection, parent.renderer.toConnection);
                 parent.statusLabels[0].setVisible(true);
-                UpdateUI();
+                UpdateUI threadObject = new UpdateUI(self);
+                Thread thread = new Thread(threadObject);
+                thread.start();
             }
 
         });
@@ -408,12 +411,21 @@ class WaitForFiles extends Thread{
         this.parent.frame.validate();
 
     }
+}
 
-    void UpdateUI(){
-        while (this.files.sentBytes != this.files.totalSize){
+class UpdateUI extends Thread{
+
+    WaitForFiles parent = null;
+
+    UpdateUI(WaitForFiles parent){
+        this.parent = parent;
+    }
+
+    public void run(){
+        while (this.parent.files.sentBytes != this.parent.files.totalSize){
             //Update UI on send
-            parent.statusLabels[0].setText(String.format("Sending files... Progress: %d", this.files.sentBytes / this.files.totalSize * 100));
-            parent.frame.validate();
+            this.parent.parent.statusLabels[0].setText(String.format("Sending files... Progress: %d", this.parent.files.sentBytes / this.parent.files.totalSize * 100));
+            this.parent.parent.frame.validate();
 
             //Sleep to reduce CPU usage
             try{
@@ -424,7 +436,7 @@ class WaitForFiles extends Thread{
         }
 
         //Update UI to show files are sent
-        parent.statusLabels[0].setText("All files sent.");
-        parent.frame.validate();
+        this.parent.parent.statusLabels[0].setText("All files sent.");
+        this.parent.parent.frame.validate();
     }
 }

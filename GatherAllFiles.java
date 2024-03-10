@@ -152,7 +152,6 @@ class ProcessFiles extends Thread{
                 Packet retrievedPacket = convertedFile.packets.take();
 
                 if (retrievedPacket != null){
-                    System.out.print("Sent packet");
                     this.outBuffer.packets.put(retrievedPacket); 
                     retrievedPacket = null;
                 }
