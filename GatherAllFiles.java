@@ -1,4 +1,9 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -140,28 +145,51 @@ class ProcessFiles extends Thread{
     }
 
     void ReadFile(String userPrompt, String filename, GatherAllFiles parent, OutputByteBuffer outBuffer) {
-         //Convert single file and set attributes
-         FileToPackets convertedFile = new FileToPackets(userPrompt, filename);
-         System.out.printf("Getting file: %s", userPrompt);
+        try{
+            //Open file and filestream
+            File currentFile = new File(userPrompt);
+            FileInputStream fileInput = new FileInputStream(currentFile);
 
-         //Add files to outputStream until depleted
-         while (convertedFile.processingFile == true){
-             //Check if data can be added to stream
-            try{
-                System.out.print(convertedFile.packets.size());
-                Packet retrievedPacket = convertedFile.packets.take();
+            //Get file size and create sequence number
+            Path filePath = Paths.get(userPrompt);
+            long fileSize = Files.size(filePath);
+            int sequenceNumber = 0;
 
-                Thread.sleep(1);
+            System.out.printf("Getting file: %s", userPrompt);
+            while (true){
+                byte packetBuffer[] = new byte[1024];
+                int currentRead = 0;
 
-                if (retrievedPacket != null){
-                    this.outBuffer.packets.put(retrievedPacket); 
-                    retrievedPacket = null;
+                //Read data from file and put it into packetBuffer
+                currentRead = fileInput.read(packetBuffer);
+                this.parent.sentBytes += currentRead;
+
+                //Check if read elements was less than packet buffers size
+                if ((currentRead < 1024) && (currentRead > -1)){
+                    byte newBuffer[] = new byte[currentRead];
+
+                    //Add all elements to new buffer
+                    for (int i = 0; i < currentRead; i++){
+                        newBuffer[i] = packetBuffer[i];
+                    }
+                    packetBuffer = newBuffer;
                 }
-            }catch (InterruptedException e){
-                System.out.print(e);
+
+                //Add new packet to output buffer
+                if (currentRead > 0){
+                    Packet newPacket = new Packet(filename, currentRead, sequenceNumber, packetBuffer);
+                    sequenceNumber += 1;
+                    outBuffer.packets.put(newPacket);
+                }
+
+                // Check if entire file has been read
+                if (currentRead == -1){
+                    fileInput.close();
+                    return;
+                }
             }
+        }catch(IOException | InterruptedException e){
+            System.out.print(e);
         }
-        this.parent.sentBytes += convertedFile.fileSize;
-        System.out.print(this.parent.sentBytes);
     }
 }
