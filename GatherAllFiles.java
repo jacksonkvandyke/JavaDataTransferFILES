@@ -8,8 +8,6 @@ public class GatherAllFiles {
     long progress = 0;
     long totalSize = 0;
     long sentBytes = 0;
-    int requiredFiles = 0;
-    int currentFiles = 0;
 
     ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(2);
 
@@ -52,7 +50,6 @@ public class GatherAllFiles {
             OpenFile threadObject = new OpenFile(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer);
             Thread thread = new Thread(threadObject);
             gatherFilesExecutor.execute(thread);
-            this.requiredFiles += 1;
         }
     }
 }
@@ -103,7 +100,6 @@ class GetDirectorySize extends Thread{
             //Add file size if file
             if (fileList[i].isFile()){
                 this.totalSize += fileList[i].length();
-                this.parent.requiredFiles += 1;
                 continue;
             }
 
@@ -152,7 +148,6 @@ class OpenDirectory extends Thread{
             OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
             Thread thread = new Thread(threadObject);
             this.parent.gatherFilesExecutor.execute(thread);
-            this.parent.requiredFiles += 1;
         }
     }
 }
@@ -190,8 +185,5 @@ class OpenFile extends Thread{
                 System.out.print(e);
             }
         }
-        parent.currentFiles += 1;
-        System.out.print("File packed");
     }
-
 }
