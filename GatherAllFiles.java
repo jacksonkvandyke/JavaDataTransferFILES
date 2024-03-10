@@ -9,6 +9,8 @@ public class GatherAllFiles {
     long totalSize = 0;
     long sentBytes = 0;
 
+    ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(2);
+
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
         this.userPrompt = userPrompt;
@@ -38,12 +40,12 @@ public class GatherAllFiles {
         //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
             //Start thread to get all files
-            new OpenDirectory(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer);
+            gatherFilesExecutor.execute(new OpenDirectory(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer));
         }
 
         if (userPrompt.isFile()){
             //Start thread for single file
-            new OpenFile(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer);
+            gatherFilesExecutor.execute(new OpenFile(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer));
         }
     }
 }
@@ -117,27 +119,30 @@ class OpenDirectory extends Thread{
     }
 
     public void run() {
-        //Get all files in directory then convert each to packets
         File directoryFile = new File(this.directory);
+        String newDirectoryName = "";
+        ReadDirectory(directoryFile, newDirectoryName, parent, outBuffer);
+    }
+
+    void ReadDirectory(File directoryFile, String newDirectoryName, GatherAllFiles parent, OutputByteBuffer outBuffer2){
+        //Get all files in directory then convert each to packets
         File fileList[] = directoryFile.listFiles();
+        String newFileName = "";
 
         //Call packet creation on each file or open start operation on directory if directory
         for (int i = 0; i < fileList.length; i++){
-            String newDirectoryName = "";
-            String newFileName = "";
-
             if (fileList[i].isDirectory()){
                 //Create new directory name
                 newDirectoryName = this.directoryname + "/" + fileList[i].getName();
 
                 //Start process to get all files
-                new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, outBuffer);
+                ReadDirectory(fileList[i], newDirectoryName, this.parent, outBuffer);
                 continue;
             }
 
             //Convert file to packets and update file size
             newFileName = this.directoryname + "/" + fileList[i].getName();
-            new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
+            this.parent.gatherFilesExecutor.execute(new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer));
         }
         System.out.print("Check directory");
     }
