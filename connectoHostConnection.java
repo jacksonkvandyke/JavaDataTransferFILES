@@ -52,7 +52,7 @@ public class connectoHostConnection {
 
         //Output threads
         for (int i = this.maxCores; i < this.maxCores * 2; i++){
-            outputThread output = new outputThread(this.socket.getPort() + i + 1, this.outBuffer);
+            outputThread output = new outputThread(this.socket.getPort() + i + 1, this.outBuffer, socket.getInetAddress());
             Thread outThread = new Thread(output);
             executors.execute(outThread);
         }
@@ -66,7 +66,7 @@ public class connectoHostConnection {
 
         //Input thread
         for (int i = 0; i < this.maxCores; i++){
-        inputThread input = new inputThread(this.socket.getPort() + i + 1);
+        inputThread input = new inputThread(this.socket.getPort() + i + 1, socket.getInetAddress());
         Thread inThread = new Thread(input);
         executors.execute(inThread);
         }
@@ -125,7 +125,7 @@ class connectThread extends Thread{
         }
         
         //Set max cores and start transfer threads
-        connection.setCores((int) ( Math.min(cores, otherCores)));
+        connection.setCores((int) (Math.min(cores, otherCores)));
 
         //Short sleep to allow host threads to be created
         try{
@@ -143,14 +143,16 @@ class inputThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
+    InetAddress hostAddress = null;
     
     ObjectOutputStream outputStream = null;
     ObjectInputStream inputStream = null;
     fileAssembler assembler = null;
     
-    public inputThread(int port){
+    public inputThread(int port, InetAddress hostAddress){
         this.port = port;
         this.assembler = new fileAssembler();
+        this.hostAddress = hostAddress;
     }
 
     public void run(){
@@ -159,7 +161,7 @@ class inputThread extends Thread{
 
         //Wait for connection then accept
         try{
-            socket.connect(new InetSocketAddress(InetAddress.getLocalHost(), this.port));
+            socket.connect(new InetSocketAddress(hostAddress, this.port));
             System.out.printf("Input Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
@@ -196,15 +198,17 @@ class outputThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
+    InetAddress hostAddress = null;
 
     ObjectOutputStream outputStream = null;
     ObjectInputStream inputStream = null;
 
     OutputByteBuffer outBuffer;
     
-    public outputThread(int port, OutputByteBuffer outBuffer){
+    public outputThread(int port, OutputByteBuffer outBuffer, InetAddress hostAddress){
         this.port = port;
         this.outBuffer = outBuffer;
+        this.hostAddress = hostAddress;
     }
 
     public void run(){
@@ -213,7 +217,7 @@ class outputThread extends Thread{
 
         //Wait for connection then accept
         try{
-            socket.connect(new InetSocketAddress(InetAddress.getLocalHost(), this.port));
+            socket.connect(new InetSocketAddress(hostAddress, this.port));
             System.out.printf("Output Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
