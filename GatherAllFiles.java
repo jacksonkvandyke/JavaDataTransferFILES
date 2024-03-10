@@ -175,7 +175,7 @@ class OpenFile extends Thread{
         FileToPackets convertedFile = new FileToPackets(this.path, this.filename);
 
         //Add files to outputStream until depleted
-        while ((convertedFile.packetIterator != convertedFile.maxPackets - 1) || (convertedFile.currentPackets == 0)){
+        while (convertedFile.processingFile == true){
             //Check if data can be added to stream
             Packet retrievedPacket = convertedFile.GetPacket();
             

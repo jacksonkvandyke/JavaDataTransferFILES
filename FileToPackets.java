@@ -11,6 +11,7 @@ public class FileToPackets{
     InputStream fileInput = null;
     long maxPackets = 0;
     long fileSize = 0;
+    boolean processingFile = true;
 
     int currentPackets = 0;
     int packetIterator = -1;
@@ -135,6 +136,7 @@ class ReadPacketThread extends Thread{
 
             //Check if any data was returned
             if (currentRead == 0){
+                this.parent.processingFile = false;
                 break;
             }
 
