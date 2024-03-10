@@ -159,7 +159,7 @@ class inputThread extends Thread{
 
         //Wait for connection then accept
         try{
-            socket.connect(new InetSocketAddress("127.0.0.1", this.port));
+            socket.connect(new InetSocketAddress(InetAddress.getLocalHost(), this.port));
             System.out.printf("Input Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams
@@ -213,7 +213,7 @@ class outputThread extends Thread{
 
         //Wait for connection then accept
         try{
-            socket.connect(new InetSocketAddress("127.0.0.1", this.port));
+            socket.connect(new InetSocketAddress(InetAddress.getLocalHost(), this.port));
             System.out.printf("Output Socket connected on port: %d\n", this.port);
 
             //Assign input and output streams

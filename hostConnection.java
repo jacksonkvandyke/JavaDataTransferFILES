@@ -149,7 +149,7 @@ class hostInputThread extends Thread{
         //Create thread socket and await connection
         try{
             serverSocket = new ServerSocket();
-            serverSocket.bind(new InetSocketAddress("127.0.0.1", this.port));
+            serverSocket.bind(new InetSocketAddress(InetAddress.getLocalHost(), this.port));
         }catch(IOException i){
             System.out.println(i);
         }
@@ -210,7 +210,7 @@ class hostOutputThread extends Thread{
         //Create thread socket and await connection
         try{
             serverSocket = new ServerSocket();
-            serverSocket.bind(new InetSocketAddress("127.0.0.1", this.port));
+            serverSocket.bind(new InetSocketAddress(InetAddress.getLocalHost(), this.port));
         }catch(IOException i){
             System.out.println(i);
         }
