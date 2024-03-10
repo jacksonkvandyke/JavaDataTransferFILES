@@ -136,6 +136,7 @@ class ReadPacketThread extends Thread{
                 try{
                     Packet packet = new Packet(fileName, parent.maxPackets, sequenceNumber, packetBuffer);
                     packets.put(packet);
+                    System.out.print("Added Packet");
                     sequenceNumber += 1;
                     parent.currentPackets += 1;
                 }catch (InterruptedException e){

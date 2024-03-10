@@ -149,6 +149,7 @@ class ProcessFiles extends Thread{
              //Check if data can be added to stream
             try{
                 Packet retrievedPacket = convertedFile.packets.take();
+                System.out.print("Took Packet");
 
                 if (retrievedPacket != null){
                     this.outBuffer.packets.put(retrievedPacket); 
