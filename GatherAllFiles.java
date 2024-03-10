@@ -7,6 +7,7 @@ public class GatherAllFiles {
     File userPrompt = null;
     long progress = 0;
     long totalSize = 0;
+    long sentBytes = 0;
     int requiredFiles = 0;
     int currentFiles = 0;
 
@@ -182,6 +183,7 @@ class OpenFile extends Thread{
             try{
                 if (retrievedPacket != null){
                     this.outBuffer.packets.put(retrievedPacket);
+                    this.parent.sentBytes += retrievedPacket.getTotalPackets() * 102400;
                     retrievedPacket = null;
                 }
             }catch (InterruptedException e){
