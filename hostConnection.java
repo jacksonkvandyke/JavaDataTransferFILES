@@ -122,7 +122,7 @@ class hostawaitThread extends Thread{
         }
 
         //Set max cores and start transfer threads
-        this.connection.setCores((int) ( Math.max(cores, otherCores) / 2));
+        this.connection.setCores((int) ( Math.min(cores, otherCores)));
 
         //Connect threads
         connection.connectThreads();
