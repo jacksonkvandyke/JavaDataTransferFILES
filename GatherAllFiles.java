@@ -150,7 +150,6 @@ class ProcessFiles extends Thread{
             try{
                 System.out.print(convertedFile.packets.size());
                 Packet retrievedPacket = convertedFile.packets.take();
-                System.out.print("Took Packet");
 
                 if (retrievedPacket != null){
                     this.outBuffer.packets.put(retrievedPacket); 

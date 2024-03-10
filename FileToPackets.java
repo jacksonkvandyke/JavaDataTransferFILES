@@ -124,7 +124,7 @@ class ReadPacketThread extends Thread{
             }
 
             //Check if any data was returned
-            if ((currentRead == -1) && (this.parent.packets.isEmpty())){
+            if ((currentRead == -1) && (this.parent.packets.isEmpty() && (parent.currentPackets == parent.maxPackets))){
                 this.parent.processingFile = false;
                 break;
             }
@@ -134,7 +134,6 @@ class ReadPacketThread extends Thread{
                 try{
                     Packet packet = new Packet(fileName, parent.maxPackets, sequenceNumber, packetBuffer);
                     packets.put(packet);
-                    System.out.print("Added Packet");
                     sequenceNumber += 1;
                     parent.currentPackets += 1;
                 }catch (InterruptedException e){
