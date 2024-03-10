@@ -173,6 +173,7 @@ class OpenFile extends Thread{
     public void run() {
         //Convert single file and set attributes
         FileToPackets convertedFile = new FileToPackets(this.path, this.filename);
+        this.parent.sentBytes += convertedFile.fileSize;
 
         //Add files to outputStream until depleted
         while (convertedFile.processingFile == true){
@@ -182,8 +183,7 @@ class OpenFile extends Thread{
             //Continue waiting until packet is added to thread
             try{
                 if (retrievedPacket != null){
-                    this.outBuffer.packets.put(retrievedPacket);
-                    this.parent.sentBytes += retrievedPacket.getTotalPackets() * 102400;
+                    this.outBuffer.packets.put(retrievedPacket); 
                     retrievedPacket = null;
                 }
             }catch (InterruptedException e){
