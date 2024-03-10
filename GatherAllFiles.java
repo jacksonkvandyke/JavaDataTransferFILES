@@ -122,19 +122,21 @@ class ProcessFiles extends Thread{
         String newFileName = "";
 
         //Call packet creation on each file or open start operation on directory if directory
-        for (int i = 0; i < fileList.length; i++){
-            if (fileList[i].isDirectory()){
-                //Create new directory name
-                newDirectoryName = this.directoryname + "/" + fileList[i].getName();
-
-                //Start process to get all files
-                ReadDirectory(fileList[i], newDirectoryName, this.parent, outBuffer);
-                continue;
+        if (fileList != null){
+            for (int i = 0; i < fileList.length; i++){
+                if (fileList[i].isDirectory()){
+                    //Create new directory name
+                    newDirectoryName = this.directoryname + "/" + fileList[i].getName();
+    
+                    //Start process to get all files
+                    ReadDirectory(fileList[i], newDirectoryName, this.parent, outBuffer);
+                    continue;
+                }
+    
+                //Convert file to packets and update file size
+                newFileName = this.directoryname + "/" + fileList[i].getName();
+                ReadFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
             }
-
-            //Convert file to packets and update file size
-            newFileName = this.directoryname + "/" + fileList[i].getName();
-            ReadFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
         }
     }
 
