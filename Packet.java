@@ -5,6 +5,7 @@ public class Packet implements Serializable {
     private String fileName = "";
     private int packetSequence = 0;
     private byte packetData[];
+    private boolean isDirectory = false;
 
     public Packet(String fileName, int sequence, byte data[]){
         this.fileName = fileName;
@@ -22,5 +23,13 @@ public class Packet implements Serializable {
 
     public byte[] getData() {
         return this.packetData;
+    }
+
+    public void SetDirectory(){
+        this.isDirectory = true;
+    }
+
+    public boolean CheckDirectory(){
+        return this.isDirectory;
     }
 }

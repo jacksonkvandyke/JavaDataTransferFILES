@@ -175,7 +175,7 @@ class hostInputThread extends Thread{
             try {
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
-                if ((inPacket != null) && (inPacket.getData().length != 0)){
+                if (inPacket != null){
                     this.assembler.packets.put(inPacket);
                 }
 

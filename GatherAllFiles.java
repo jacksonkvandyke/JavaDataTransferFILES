@@ -132,8 +132,15 @@ class ProcessFiles extends Thread{
                     String newfileName = fileName + "/" + fileList[i].getName();
     
                     //Start process to get all files
-                    ReadDirectory(fileList[i], newfileName, this.parent, this.outBuffer);
-                    continue;
+                    try{
+                        ReadDirectory(fileList[i], newfileName, this.parent, this.outBuffer);
+                        Packet directoryPacket = new Packet(fileList[i].getName(), 0, new byte[0]);
+                        directoryPacket.SetDirectory();
+                        outBuffer.packets.put(directoryPacket);
+                        continue;
+                    } catch(InterruptedException e){
+                        System.out.print(e);
+                    }
                 }
                 //Convert file to packets and update file size
                 String newfileName = fileName + "/" + fileList[i].getName();
@@ -150,9 +157,7 @@ class ProcessFiles extends Thread{
             File currentFile = new File(userPrompt);
             FileInputStream fileInput = new FileInputStream(currentFile);
 
-            //Get file size and create sequence number
-            Path filePath = Paths.get(userPrompt);
-            long fileSize = Files.size(filePath);
+            //Create sequence number
             int sequenceNumber = 0;
 
             System.out.printf("Getting file: %s", userPrompt);

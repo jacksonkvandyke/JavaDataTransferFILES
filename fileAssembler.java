@@ -35,6 +35,17 @@ class SavePackets extends Thread{
                     continue;
                 }
 
+                //Check if file is directory and create directory
+                if (packet.CheckDirectory()){
+                    File file = new File(packet.getFilename());
+                    
+                    if (file.getParentFile() != null){
+                        file.getParentFile().mkdirs();
+                    }
+                    file.mkdir();
+
+                }
+
                 //Create file if it hasn't already been created
                 File file = new File(packet.getFilename());
 
