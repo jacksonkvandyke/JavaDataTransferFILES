@@ -37,16 +37,8 @@ public class GatherAllFiles {
             outBuffer = toConnection.outBuffer;
         }
 
-        //Checks for directories or files and then send over socket as packets
-        if (userPrompt.isDirectory()){
-            //Start thread to get all files
-            gatherFilesExecutor.execute(new OpenDirectory(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer));
-        }
-
-        if (userPrompt.isFile()){
-            //Start thread for single file
-            gatherFilesExecutor.execute(new OpenFile(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer));
-        }
+        //Start thread to get all files
+        gatherFilesExecutor.execute(new ProcessFiles(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer));
     }
 }
 
@@ -104,14 +96,14 @@ class GetDirectorySize extends Thread{
 
 }
 
-class OpenDirectory extends Thread{
+class ProcessFiles extends Thread{
     //This class opens the specified directory and checks for any files to send
     String directory = "";
     String directoryname = "";
     GatherAllFiles parent = null;
     OutputByteBuffer outBuffer = null;
 
-    OpenDirectory(String userPrompt, String directoryname, GatherAllFiles parent, OutputByteBuffer outBuffer) {
+    ProcessFiles(String userPrompt, String directoryname, GatherAllFiles parent, OutputByteBuffer outBuffer) {
         this.directory = userPrompt;
         this.directoryname = directoryname;
         this.parent = parent;
@@ -142,44 +134,30 @@ class OpenDirectory extends Thread{
 
             //Convert file to packets and update file size
             newFileName = this.directoryname + "/" + fileList[i].getName();
-            this.parent.gatherFilesExecutor.execute(new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer));
+            ReadFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
         }
         System.out.print("Check directory");
     }
-}
 
-class OpenFile extends Thread{
-    String path = "";
-    String filename = "";
-    GatherAllFiles parent = null;
-    OutputByteBuffer outBuffer = null;
+    void ReadFile(String userPrompt, String filename, GatherAllFiles parent, OutputByteBuffer outBuffer) {
+         //Convert single file and set attributes
+         FileToPackets convertedFile = new FileToPackets(userPrompt, filename);
 
-    OpenFile(String userPrompt, String filename, GatherAllFiles parent, OutputByteBuffer outBuffer) {
-        this.path = userPrompt;
-        this.filename = filename;
-        this.parent = parent;
-        this.outBuffer = outBuffer;
-    }
-
-    public void run() {
-        //Convert single file and set attributes
-        FileToPackets convertedFile = new FileToPackets(this.path, this.filename);
-
-        //Add files to outputStream until depleted
-        while (convertedFile.processingFile == true){
-            //Check if data can be added to stream
-            Packet retrievedPacket = convertedFile.GetPacket();
-            
-            //Continue waiting until packet is added to thread
-            try{
-                if (retrievedPacket != null){
-                    this.outBuffer.packets.put(retrievedPacket); 
-                    retrievedPacket = null;
-                }
-            }catch (InterruptedException e){
-                System.out.print(e);
-            }
-        }
-        this.parent.sentBytes += convertedFile.fileSize;
+         //Add files to outputStream until depleted
+         while (convertedFile.processingFile == true){
+             //Check if data can be added to stream
+             Packet retrievedPacket = convertedFile.GetPacket();
+             
+             //Continue waiting until packet is added to thread
+             try{
+                 if (retrievedPacket != null){
+                     this.outBuffer.packets.put(retrievedPacket); 
+                     retrievedPacket = null;
+                 }
+             }catch (InterruptedException e){
+                 System.out.print(e);
+             }
+         }
+         this.parent.sentBytes += convertedFile.fileSize;
     }
 }
