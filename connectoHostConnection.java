@@ -48,7 +48,7 @@ public class connectoHostConnection {
 
     void connectThreads(){
         //Create the threads and await for connection
-        ExecutorService executors = Executors.newFixedThreadPool(this.maxCores);
+        ExecutorService executors = Executors.newFixedThreadPool(this.maxCores * 2);
 
         //Output threads
         for (int i = this.maxCores; i < this.maxCores * 2; i++){

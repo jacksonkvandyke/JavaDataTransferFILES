@@ -40,7 +40,7 @@ public class hostConnection{
 
     void connectThreads(){
         //Create the threads and await for connection
-        ExecutorService executors = Executors.newFixedThreadPool(this.maxCores);
+        ExecutorService executors = Executors.newFixedThreadPool(this.maxCores * 2);
 
         //Output threads
         for (int i = 0; i < this.maxCores; i++){
