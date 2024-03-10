@@ -9,7 +9,7 @@ public class GatherAllFiles {
     long totalSize = 0;
     long sentBytes = 0;
 
-    ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(10);
+    ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(2);
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
@@ -40,16 +40,12 @@ public class GatherAllFiles {
         //Checks for directories or files and then send over socket as packets
         if (userPrompt.isDirectory()){
             //Start thread to get all files
-            OpenDirectory threadObject = new OpenDirectory(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer);
-            Thread thread = new Thread(threadObject);
-            gatherFilesExecutor.execute(thread);
+            gatherFilesExecutor.execute(new OpenDirectory(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer));
         }
 
         if (userPrompt.isFile()){
             //Start thread for single file
-            OpenFile threadObject = new OpenFile(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer);
-            Thread thread = new Thread(threadObject);
-            gatherFilesExecutor.execute(thread);
+            gatherFilesExecutor.execute(new OpenFile(userPrompt.getAbsolutePath(), userPrompt.getName(), this, outBuffer));
         }
     }
 }
@@ -137,17 +133,13 @@ class OpenDirectory extends Thread{
                 newDirectoryName = this.directoryname + "/" + fileList[i].getName();
 
                 //Start process to get all files
-                OpenDirectory threadObject = new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, outBuffer);
-                Thread thread = new Thread(threadObject);
-                this.parent.gatherFilesExecutor.execute(thread);
+                this.parent.gatherFilesExecutor.execute(new OpenDirectory(fileList[i].getAbsolutePath(), newDirectoryName, this.parent, outBuffer));
                 continue;
             }
 
             //Convert file to packets and update file size
             newFileName = this.directoryname + "/" + fileList[i].getName();
-            OpenFile threadObject = new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer);
-            Thread thread = new Thread(threadObject);
-            this.parent.gatherFilesExecutor.execute(thread);
+            this.parent.gatherFilesExecutor.execute(new OpenFile(fileList[i].getAbsolutePath(), newFileName, this.parent, this.outBuffer));
         }
         System.out.print("Check directory");
     }
