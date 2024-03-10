@@ -7,7 +7,6 @@ public class hostConnection{
     //Initialize variables
     renderer renderer = null;
     ServerSocket socket = null;
-    String address = "127.0.0.1";
     int maxCores = 0;
 
     OutputByteBuffer outBuffer = new OutputByteBuffer();
@@ -16,7 +15,7 @@ public class hostConnection{
         //Set up server socket and bind to address and port
         try{
             socket = new ServerSocket();
-            socket.bind(new InetSocketAddress(address, 50000));
+            socket.bind(new InetSocketAddress(InetAddress.getLocalHost(), 50000));
             System.out.printf("Socket created on port: %d\n", socket.getLocalPort());
         }catch(IOException i){
             System.out.println(i);

@@ -7,7 +7,7 @@ public class connectoHostConnection {
     //Initialize variables
     connectoHostConnection connection = this;
     Socket socket = null;
-    String address = "127.0.0.1";
+    String address = null;
     int maxCores = 0;
 
     OutputByteBuffer outBuffer = new OutputByteBuffer();
