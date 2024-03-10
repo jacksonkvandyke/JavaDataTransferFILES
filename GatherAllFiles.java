@@ -142,6 +142,7 @@ class ProcessFiles extends Thread{
     void ReadFile(String userPrompt, String filename, GatherAllFiles parent, OutputByteBuffer outBuffer) {
          //Convert single file and set attributes
          FileToPackets convertedFile = new FileToPackets(userPrompt, filename);
+         System.out.printf("Getting file: %s", userPrompt);
 
          //Add files to outputStream until depleted
          while (convertedFile.processingFile == true){
