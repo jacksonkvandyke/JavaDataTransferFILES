@@ -135,7 +135,7 @@ class ReadPacketThread extends Thread{
             }
 
             //Check if any data was returned
-            if ((currentRead == -1) && (parent.packetIterator == parent.maxPackets - 1)){
+            if (currentRead == -1){
                 this.parent.processingFile = false;
                 break;
             }
