@@ -275,7 +275,7 @@ class ConnectedSessionPage {
         this.frame.setSize(500, 400);
 
         //Create grid for elements
-        GridLayout grid = new GridLayout(6, 1, 0, 15);
+        GridLayout grid = new GridLayout(8, 1, 0, 15);
         this.frame.setLayout(grid);
 
         //Create elements for initial window
