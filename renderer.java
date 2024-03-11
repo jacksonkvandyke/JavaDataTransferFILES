@@ -467,7 +467,7 @@ class RecievingHandler extends Thread{
 
         while (true){
             if (this.parent.renderer.hostConnection != null){
-                if (this.parent.renderer.toConnection.receivingFiles == true){
+                if (this.parent.renderer.hostConnection.receivingFiles == true){
                     RecieveAsHost();
                 }
             }
