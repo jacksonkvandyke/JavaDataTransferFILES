@@ -309,6 +309,7 @@ class ConnectedSessionPage {
         statusLabels[1] = new Label();
         statusLabels[1].setText("0");
         statusLabels[1].setFont(labelFont);
+        statusLabels[1].setVisible(false);
 
         sendButton = new Button("Send Files");
         Font sendFilesFont = new Font("Arial", Font.PLAIN, 32);
@@ -324,6 +325,7 @@ class ConnectedSessionPage {
         statusLabels[3] = new Label();
         statusLabels[3].setText("0");
         statusLabels[3].setFont(labelFont);
+        statusLabels[3].setVisible(false);
 
         //Add elements to window
         this.frame.add(topLabel);
@@ -334,7 +336,6 @@ class ConnectedSessionPage {
         this.frame.add(sendButton);
         this.frame.add(statusLabels[2]);
         this.frame.add(statusLabels[3]);
-        statusLabels[1].setVisible(false);
 
         //Set homepage window visible
         this.frame.setVisible(true);
@@ -466,18 +467,6 @@ class RecievingHandler extends Thread{
         this.parent = parent;
     }
 
-    void RecieveAsHost(){
-        //Update UI on send
-        this.parent.statusLabels[2].setVisible(true);
-        this.parent.frame.validate();
-    }
-
-    void RecieveAsClient(){
-        //Update UI on send
-        this.parent.statusLabels[2].setVisible(true);
-        this.parent.frame.validate();
-    }
-
     public void run(){
         while (true){
             if (this.parent.renderer.hostConnection != null){
@@ -497,6 +486,20 @@ class RecievingHandler extends Thread{
                 System.out.print(e);
             }
         }
+    }
+
+    void RecieveAsHost(){
+        //Update UI on send
+        this.parent.statusLabels[2].setVisible(true);
+        this.parent.statusLabels[3].setVisible(true);
+        this.parent.frame.validate();
+    }
+
+    void RecieveAsClient(){
+        //Update UI on send
+        this.parent.statusLabels[2].setVisible(true);
+        this.parent.statusLabels[3].setVisible(true);
+        this.parent.frame.validate();
     }
 
 }
