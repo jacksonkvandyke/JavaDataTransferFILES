@@ -261,7 +261,7 @@ class ConnectedSessionPage {
     Frame frame = null;
     renderer renderer = null;
     GatherAllFiles filestoSend = null;
-    Label statusLabels[] = new Label[2];
+    Label statusLabels[] = new Label[4];
     Button sendButton = new Button();
 
     public ConnectedSessionPage(renderer renderer){
@@ -295,7 +295,7 @@ class ConnectedSessionPage {
         });
 
         //Start thread which waits for recieving files
-        RecievingHandler recieverThread = new RecievingHandler(this.renderer);
+        RecievingHandler recieverThread = new RecievingHandler(this);
         Thread threadObject = new Thread(recieverThread);
         threadObject.start();
 
@@ -315,6 +315,16 @@ class ConnectedSessionPage {
         sendButton.setFont(sendFilesFont);
         sendButton.setVisible(false);
 
+        //Create UI elements for receivingfiles, but set them invisible until needed
+        statusLabels[2] = new Label();
+        statusLabels[2].setText("Receiving files.");
+        statusLabels[2].setFont(labelFont);
+        statusLabels[2].setVisible(false);
+
+        statusLabels[3] = new Label();
+        statusLabels[3].setText("0");
+        statusLabels[3].setFont(labelFont);
+
         //Add elements to window
         this.frame.add(topLabel);
         this.frame.add(new JSeparator());
@@ -322,6 +332,8 @@ class ConnectedSessionPage {
         this.frame.add(statusLabels[0]);
         this.frame.add(statusLabels[1]);
         this.frame.add(sendButton);
+        this.frame.add(statusLabels[2]);
+        this.frame.add(statusLabels[3]);
         statusLabels[1].setVisible(false);
 
         //Set homepage window visible
@@ -447,17 +459,21 @@ class SendingUpdateUI extends Thread{
 }
 
 class RecievingHandler extends Thread{
-
-    renderer parent = null;
+    //This class is used to update the UI on recieving files
+    ConnectedSessionPage parent = null;
     
-    RecievingHandler(renderer parent){
+    RecievingHandler(ConnectedSessionPage parent){
         this.parent = parent;
 
         while (true){
-            if (this.parent.hostConnection != null){
-                if ()
+            if (this.parent.renderer.hostConnection != null){
+                if (this.parent.renderer.toConnection.receivingFiles == true){
+                    RecieveAsHost();
+                }
             }else{
-
+                if (this.parent.renderer.toConnection.receivingFiles == true){
+                    RecieveAsClient();
+                }
             }
             //Sleep to reduce CPU usage
             try{
@@ -469,39 +485,13 @@ class RecievingHandler extends Thread{
     }
 
     void RecieveAsHost(){
-
+        //Update UI on send
+        this.parent.statusLabels[2].setVisible(true);
+        this.parent.frame.validate();
     }
 
     void RecieveAsClient(){
 
     }
 
-}
-
-class ReceivingUpdateUI extends Thread{
-    //This class updates the UI will recieving files
-    WaitForFiles parent = null;
-
-    ReceivingUpdateUI(WaitForFiles parent){
-        this.parent = parent;
-    }
-
-    public void run(){
-        while (this.parent.files.sentBytes != this.parent.files.totalSize){
-            //Update UI on send
-            this.parent.parent.statusLabels[0].setText(String.format("Recieving files... Progress: %f", ((double) this.parent.files.sentBytes / (double) this.parent.files.totalSize * 100)));
-            this.parent.parent.frame.validate();
-
-            //Sleep to reduce CPU usage
-            try{
-                Thread.sleep(500);
-            }catch(InterruptedException e){
-                System.out.print(e);
-            }
-        }
-
-        //Update UI to show files are sent
-        this.parent.parent.statusLabels[0].setText("All files recieved.");
-        this.parent.parent.frame.validate();
-    }
 }
