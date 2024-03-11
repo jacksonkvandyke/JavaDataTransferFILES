@@ -491,7 +491,9 @@ class RecievingHandler extends Thread{
     }
 
     void RecieveAsClient(){
-
+        //Update UI on send
+        this.parent.statusLabels[2].setVisible(true);
+        this.parent.frame.validate();
     }
 
 }
