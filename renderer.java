@@ -464,7 +464,21 @@ class RecievingHandler extends Thread{
     
     RecievingHandler(ConnectedSessionPage parent){
         this.parent = parent;
+    }
 
+    void RecieveAsHost(){
+        //Update UI on send
+        this.parent.statusLabels[2].setVisible(true);
+        this.parent.frame.validate();
+    }
+
+    void RecieveAsClient(){
+        //Update UI on send
+        this.parent.statusLabels[2].setVisible(true);
+        this.parent.frame.validate();
+    }
+
+    public void run(){
         while (true){
             if (this.parent.renderer.hostConnection != null){
                 if (this.parent.renderer.hostConnection.receivingFiles == true){
@@ -483,18 +497,6 @@ class RecievingHandler extends Thread{
                 System.out.print(e);
             }
         }
-    }
-
-    void RecieveAsHost(){
-        //Update UI on send
-        this.parent.statusLabels[2].setVisible(true);
-        this.parent.frame.validate();
-    }
-
-    void RecieveAsClient(){
-        //Update UI on send
-        this.parent.statusLabels[2].setVisible(true);
-        this.parent.frame.validate();
     }
 
 }
