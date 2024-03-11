@@ -446,7 +446,7 @@ class SendingUpdateUI extends Thread{
 
             //Sleep to reduce CPU usage
             try{
-                Thread.sleep(500);
+                Thread.sleep(1000);
             }catch(InterruptedException e){
                 System.out.print(e);
             }
@@ -478,7 +478,7 @@ class RecievingHandler extends Thread{
             }
             //Sleep to reduce CPU usage
             try{
-                Thread.sleep(500);
+                Thread.sleep(1000);
             }catch(InterruptedException e){
                 System.out.print(e);
             }
