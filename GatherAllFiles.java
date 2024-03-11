@@ -182,7 +182,7 @@ class ProcessFiles extends Thread{
 
                 //Add new packet to output buffer
                 if (currentRead > 0){
-                    Packet newPacket = new Packet(filename, sequenceNumber, packetBuffer, this.parent.totalSize);
+                    Packet newPacket = new Packet(filename, sequenceNumber, packetBuffer, currentRead, this.parent.totalSize);
                     sequenceNumber += 1;
                     outBuffer.packets.put(newPacket);
                 }

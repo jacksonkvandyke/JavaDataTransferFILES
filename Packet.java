@@ -5,13 +5,15 @@ public class Packet implements Serializable {
     private String fileName = "";
     private int packetSequence = 0;
     private byte packetData[];
+    private int packetDataLength = 0;
     private long totalData = 0;
     private boolean isDirectory = false;
 
-    public Packet(String fileName, int sequence, byte data[], long totalData){
+    public Packet(String fileName, int sequence, byte data[], int packetDataLength, long totalData){
         this.fileName = fileName;
         this.packetSequence = sequence;
         this.packetData = data;
+        this.packetDataLength = packetDataLength;
         this.totalData = totalData;
     }
 
@@ -25,6 +27,10 @@ public class Packet implements Serializable {
 
     public byte[] getData() {
         return this.packetData;
+    }
+
+    public int getDataLength() {
+        return this.packetDataLength;
     }
 
     public long getTotalData(){

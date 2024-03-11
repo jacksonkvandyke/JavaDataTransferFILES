@@ -318,12 +318,12 @@ class ConnectedSessionPage {
 
         //Create UI elements for receivingfiles, but set them invisible until needed
         statusLabels[2] = new Label();
-        statusLabels[2].setText("Receiving files.");
+        statusLabels[2].setText("Receiving files...");
         statusLabels[2].setFont(labelFont);
         statusLabels[2].setVisible(false);
 
         statusLabels[3] = new Label();
-        statusLabels[3].setText("0");
+        statusLabels[3].setText("Data Recieved: 0");
         statusLabels[3].setFont(labelFont);
         statusLabels[3].setVisible(false);
 
@@ -492,6 +492,10 @@ class RecievingHandler extends Thread{
         //Update UI on send
         this.parent.statusLabels[2].setVisible(true);
         this.parent.statusLabels[3].setVisible(true);
+
+        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %f", ((double) this.parent.renderer.hostConnection.recievedData / (double) this.parent.renderer.hostConnection.totalReceivingData * 100)));
+        this.parent.statusLabels[3].setText(String.valueOf(this.parent.renderer.hostConnection.totalReceivingData));
+
         this.parent.frame.validate();
     }
 
@@ -499,6 +503,10 @@ class RecievingHandler extends Thread{
         //Update UI on send
         this.parent.statusLabels[2].setVisible(true);
         this.parent.statusLabels[3].setVisible(true);
+
+        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %f", ((double) this.parent.renderer.hostConnection.recievedData / (double) this.parent.renderer.hostConnection.totalReceivingData * 100)));
+        this.parent.statusLabels[3].setText(String.valueOf(this.parent.renderer.hostConnection.totalReceivingData));
+
         this.parent.frame.validate();
     }
 

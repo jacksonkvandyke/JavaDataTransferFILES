@@ -12,6 +12,8 @@ public class hostConnection{
     OutputByteBuffer outBuffer = new OutputByteBuffer();
 
     boolean receivingFiles = false;
+    int totalReceivingData = 0;
+    int recievedData = 0;
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
@@ -183,6 +185,8 @@ class hostInputThread extends Thread{
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 if (inPacket != null){
                     this.parent.receivingFiles = true;
+                    this.parent.totalReceivingData = (int) inPacket.getTotalData();
+                    this.parent.recievedData += inPacket.getDataLength();
                     this.assembler.packets.put(inPacket);
                 }
 
