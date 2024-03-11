@@ -5,14 +5,13 @@ public class Packet implements Serializable {
     private String fileName = "";
     private int packetSequence = 0;
     private byte packetData[];
-    private long totalData = 0;
     private boolean isDirectory = false;
+    private boolean lastPacket = false;
 
     public Packet(String fileName, int sequence, byte data[], long totalData){
         this.fileName = fileName;
         this.packetSequence = sequence;
         this.packetData = data;
-        this.totalData = totalData;
     }
 
     public String getFilename() {
@@ -33,5 +32,13 @@ public class Packet implements Serializable {
 
     public boolean CheckDirectory(){
         return this.isDirectory;
+    }
+
+    public void SetLast(){
+        this.lastPacket = true;
+    }
+
+    public boolean CheckLast(){
+        return this.lastPacket;
     }
 }
