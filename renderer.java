@@ -504,8 +504,8 @@ class RecievingHandler extends Thread{
         this.parent.statusLabels[2].setVisible(true);
         this.parent.statusLabels[3].setVisible(true);
 
-        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %f", ((double) this.parent.renderer.hostConnection.recievedData / (double) this.parent.renderer.hostConnection.totalReceivingData * 100)));
-        this.parent.statusLabels[3].setText(String.valueOf(this.parent.renderer.hostConnection.totalReceivingData));
+        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %f", ((double) this.parent.renderer.toConnection.recievedData / (double) this.parent.renderer.toConnection.totalReceivingData * 100)));
+        this.parent.statusLabels[3].setText(String.valueOf(this.parent.renderer.toConnection.totalReceivingData));
 
         this.parent.frame.validate();
     }
