@@ -11,6 +11,8 @@ public class hostConnection{
 
     OutputByteBuffer outBuffer = new OutputByteBuffer();
 
+    boolean receivingFiles = false;
+
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
         try{
@@ -57,7 +59,7 @@ public class hostConnection{
 
         //Input thread
         for (int i = this.maxCores; i < this.maxCores * 2; i++){
-        hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 1);
+        hostInputThread input = new hostInputThread(this.socket.getLocalPort() + i + 1, this);
         Thread inThread = new Thread(input);
         executors.execute(inThread);
         }
@@ -134,14 +136,15 @@ class hostInputThread extends Thread{
     private int port = 0;
     private ServerSocket serverSocket = null;
     private Socket socket = null;
+    private hostConnection parent = null;
 
-    ObjectOutputStream outputStream = null;
-    ObjectInputStream inputStream = null;
-
-    fileAssembler assembler = null;
+    private ObjectOutputStream outputStream = null;
+    private ObjectInputStream inputStream = null;
+    private fileAssembler assembler = null;
     
-    public hostInputThread(int port){
+    public hostInputThread(int port, hostConnection parent){
         this.port = port;
+        this.parent = parent;
         this.assembler = new fileAssembler();
     }
 
@@ -179,6 +182,7 @@ class hostInputThread extends Thread{
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 if (inPacket != null){
+                    this.parent.receivingFiles = true;
                     this.assembler.packets.put(inPacket);
                 }
 

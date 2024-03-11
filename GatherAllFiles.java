@@ -134,7 +134,7 @@ class ProcessFiles extends Thread{
                     //Start process to get all files
                     try{
                         ReadDirectory(fileList[i], newfileName, this.parent, this.outBuffer);
-                        Packet directoryPacket = new Packet(newfileName, 0, new byte[0]);
+                        Packet directoryPacket = new Packet(newfileName, 0, new byte[0], this.parent.totalSize);
                         directoryPacket.SetDirectory();
                         outBuffer.packets.put(directoryPacket);
                         continue;
@@ -182,7 +182,7 @@ class ProcessFiles extends Thread{
 
                 //Add new packet to output buffer
                 if (currentRead > 0){
-                    Packet newPacket = new Packet(filename, sequenceNumber, packetBuffer);
+                    Packet newPacket = new Packet(filename, sequenceNumber, packetBuffer, this.parent.totalSize);
                     sequenceNumber += 1;
                     outBuffer.packets.put(newPacket);
                 }

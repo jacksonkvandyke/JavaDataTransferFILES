@@ -12,6 +12,8 @@ public class connectoHostConnection {
 
     OutputByteBuffer outBuffer = new OutputByteBuffer();
 
+    boolean receivingFiles = false;
+
     connectoHostConnection(String address, int port){
         //Create socket and link streams
         socket = new Socket();
@@ -66,7 +68,7 @@ public class connectoHostConnection {
 
         //Input thread
         for (int i = 0; i < this.maxCores; i++){
-        inputThread input = new inputThread(this.socket.getPort() + i + 1, socket.getInetAddress());
+        inputThread input = new inputThread(this.socket.getPort() + i + 1, this, socket.getInetAddress());
         Thread inThread = new Thread(input);
         executors.execute(inThread);
         }
@@ -143,16 +145,18 @@ class inputThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
-    InetAddress hostAddress = null;
+    private connectoHostConnection parent = null;
+    private InetAddress hostAddress = null;
     
-    ObjectOutputStream outputStream = null;
-    ObjectInputStream inputStream = null;
-    fileAssembler assembler = null;
+    private ObjectOutputStream outputStream = null;
+    private ObjectInputStream inputStream = null;
+    private fileAssembler assembler = null;
     
-    public inputThread(int port, InetAddress hostAddress){
+    public inputThread(int port, connectoHostConnection parent, InetAddress hostAddress){
         this.port = port;
-        this.assembler = new fileAssembler();
+        this.parent = parent;
         this.hostAddress = hostAddress;
+        this.assembler = new fileAssembler();
     }
 
     public void run(){
@@ -183,6 +187,7 @@ class inputThread extends Thread{
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 if (inPacket != null){
+                    this.parent.receivingFiles = true;
                     this.assembler.packets.put(inPacket);
                 }
 
@@ -198,12 +203,12 @@ class outputThread extends Thread{
 
     private int port = 0;
     private Socket socket = null;
-    InetAddress hostAddress = null;
+    private InetAddress hostAddress = null;
 
-    ObjectOutputStream outputStream = null;
-    ObjectInputStream inputStream = null;
+    private ObjectOutputStream outputStream = null;
+    private ObjectInputStream inputStream = null;
 
-    OutputByteBuffer outBuffer;
+    private OutputByteBuffer outBuffer;
     
     public outputThread(int port, OutputByteBuffer outBuffer, InetAddress hostAddress){
         this.port = port;

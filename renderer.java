@@ -292,8 +292,12 @@ class ConnectedSessionPage {
                 //Prompt user to select a directory of files or file
                 new SelectFile(self);
             }
-
         });
+
+        //Start thread which waits for recieving files
+        RecievingHandler recieverThread = new RecievingHandler(this.renderer);
+        Thread threadObject = new Thread(recieverThread);
+        threadObject.start();
 
         //Create UI elements for file await, but set them invisible until needed
         Font labelFont = new Font("Arial", Font.PLAIN, 32);
@@ -400,7 +404,7 @@ class WaitForFiles extends Thread{
                 //Start file transfer
                 files.StartTransfer(parent.renderer.hostConnection, parent.renderer.toConnection);
                 parent.statusLabels[0].setVisible(true);
-                UpdateUI threadObject = new UpdateUI(self);
+                SendingUpdateUI threadObject = new SendingUpdateUI(self);
                 Thread thread = new Thread(threadObject);
                 thread.start();
             }
@@ -413,11 +417,12 @@ class WaitForFiles extends Thread{
     }
 }
 
-class UpdateUI extends Thread{
+class SendingUpdateUI extends Thread{
+    //This class updates the UI when sending files
 
     WaitForFiles parent = null;
 
-    UpdateUI(WaitForFiles parent){
+    SendingUpdateUI(WaitForFiles parent){
         this.parent = parent;
     }
 
@@ -437,6 +442,66 @@ class UpdateUI extends Thread{
 
         //Update UI to show files are sent
         this.parent.parent.statusLabels[0].setText("All files sent.");
+        this.parent.parent.frame.validate();
+    }
+}
+
+class RecievingHandler extends Thread{
+
+    renderer parent = null;
+    
+    RecievingHandler(renderer parent){
+        this.parent = parent;
+
+        while (true){
+            if (this.parent.hostConnection != null){
+                if ()
+            }else{
+
+            }
+            //Sleep to reduce CPU usage
+            try{
+                Thread.sleep(500);
+            }catch(InterruptedException e){
+                System.out.print(e);
+            }
+        }
+    }
+
+    void RecieveAsHost(){
+
+    }
+
+    void RecieveAsClient(){
+
+    }
+
+}
+
+class ReceivingUpdateUI extends Thread{
+    //This class updates the UI will recieving files
+    WaitForFiles parent = null;
+
+    ReceivingUpdateUI(WaitForFiles parent){
+        this.parent = parent;
+    }
+
+    public void run(){
+        while (this.parent.files.sentBytes != this.parent.files.totalSize){
+            //Update UI on send
+            this.parent.parent.statusLabels[0].setText(String.format("Recieving files... Progress: %f", ((double) this.parent.files.sentBytes / (double) this.parent.files.totalSize * 100)));
+            this.parent.parent.frame.validate();
+
+            //Sleep to reduce CPU usage
+            try{
+                Thread.sleep(500);
+            }catch(InterruptedException e){
+                System.out.print(e);
+            }
+        }
+
+        //Update UI to show files are sent
+        this.parent.parent.statusLabels[0].setText("All files recieved.");
         this.parent.parent.frame.validate();
     }
 }
