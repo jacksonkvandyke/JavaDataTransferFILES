@@ -30,6 +30,10 @@ public class GatherAllFiles {
         }
     }
 
+    long GetTotalSize(){
+        return this.totalSize;
+    }
+
     void StartTransfer(hostConnection hostConnection, connectoHostConnection toConnection){
         //Check if host or client
         OutputByteBuffer outBuffer = null;
@@ -179,7 +183,7 @@ class ProcessFiles extends Thread{
 
                 //Add new packet to output buffer
                 if (currentRead > 0){
-                    Packet newPacket = new Packet(filename, sequenceNumber, packetBuffer, currentRead, this.parent.totalSize);
+                    Packet newPacket = new Packet(filename, sequenceNumber, packetBuffer, currentRead, this.parent.GetTotalSize());
                     sequenceNumber += 1;
                     outBuffer.packets.put(newPacket);
                 }
