@@ -408,7 +408,7 @@ class WaitForFiles extends Thread{
         //Gets total file size and waits for files to be sent
         this.files = new GatherAllFiles(this.userPrompt);
         this.parent.statusLabels[1].setVisible(true);
-        this.parent.statusLabels[1].setText("Total Data: " + String.valueOf(files.totalSize));
+        this.parent.statusLabels[1].setText("Total Data: " + new DataSizeToReadable(this.files.totalSize));
 
         //Add send button to UI and add event listener
         this.parent.sendButton.setVisible(true);
@@ -496,7 +496,7 @@ class RecievingHandler extends Thread{
 
         long progressValue = (long) Math.floor(((double) this.parent.renderer.hostConnection.recievedData / (double) (this.parent.renderer.hostConnection.totalReceivingData - 1) * 100));
         this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %d%s", progressValue, "%"));
-        this.parent.statusLabels[3].setText("Total Data: " + String.valueOf(this.parent.renderer.hostConnection.totalReceivingData));
+        this.parent.statusLabels[3].setText("Total Data: " + new DataSizeToReadable(this.parent.renderer.toConnection.totalReceivingData));
 
         this.parent.frame.validate();
     }
@@ -508,7 +508,7 @@ class RecievingHandler extends Thread{
 
         long progressValue = (long) Math.floor(((double) this.parent.renderer.toConnection.recievedData / (double) (this.parent.renderer.toConnection.totalReceivingData - 1) * 100));
         this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %d%s", progressValue, "%"));
-        this.parent.statusLabels[3].setText("Total Data: " + String.valueOf(this.parent.renderer.toConnection.totalReceivingData));
+        this.parent.statusLabels[3].setText("Total Data: " + new DataSizeToReadable(this.parent.renderer.toConnection.totalReceivingData));
 
         this.parent.frame.validate();
     }
