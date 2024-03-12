@@ -443,7 +443,7 @@ class SendingUpdateUI extends Thread{
         while (this.parent.files.sentBytes != this.parent.files.totalSize){
             //Update UI on send
             long progressValue = (long) Math.floor((double) this.parent.files.sentBytes / (double) this.parent.files.totalSize * 100);
-            this.parent.parent.statusLabels[0].setText(String.format("Sending files... Progress: %d", progressValue));
+            this.parent.parent.statusLabels[0].setText(String.format("Sending files... Progress: %d%s", progressValue, "%"));
             this.parent.parent.frame.validate();
 
             //Sleep to reduce CPU usage
@@ -495,7 +495,7 @@ class RecievingHandler extends Thread{
         this.parent.statusLabels[3].setVisible(true);
 
         long progressValue = (long) Math.floor(((double) this.parent.renderer.hostConnection.recievedData / (double) this.parent.renderer.hostConnection.totalReceivingData * 100));
-        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %d", progressValue));
+        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %d%s", progressValue, "%"));
         this.parent.statusLabels[3].setText("Total Data: " + String.valueOf(this.parent.renderer.hostConnection.totalReceivingData));
 
         this.parent.frame.validate();
@@ -507,7 +507,7 @@ class RecievingHandler extends Thread{
         this.parent.statusLabels[3].setVisible(true);
 
         long progressValue = (long) Math.floor(((double) this.parent.renderer.toConnection.recievedData / (double) this.parent.renderer.toConnection.totalReceivingData * 100));
-        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %d", progressValue));
+        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %d%s", progressValue, "%"));
         this.parent.statusLabels[3].setText("Total Data: " + String.valueOf(this.parent.renderer.toConnection.totalReceivingData));
 
         this.parent.frame.validate();
