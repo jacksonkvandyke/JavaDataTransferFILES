@@ -13,7 +13,7 @@ public class hostConnection{
 
     boolean receivingFiles = false;
     long totalReceivingData = 0;
-    int recievedData = 0;
+    long recievedData = 0;
 
     public hostConnection(renderer renderer){
         //Set up server socket and bind to address and port
