@@ -10,14 +10,12 @@ public class GatherAllFiles {
     long progress = 0;
     long totalSize = 0;
     long sentBytes = 0;
-    boolean allFilesGathered = false;
 
     ExecutorService gatherFilesExecutor = Executors.newFixedThreadPool(1);
 
     GatherAllFiles(File userPrompt){
         //Stores userPrompt
         this.userPrompt = userPrompt;
-        this.allFilesGathered = false;
         
         //Checks for directories or files
         if (userPrompt.isDirectory()){
@@ -30,16 +28,9 @@ public class GatherAllFiles {
             //Get total file size
             this.totalSize = userPrompt.length();
         }
-
-        //All file size gathered
-        this.allFilesGathered = true;
     }
 
     void StartTransfer(hostConnection hostConnection, connectoHostConnection toConnection){
-        //Wait until total size has been determined
-        while (!this.allFilesGathered){
-        }
-
         //Check if host or client
         OutputByteBuffer outBuffer = null;
         if (hostConnection != null){
