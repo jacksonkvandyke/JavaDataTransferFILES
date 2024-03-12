@@ -442,7 +442,8 @@ class SendingUpdateUI extends Thread{
     public void run(){
         while (this.parent.files.sentBytes != this.parent.files.totalSize){
             //Update UI on send
-            this.parent.parent.statusLabels[0].setText(String.format("Sending files... Progress: %f", Math.floor(((double) this.parent.files.sentBytes / (double) this.parent.files.totalSize * 100))));
+            long progressValue = (long) Math.floor((double) this.parent.files.sentBytes / (double) this.parent.files.totalSize * 100);
+            this.parent.parent.statusLabels[0].setText(String.format("Sending files... Progress: %f", progressValue));
             this.parent.parent.frame.validate();
 
             //Sleep to reduce CPU usage
@@ -493,7 +494,8 @@ class RecievingHandler extends Thread{
         this.parent.statusLabels[2].setVisible(true);
         this.parent.statusLabels[3].setVisible(true);
 
-        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %f", Math.floor(((double) this.parent.renderer.hostConnection.recievedData / (double) this.parent.renderer.hostConnection.totalReceivingData * 100))));
+        long progressValue = (long) Math.floor(((double) this.parent.renderer.hostConnection.recievedData / (double) this.parent.renderer.hostConnection.totalReceivingData * 100));
+        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %f", progressValue));
         this.parent.statusLabels[3].setText("Total Data: " + String.valueOf(this.parent.renderer.hostConnection.totalReceivingData));
 
         this.parent.frame.validate();
@@ -504,7 +506,8 @@ class RecievingHandler extends Thread{
         this.parent.statusLabels[2].setVisible(true);
         this.parent.statusLabels[3].setVisible(true);
 
-        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %f", Math.floor(((double) this.parent.renderer.toConnection.recievedData / (double) this.parent.renderer.toConnection.totalReceivingData * 100))));
+        long progressValue = (long) Math.floor(((double) this.parent.renderer.toConnection.recievedData / (double) this.parent.renderer.toConnection.totalReceivingData * 100));
+        this.parent.statusLabels[2].setText(String.format("Recieving files... Progress: %f", progressValue));
         this.parent.statusLabels[3].setText("Total Data: " + String.valueOf(this.parent.renderer.toConnection.totalReceivingData));
 
         this.parent.frame.validate();
