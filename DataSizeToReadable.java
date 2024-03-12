@@ -5,22 +5,22 @@ class DataSizeToReadable {
 
         //KB
         if ((data / 1024) > 1){
-            totalString = String.format("%.2f KB", (long) (data / 1024));
+            totalString = String.format("%s KB", String.valueOf(Math.round(data / 1024 * 100) / 100));
         }
 
         //MB
         if ((data / Math.pow(1024, 2)) > 1){
-            totalString = String.format("%.2f MB", (long) (data / Math.pow(1024, 2)));
+            totalString = String.format("%s MB", String.valueOf(Math.round(data / Math.pow(1024, 2) * 100) / 100));
         }
 
         //GB
         if ((data / Math.pow(1024, 3)) > 1){
-            totalString = String.format("%.2f GB", (long) (data / Math.pow(1024, 3)));
+            totalString = String.format("%s GB", String.valueOf(Math.round(data / Math.pow(1024, 3) * 100) / 100));
         }
 
         //TB
         if ((data / Math.pow(1024, 4)) > 1){
-            totalString = String.format("%.2f TB", (long) (data / Math.pow(1024, 4)));
+            totalString = String.format("%s TB", String.valueOf(Math.round(data / Math.pow(1024, 4) * 100) / 100));
         }
 
         //Return final string
