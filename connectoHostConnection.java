@@ -13,8 +13,8 @@ public class connectoHostConnection {
     OutputByteBuffer outBuffer = new OutputByteBuffer();
 
     boolean receivingFiles = false;
-    int totalReceivingData = 0;
-    int recievedData = 0;
+    long totalReceivingData = 0;
+    long recievedData = 0;
 
     connectoHostConnection(String address, int port){
         //Create socket and link streams
@@ -190,7 +190,7 @@ class inputThread extends Thread{
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 if (inPacket != null){
                     this.parent.receivingFiles = true;
-                    this.parent.totalReceivingData = (int) inPacket.getTotalData();
+                    this.parent.totalReceivingData = inPacket.getTotalData();
                     this.parent.recievedData += inPacket.getDataLength();
                     this.assembler.packets.put(inPacket);
                 }
