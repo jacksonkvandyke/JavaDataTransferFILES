@@ -170,7 +170,6 @@ class ProcessFiles extends Thread{
 
                 //Read data from file and put it into packetBuffer
                 currentRead = fileInput.read(packetBuffer);
-                this.parent.sentBytes += currentRead;
 
                 //Check if read elements was less than packet buffers size
                 if ((currentRead < 1024) && (currentRead > -1)){
@@ -186,6 +185,7 @@ class ProcessFiles extends Thread{
                 //Add new packet to output buffer
                 if (currentRead > 0){
                     Packet newPacket = new Packet(filename, sequenceNumber, packetBuffer, currentRead, this.parent.GetTotalSize());
+                    this.parent.sentBytes += currentRead;
                     sequenceNumber += 1;
                     outBuffer.packets.put(newPacket);
                 }
