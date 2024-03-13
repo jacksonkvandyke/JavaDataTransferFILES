@@ -406,6 +406,8 @@ class WaitForFiles extends Thread{
 
     public void run() {
         //Gets total file size and waits for files to be sent
+        this.parent.statusLabels[0].setVisible(true);
+        this.parent.statusLabels[0].setText("Processing Files for transfer.");
         this.files = new GatherAllFiles(this.userPrompt);
         this.parent.statusLabels[1].setVisible(true);
         this.parent.statusLabels[1].setText("Total Data: " + new DataSizeToReadable().Convert(this.files.totalSize));
