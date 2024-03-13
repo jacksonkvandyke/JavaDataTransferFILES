@@ -319,8 +319,9 @@ class ConnectedSessionPage {
 
         //Select download location elements
         Label locationLabel = new Label();
+        Font locationFont = new Font("Arial", Font.PLAIN, 16);
         locationLabel.setText("Download Location: Program directory");
-        locationLabel.setFont(labelFont);
+        locationLabel.setFont(locationFont);
 
         Button downloadLocationButton = new Button("Select Download Location");
         downloadLocationButton.setFont(connectFont);
