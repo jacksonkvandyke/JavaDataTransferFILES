@@ -339,6 +339,7 @@ class ConnectedSessionPage {
                         locationLabel.setText(renderer.toConnection.downloadLocation);
                     }
                 }
+                frame.validate();
             }
         });
 
