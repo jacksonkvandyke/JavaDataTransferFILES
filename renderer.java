@@ -317,6 +317,15 @@ class ConnectedSessionPage {
         sendButton.setFont(sendFilesFont);
         sendButton.setVisible(false);
 
+        Button downloadLocationButton = new Button("Select Download Location");
+        downloadLocationButton.setFont(connectFont);
+        downloadLocationButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                //Prompt user to select a directory of files or file
+                new SelectDownloadLocation(self);
+            }
+        });
+
         //Create UI elements for receivingfiles, but set them invisible until needed
         statusLabels[2] = new Label();
         statusLabels[2].setText("Receiving files...");
@@ -337,6 +346,7 @@ class ConnectedSessionPage {
         this.frame.add(sendButton);
         this.frame.add(statusLabels[2]);
         this.frame.add(statusLabels[3]);
+        this.frame.add(downloadLocationButton);
 
         //Set homepage window visible
         this.frame.setVisible(true);
