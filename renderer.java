@@ -317,12 +317,28 @@ class ConnectedSessionPage {
         sendButton.setFont(sendFilesFont);
         sendButton.setVisible(false);
 
+        //Select download location elements
+        Label locationLabel = new Label();
+        locationLabel.setText("Program directory");
+        locationLabel.setFont(labelFont);
+
         Button downloadLocationButton = new Button("Select Download Location");
         downloadLocationButton.setFont(connectFont);
         downloadLocationButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //Prompt user to select a directory of files or file
                 new SelectDownloadLocation(self);
+                
+                //Set location text
+                if (renderer.hostConnection != null){
+                    if (renderer.hostConnection.downloadLocation != ""){
+                        locationLabel.setText(renderer.hostConnection.downloadLocation);
+                    }
+                }else {
+                    if (renderer.toConnection.downloadLocation != ""){
+                        locationLabel.setText(renderer.toConnection.downloadLocation);
+                    }
+                }
             }
         });
 
@@ -372,7 +388,6 @@ class ConnectedSessionPage {
 
 class SelectFile {
     //This class allows the user to select a file
-
     SelectFile(ConnectedSessionPage parent){
         //Prompt file select
         File userPrompt = new File("C://Program Files//");
