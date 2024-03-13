@@ -261,6 +261,7 @@ class ConnectedSessionPage {
     Frame frame = null;
     renderer renderer = null;
     GatherAllFiles filestoSend = null;
+
     Label statusLabels[] = new Label[4];
     Button sendButton = new Button();
 
@@ -387,6 +388,36 @@ class SelectFile {
             thread.start();
         }
 
+    }
+}
+
+class SelectDownloadLocation {
+    SelectDownloadLocation(ConnectedSessionPage parent){
+        //Prompt file select
+        File userPrompt = new File("C://Program Files//");
+
+        //Try to open and get file directory or file
+        if (Desktop.isDesktopSupported()){
+            try{
+                JFileChooser chooser = new JFileChooser();
+                chooser.setCurrentDirectory(userPrompt);
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                chooser.showOpenDialog(chooser);
+
+                userPrompt = chooser.getSelectedFile();
+            }catch(SecurityException e){
+                System.out.println(e);
+            }
+        }
+
+        //Set download location if user selected a location
+        if (userPrompt != null){
+            if (parent.renderer.hostConnection != null){
+                parent.renderer.hostConnection.downloadLocation = userPrompt.getAbsolutePath();
+            }else{
+                parent.renderer.toConnection.downloadLocation = userPrompt.getAbsolutePath();
+            }
+        }
     }
 }
 

@@ -10,6 +10,7 @@ import java.util.concurrent.BlockingQueue;
 public class fileAssembler {
     String currentDirectory = null;
     BlockingQueue<Packet> packets = new ArrayBlockingQueue<Packet>(10);
+    String downloadLocation;
 
     //Start file assembler on object creation
     fileAssembler(){
@@ -40,13 +41,13 @@ class SavePackets extends Thread{
 
                 //Check if file is directory and create directory
                 if (packet.CheckDirectory()){
-                    Path directoryPath = Paths.get(packet.getFilename());
+                    Path directoryPath = Paths.get(assembler.downloadLocation + packet.getFilename());
                     Files.createDirectory(directoryPath);
 
                 }
 
                 //Create file if it hasn't already been created
-                File file = new File(packet.getFilename());
+                File file = new File(assembler.downloadLocation + packet.getFilename());
 
                 if (!file.exists()){
                     try{

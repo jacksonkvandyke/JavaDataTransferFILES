@@ -11,6 +11,7 @@ public class hostConnection{
 
     OutputByteBuffer outBuffer = new OutputByteBuffer();
 
+    String downloadLocation = "";
     boolean receivingFiles = false;
     long totalReceivingData = 0;
     long recievedData = 0;
@@ -184,6 +185,10 @@ class hostInputThread extends Thread{
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 if (inPacket != null){
+                    //Set download location of assembler
+                    this.assembler.downloadLocation = this.parent.downloadLocation;
+
+                    //Recieve packet
                     this.parent.receivingFiles = true;
                     this.parent.totalReceivingData = inPacket.getTotalData();
                     this.parent.recievedData += inPacket.getDataLength();
