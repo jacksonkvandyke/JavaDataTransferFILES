@@ -408,6 +408,7 @@ class WaitForFiles extends Thread{
         //Gets total file size and waits for files to be sent
         this.parent.statusLabels[0].setVisible(true);
         this.parent.statusLabels[0].setText("Processing files for transfer.");
+        this.parent.statusLabels[1].setVisible(false);
         this.files = new GatherAllFiles(this.userPrompt);
         this.parent.statusLabels[0].setText("Files ready for transfer.");
         this.parent.statusLabels[1].setVisible(true);
