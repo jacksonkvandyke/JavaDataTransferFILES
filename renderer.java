@@ -364,6 +364,7 @@ class ConnectedSessionPage {
         this.frame.add(statusLabels[2]);
         this.frame.add(statusLabels[3]);
         this.frame.add(downloadLocationButton);
+        this.frame.add(locationLabel);
 
         //Set homepage window visible
         this.frame.setVisible(true);
