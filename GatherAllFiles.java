@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 public class GatherAllFiles {
     //This class gathers all files and prepares them to be sent by converting them to packets
     File userPrompt = null;
-    long progress = 0;
     long totalSize = 0;
     long sentBytes = 0;
 
@@ -150,6 +149,9 @@ class ProcessFiles extends Thread{
         }else {
             ReadFile(userInput.getAbsolutePath(), fileName, this.parent, this.outBuffer);
         }
+
+        System.out.printf("Sent packets: %s", String.valueOf(this.parent.sentBytes));
+        System.out.printf("Total packets: %s", String.valueOf(this.parent.totalSize));
     }
 
     void ReadFile(String userPrompt, String filename, GatherAllFiles parent, OutputByteBuffer outBuffer) {

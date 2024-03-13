@@ -509,7 +509,7 @@ class SendingUpdateUI extends Thread{
     }
 
     public void run(){
-        while (this.parent.files.sentBytes != (this.parent.files.totalSize - 1)){
+        while (this.parent.files.sentBytes != (this.parent.files.totalSize)){
             //Update UI on send
             long progressValue = (long) Math.floor((double) this.parent.files.sentBytes / (double) (this.parent.files.totalSize) * 100);
             this.parent.parent.statusLabels[0].setText(String.format("Sending files... Progress: %d%s", progressValue, "%"));
