@@ -333,11 +333,11 @@ class ConnectedSessionPage {
                 //Set location text
                 if (renderer.hostConnection != null){
                     if (renderer.hostConnection.downloadLocation != ""){
-                        locationLabel.setText(renderer.hostConnection.downloadLocation);
+                        locationLabel.setText("Download Location: " + renderer.hostConnection.downloadLocation);
                     }
                 }else {
                     if (renderer.toConnection.downloadLocation != ""){
-                        locationLabel.setText(renderer.toConnection.downloadLocation);
+                        locationLabel.setText("Download Location: " + renderer.toConnection.downloadLocation);
                     }
                 }
                 frame.validate();
@@ -441,9 +441,9 @@ class SelectDownloadLocation {
         //Set download location if user selected a location
         if (userPrompt != null){
             if (parent.renderer.hostConnection != null){
-                parent.renderer.hostConnection.downloadLocation = "Download Location: " + userPrompt.getAbsolutePath();
+                parent.renderer.hostConnection.downloadLocation = userPrompt.getAbsolutePath();
             }else{
-                parent.renderer.toConnection.downloadLocation = "Download Location: " + userPrompt.getAbsolutePath();
+                parent.renderer.toConnection.downloadLocation = userPrompt.getAbsolutePath();
             }
         }
     }
