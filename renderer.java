@@ -319,7 +319,7 @@ class ConnectedSessionPage {
 
         //Select download location elements
         Label locationLabel = new Label();
-        locationLabel.setText("Program directory");
+        locationLabel.setText("Download Location: Program directory");
         locationLabel.setFont(labelFont);
 
         Button downloadLocationButton = new Button("Select Download Location");
@@ -440,9 +440,9 @@ class SelectDownloadLocation {
         //Set download location if user selected a location
         if (userPrompt != null){
             if (parent.renderer.hostConnection != null){
-                parent.renderer.hostConnection.downloadLocation = userPrompt.getAbsolutePath();
+                parent.renderer.hostConnection.downloadLocation = "Download Location: " + userPrompt.getAbsolutePath();
             }else{
-                parent.renderer.toConnection.downloadLocation = userPrompt.getAbsolutePath();
+                parent.renderer.toConnection.downloadLocation = "Download Location: " + userPrompt.getAbsolutePath();
             }
         }
     }
