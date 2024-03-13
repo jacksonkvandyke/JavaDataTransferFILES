@@ -473,6 +473,12 @@ class WaitForFiles extends Thread{
         this.parent.statusLabels[1].setVisible(true);
         this.parent.statusLabels[1].setText("Total Data: " + new DataSizeToReadable().Convert(this.files.totalSize));
 
+        //Remove old action listeners
+        ActionListener listeners[] = this.parent.sendButton.getActionListeners();
+        for (int i = 0; i < listeners.length; i++){
+            this.parent.sendButton.removeActionListener(listeners[i]);
+        }
+
         //Add send button to UI and add event listener
         this.parent.sendButton.setVisible(true);
         this.parent.sendButton.addActionListener(new ActionListener() {
