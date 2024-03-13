@@ -185,10 +185,10 @@ class ConnectPage {
         this.frame = new Frame("Simple File Transfer");
 
         //Set homepage frame size
-        this.frame.setSize(500, 600);
+        this.frame.setSize(500, 400);
 
         //Create grid for elements
-        GridLayout grid = new GridLayout(8, 1, 0, 15);
+        GridLayout grid = new GridLayout(6, 1, 0, 15);
         this.frame.setLayout(grid);
 
         //Create elements for window
@@ -273,10 +273,10 @@ class ConnectedSessionPage {
         this.frame = new Frame("Simple File Transfer");
 
         //Set homepage frame size
-        this.frame.setSize(500, 400);
+        this.frame.setSize(500, 600);
 
         //Create grid for elements
-        GridLayout grid = new GridLayout(8, 1, 0, 15);
+        GridLayout grid = new GridLayout(10, 1, 0, 15);
         this.frame.setLayout(grid);
 
         //Create elements for initial window
