@@ -187,15 +187,24 @@ class inputThread extends Thread{
     void dataTransfer(){
         while(true){
             try {
+                //Check if all data recieved
+                if (this.parent.recievedData == this.parent.totalReceivingData){
+                    this.parent.receivingFiles = false;
+                }
+
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
                 if (inPacket != null){
                     //Set download location of assembler
                     this.assembler.downloadLocation = this.parent.downloadLocation;
+                    
+                    //Create starter data
+                    if (this.parent.receivingFiles == false){
+                        this.parent.receivingFiles = true;
+                        this.parent.totalReceivingData = inPacket.getTotalData();
+                    }
 
                     //Recieve packet
-                    this.parent.receivingFiles = true;
-                    this.parent.totalReceivingData = inPacket.getTotalData();
                     this.parent.recievedData += inPacket.getDataLength();
                     this.assembler.packets.put(inPacket);
                 }

@@ -441,9 +441,9 @@ class SelectDownloadLocation {
         //Set download location if user selected a location
         if (userPrompt != null){
             if (parent.renderer.hostConnection != null){
-                parent.renderer.hostConnection.downloadLocation = userPrompt.getAbsolutePath();
+                parent.renderer.hostConnection.downloadLocation = userPrompt.getAbsolutePath() + '/';
             }else{
-                parent.renderer.toConnection.downloadLocation = userPrompt.getAbsolutePath();
+                parent.renderer.toConnection.downloadLocation = userPrompt.getAbsolutePath() + '/';
             }
         }
     }
@@ -542,12 +542,19 @@ class RecievingHandler extends Thread{
             if (this.parent.renderer.hostConnection != null){
                 if (this.parent.renderer.hostConnection.receivingFiles == true){
                     RecieveAsHost();
+                }else{
+                    if (this.parent.renderer.hostConnection.totalReceivingData != 0){
+                        this.parent.statusLabels[2].setText("All files recieved.");
+                    }
                 }
             }
             if (this.parent.renderer.toConnection != null){
                 if (this.parent.renderer.toConnection.receivingFiles == true){
                     RecieveAsClient();
-                }
+                }else{
+                    if (this.parent.renderer.hostConnection.totalReceivingData != 0){
+                        this.parent.statusLabels[2].setText("All files recieved.");
+                    }
             }
             //Sleep to reduce CPU usage
             try{
