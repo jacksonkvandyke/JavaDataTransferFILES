@@ -12,10 +12,13 @@ public class fileAssembler {
     BlockingQueue<Packet> packets = new ArrayBlockingQueue<Packet>(10);
     String downloadLocation;
 
-    //Start file assembler on object creation
+    //Start file assemblers on object creation
     fileAssembler(){
         SavePackets savepackets = new SavePackets(this);
         Thread thread = new Thread(savepackets);
+
+        //Start two threads per input stream
+        thread.start();
         thread.start();
     }
 }
