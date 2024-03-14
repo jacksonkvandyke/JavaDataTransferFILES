@@ -545,6 +545,7 @@ class RecievingHandler extends Thread{
                 }else{
                     if (this.parent.renderer.hostConnection.totalReceivingData != 0){
                         this.parent.statusLabels[2].setText("All files recieved.");
+                        this.parent.frame.validate();
                     }
                 }
             }
@@ -554,6 +555,7 @@ class RecievingHandler extends Thread{
                 }else{
                     if (this.parent.renderer.hostConnection.totalReceivingData != 0){
                         this.parent.statusLabels[2].setText("All files recieved.");
+                        this.parent.frame.validate();
                     }
             }
             //Sleep to reduce CPU usage
@@ -564,6 +566,7 @@ class RecievingHandler extends Thread{
             }
         }
     }
+}
 
     void RecieveAsHost(){
         //Update UI on send
