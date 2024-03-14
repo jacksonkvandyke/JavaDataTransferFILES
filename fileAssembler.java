@@ -44,6 +44,7 @@ class SavePackets extends Thread{
 
                 //Check if file is directory and create directory
                 if (packet.CheckDirectory()){
+                    System.out.print(assembler.downloadLocation);
                     Path directoryPath = Paths.get(assembler.downloadLocation + packet.getFilename());
                     Files.createDirectory(directoryPath);
 

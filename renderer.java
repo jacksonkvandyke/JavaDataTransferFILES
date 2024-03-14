@@ -553,7 +553,7 @@ class RecievingHandler extends Thread{
                 if (this.parent.renderer.toConnection.receivingFiles == true){
                     RecieveAsClient();
                 }else{
-                    if (this.parent.renderer.hostConnection.totalReceivingData != 0){
+                    if (this.parent.renderer.toConnection.totalReceivingData != 0){
                         this.parent.statusLabels[2].setText("All files recieved.");
                         this.parent.frame.validate();
                     }
