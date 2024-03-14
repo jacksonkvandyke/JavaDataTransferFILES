@@ -19,7 +19,6 @@ public class fileAssembler {
 
         //Start two threads per input stream
         thread.start();
-        thread.start();
     }
 }
 
