@@ -190,6 +190,7 @@ class inputThread extends Thread{
                 //Check if all data recieved
                 if (this.parent.recievedData == this.parent.totalReceivingData){
                     this.parent.receivingFiles = false;
+                    this.parent.recievedData = 0;
                 }
 
                 //Read from input stream

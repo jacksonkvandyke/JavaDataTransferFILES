@@ -46,7 +46,7 @@ class SavePackets extends Thread{
                     System.out.print(assembler.downloadLocation);
                     Path directoryPath = Paths.get(assembler.downloadLocation + "\\" + packet.getFilename());
                     Files.createDirectory(directoryPath);
-
+                    continue;
                 }
 
                 //Create file if it hasn't already been created
