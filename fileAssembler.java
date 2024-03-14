@@ -44,13 +44,13 @@ class SavePackets extends Thread{
                 //Check if file is directory and create directory
                 if (packet.CheckDirectory()){
                     System.out.print(assembler.downloadLocation);
-                    Path directoryPath = Paths.get(assembler.downloadLocation + packet.getFilename());
+                    Path directoryPath = Paths.get(assembler.downloadLocation + "\\" + packet.getFilename());
                     Files.createDirectory(directoryPath);
 
                 }
 
                 //Create file if it hasn't already been created
-                File file = new File(assembler.downloadLocation + packet.getFilename());
+                File file = new File(assembler.downloadLocation + "\\" + packet.getFilename());
 
                 if (!file.exists()){
                     try{
