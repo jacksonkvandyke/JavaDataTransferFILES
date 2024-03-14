@@ -543,20 +543,16 @@ class RecievingHandler extends Thread{
                 if (this.parent.renderer.hostConnection.receivingFiles == true){
                     RecieveAsHost();
                 }else{
-                    if (this.parent.renderer.hostConnection.totalReceivingData != 0){
-                        this.parent.statusLabels[2].setText("All files recieved.");
-                        this.parent.frame.validate();
-                    }
+                    this.parent.statusLabels[2].setVisible(false);
+                    this.parent.frame.validate();
                 }
             }
             if (this.parent.renderer.toConnection != null){
                 if (this.parent.renderer.toConnection.receivingFiles == true){
                     RecieveAsClient();
                 }else{
-                    if (this.parent.renderer.toConnection.totalReceivingData != 0){
-                        this.parent.statusLabels[2].setText("All files recieved.");
-                        this.parent.frame.validate();
-                    }
+                    this.parent.statusLabels[2].setVisible(false);
+                    this.parent.frame.validate();
             }
             //Sleep to reduce CPU usage
             try{
