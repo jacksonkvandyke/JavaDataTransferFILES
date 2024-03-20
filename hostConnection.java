@@ -181,12 +181,6 @@ class hostInputThread extends Thread{
 
     void dataTransfer(){
         while(true){
-            //Check if all data recieved
-            if (this.parent.recievedData == this.parent.totalReceivingData){
-                this.parent.receivingFiles = false;
-                this.parent.recievedData = 0;
-            }
-
             try {
                 //Read from input stream
                 Packet inPacket = (Packet) this.inputStream.readObject();
@@ -194,15 +188,24 @@ class hostInputThread extends Thread{
                     //Set download location of assembler
                     this.assembler.downloadLocation = this.parent.downloadLocation;
 
-                    //Create starter data
-                    if (this.parent.receivingFiles == false){
-                        this.parent.receivingFiles = true;
-                        this.parent.totalReceivingData = inPacket.getTotalData();
-                    }
-
                     //Recieve packet
-                    this.parent.recievedData += inPacket.getDataLength();
-                    this.assembler.packets.put(inPacket);
+                    synchronized(this.parent){
+                        this.parent.recievedData += inPacket.getDataLength();
+                        System.out.printf("Recieved data: %d", this.parent.recievedData);
+                        this.assembler.packets.put(inPacket);
+
+                        //Create starter data
+                        if (this.parent.receivingFiles == false){
+                            this.parent.receivingFiles = true;
+                            this.parent.totalReceivingData = inPacket.getTotalData();
+                        }
+
+                        //Check if all data recieved
+                        if (this.parent.recievedData == this.parent.totalReceivingData){
+                            this.parent.receivingFiles = false;
+                            this.parent.recievedData = 0;
+                        }
+                    }
                 }
 
             }catch (IOException | ClassNotFoundException | InterruptedException e){
